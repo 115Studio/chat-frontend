@@ -5,6 +5,7 @@ export default defineNuxtConfig({
     '@nuxtjs/i18n',
     '@nuxt/eslint',
     '@nuxt/fonts',
+    '@nuxtjs/tailwindcss',
     '@vueuse/nuxt',
     '@pinia/nuxt',
     '@pinia-plugin-persistedstate/nuxt',
@@ -17,8 +18,9 @@ export default defineNuxtConfig({
   $production: {
     runtimeConfig: {
       public: {
-        discordClientId: '',
+        discordClientId: '1381420687230763129',
         api: 'https://chat.115.studio/api/v1',
+        ws: 'wss://chat.115.studio/api/v1/sync/connection',
       },
     },
     nitro: {
@@ -30,6 +32,7 @@ export default defineNuxtConfig({
       public: {
         discordClientId: '1381420687230763129',
         api: 'http://localhost:8787/api/v1',
+        ws: 'ws://localhost:8787/api/v1/sync/connection',
       },
     },
   },
