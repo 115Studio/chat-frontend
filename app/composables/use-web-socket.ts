@@ -28,7 +28,6 @@ export const useWebSocket = (url: string, jwt: string) => {
           console.error('Failed to connect WebSocket after 5 retries')
         }
       },
-      heartbeat: true,
       immediate: true,
       autoClose: true,
       onConnected: (socket) => {
