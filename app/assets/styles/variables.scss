@@ -1,0 +1,45 @@
+:root {
+    --color-background: #F5F5F5;
+    --color-default: #FBFBFB;
+    --color-inset: #FEFEFE;
+    --color-border: #ECECEC;
+    --color-content: #101115;
+    --color-muted: #57585B;
+    --color-subtle: #878789;
+
+    --color-accent: #336CFF;
+    --color-critical: #F2304E;
+    --color-caution: #FFCB45;
+    --color-success: #17C184;
+    --color-white: hsl(0, 0%, 100%);
+    --color-black: hsl(0, 0%, 0%);
+
+    --color-text-placeholder: #676F7A;
+
+    --color-btn-accent-bg: var(--color-accent);
+    --color-btn-accent-text: var(--color-white);
+    --color-btn-accent-hover-bg: #3064E8;
+    --color-btn-accent-selected-bg: #2D5BD2;
+    --color-btn-accent-disabled-bg: #81A3FB;
+    --color-btn-accent-disabled-text: #D9E3FE;
+
+    --color-btn-inner-bg: var(--color-inset);
+    --color-btn-inner-border: var(--color-border);
+    --color-btn-inner-text: var(--color-content);
+    --color-btn-inner-hover-bg: #F9F9F9;
+    --color-btn-inner-hover-border: #E7E7E7;
+    --color-btn-inner-selected-bg: #F5F5F5;
+    --color-btn-inner-selected-border: #E4E4E4;
+    --color-btn-inner-disabled-bg: var(--color-inset);
+    --color-btn-inner-disabled-text: var(--color-fg-subtle);
+
+    --color-input-inner-bg: var(--color-inset);
+    --color-input-inner-border: var(--color-border);
+    --color-input-inner-focus-bg: var(--color-accent);
+    --color-input-inner-error-bg: var(--color-critical);
+    --color-input-inner-success-bg: var(--color-success);
+
+    --transition-fast: .05s;
+    --transition-default: .15s;
+    --transition-long: .25s;
+}

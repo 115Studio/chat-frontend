@@ -1,0 +1,57 @@
+@mixin skeleton($width, $height, $border-radius){
+  $shimmer-width: 700px;
+  $gradient-stop-1: calc($shimmer-width * 0.5);
+  $gradient-stop-2: calc($shimmer-width * 0.75);
+  background-image: linear-gradient(to right, var(--color-border) 0, var(--color-inset) $gradient-stop-1, var(--color-border) $gradient-stop-2);
+  animation-duration: 1.2s;
+  animation-iteration-count: infinite;
+  animation-name: shimmer;
+  animation-timing-function: cubic-bezier(.4, 0, .2, 1);
+  background-size: $shimmer-width 100%;
+  background-attachment: fixed;
+  will-change: background-position;
+  height: $height;
+  width: $width;
+  border-radius: $border-radius;
+  border: none;
+
+  @keyframes shimmer {
+    0%{
+      background-position: 0 0;
+    }
+    100%{
+      background-position: $shimmer-width 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    background-image: none;
+    background: var(--color-default);
+  }
+}
+
+@mixin line-clamp($lines) {
+  display: -webkit-box;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-line-clamp: $lines;
+  -webkit-box-orient: vertical;
+}
+
+@mixin clamp-fix() {
+  display: grid;
+  width: 100%;
+}
+
+@mixin mask-image($deg, $start, $end) {
+  -webkit-mask-image: linear-gradient($deg, transparent 0%, transparent $start, var(--color-black) $end);
+  mask-image: linear-gradient($deg, transparent 0%, transparent $start, var(--color-black) $end);
+}
+
+@mixin select-none {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}

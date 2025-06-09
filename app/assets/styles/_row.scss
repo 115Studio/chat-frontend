@@ -1,0 +1,203 @@
+@use 'mixins';
+
+.row {
+  display: flex;
+
+  @media (max-width: 640px) {
+    flex-direction: column;
+  }
+
+  &__info {
+    margin-right: 32px;
+    max-width: 220px;
+    width: 100%;
+
+    @media (max-width: 640px) {
+      max-width: 100%;
+      margin-bottom: 36px;
+      margin-right: 0;
+    }
+  }
+
+  &__divider {
+    border: 0;
+    border-left: 1px solid var(--color-border);
+    margin-right: 36px;
+
+    @media (max-width: 640px) {
+      display: none;
+    }
+  }
+
+  &__end {
+    width: 100%;
+
+    &--between {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+  }
+
+  &__buttons {
+    display: flex;
+    gap: 12px;
+    margin-top: 32px;
+
+    @media (max-width: 640px) {
+      flex-direction: column;
+    }
+  }
+
+  &__button {
+    all: unset;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    height: 40px;
+    padding: 0 24px;
+    font-weight: 700;
+    border-radius: 12px;
+    width: 100%;
+    box-sizing: border-box;
+    cursor: pointer;
+    transition: background-color var(--transition-default), border-color var(--transition-default), color var(--transition-default);
+
+    &:disabled {
+      cursor: default;
+      pointer-events: none;
+      @include mixins.select-none;
+    }
+
+    &--inner {
+      background-color: var(--color-btn-inner-bg);
+      border: 1px solid var(--color-btn-inner-border);
+      color: var(--color-btn-inner-text);;
+
+      &:hover {
+        background-color: var(--color-btn-inner-hover-bg);
+        border: 1px solid var(--color-btn-inner-hover-border);
+      }
+
+      &:active, &:focus-visible {
+        background-color: var(--color-btn-inner-selected-bg);
+        border: 1px solid var(--color-btn-inner-selected-border);
+      }
+
+      &:disabled {
+        background-color: var(--color-btn-inner-disabled-bg);
+        color: var(--color-btn-inner-disabled-text);
+      }
+    }
+
+    &--accent {
+      background-color: var(--color-btn-accent-bg);
+      color: var(--color-btn-accent-text);
+
+      &:hover {
+        background-color: var(--color-btn-accent-hover-bg);
+      }
+
+      &:active, &:focus-visible {
+        background-color: var(--color-btn-accent-selected-bg);
+      }
+
+      &:disabled {
+        background-color: var(--color-btn-accent-disabled-bg);
+        color: var(--color-btn-accent-disabled-text);
+      }
+    }
+
+    &.skeleton {
+      @include mixins.skeleton(100%, 40px, 12px);
+    }
+  }
+
+
+  &__input {
+    background: var(--color-input-inner-bg);
+    border: 1px solid var(--color-input-inner-border);
+    width: 100%;
+    height: 40px;
+    padding: 0 12px;
+    box-sizing: border-box;
+    border-radius: 12px;
+    transition: border-color var(--transition-default);
+
+    &:focus {
+      border: 1px solid var(--color-input-inner-focus-bg);
+    }
+
+    &.skeleton {
+      @include mixins.skeleton(100%, 40px, 12px);
+    }
+
+    &--error {
+      border-color: var(--color-input-inner-error-bg);
+    }
+
+    &--success {
+      border-color: var(--color-input-inner-success-bg);
+    }
+  }
+
+  &__container {
+    position: relative;
+
+    &::before,
+    &::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 24px;
+      pointer-events: none;
+      transition: opacity var(--transition-default);
+    }
+
+    &::before {
+      top: 0;
+      background: linear-gradient(to bottom, hsl(0, 0%, 98%) 0%, hsla(0, 0%, 98%, 0));
+    }
+
+    &::after {
+      bottom: 0;
+      background: linear-gradient(to top, hsl(0, 0%, 98%) 0%, hsla(0, 0%, 98%, 0));
+    }
+
+    &--shadow-top {
+      &::before {
+        opacity: 0;
+      }
+    }
+
+    &--shadow-bottom {
+      &::after {
+        opacity: 0;
+      }
+    }
+  }
+
+  &__list {
+    overflow: auto;
+    max-height: 320px;
+    scrollbar-width: none;
+
+    @media (max-width: 640px) {
+      max-height: 260px;
+    }
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    &-item {
+      margin-bottom: 12px;
+
+      &.skeleton {
+        @include mixins.skeleton(100%, 48px, 12px);
+      }
+    }
+  }
+}

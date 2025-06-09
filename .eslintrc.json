@@ -1,0 +1,84 @@
+{
+  "env": {
+    "es2021": true,
+    "node": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:vue/vue3-recommended"
+  ],
+  "parser": "vue-eslint-parser",
+  "parserOptions": {
+    "parser": "@typescript-eslint/parser",
+    "ecmaVersion": 12,
+    "sourceType": "module"
+  },
+  "plugins": [
+    "@typescript-eslint"
+  ],
+  "rules": {
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+    "@typescript-eslint/no-non-null-assertion": "off",
+    "@typescript-eslint/no-duplicate-enum-values": "off",
+    "quotes": [
+      "error",
+      "single"
+    ],
+    "semi": [ "error", "never" ],
+    "indent": [
+      "error",
+      2,
+      { "SwitchCase": 1 }
+    ],
+    "block-spacing": [
+      "error",
+      "always"
+    ],
+    "array-bracket-spacing": [
+      "error",
+      "always"
+    ],
+    "object-curly-spacing": [
+      "error",
+      "always"
+    ],
+    "@typescript-eslint/member-delimiter-style": [
+      "error",
+      {
+        "multiline": {
+          "delimiter": "none",
+          "requireLast": true
+        }
+      }
+    ],
+    "@typescript-eslint/ban-ts-comment": "off",
+    "@typescript-eslint/no-var-requires": "off",
+    "keyword-spacing": ["error", { "before": true, "after": true }],
+    "spaced-comment": ["error", "always"],
+    "vue/html-button-has-type": ["error"],
+    "vue/multi-word-component-names": ["off"],
+    "vue/first-attribute-linebreak": ["error", {
+      "singleline": "beside",
+      "multiline": "ignore"
+    }],
+    "vue/html-closing-bracket-newline": ["error", {
+      "singleline": "never",
+      "multiline": "never"
+    }],
+    "vue/multiline-html-element-content-newline": ["error", {
+      "allowEmptyLines": true
+    }],
+    "vue/max-attributes-per-line": ["error", {
+      "singleline": {
+        "max": 5
+      }
+    }]
+},
+  "ignorePatterns": [
+    "node_modules",
+    "dist",
+    "public"
+  ]
+}

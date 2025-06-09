@@ -1,0 +1,30 @@
+:root {
+  --font-family: Onest, system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+
+  --font-xl-display: normal 700 3.75rem/4rem var(--font-family); /* 60px/64px */
+  --font-md-display: normal 700 3rem/3.25rem var(--font-family); /* 48px/52px */
+  --font-sm-display: normal 700 2.625rem/2.75rem var(--font-family); /* 42px/44px */
+
+  --font-xl-heading-2xl: normal 700 3rem/3.25rem var(--font-family); /* 48px/52px */
+  --font-md-heading-2xl: normal 700 2.75rem/3rem var(--font-family); /* 44px/48px */
+  --font-sm-heading-2xl: normal 700 2.5rem/2.75rem var(--font-family); /* 40px/44px */
+
+  --font-xl-heading-xl: normal 700 2.5rem/2.75rem var(--font-family); /* 40px/44px */
+  --font-md-heading-xl: normal 700 2.375rem/2.75rem var(--font-family); /* 38px/44px */
+  --font-sm-heading-xl: normal 700 2.25rem/2.5rem var(--font-family); /* 36px/40px */
+
+  --font-xl-heading-lg: normal 700 2rem/2.25rem var(--font-family); /* 32px/36px */
+  --font-md-heading-lg: normal 700 1.875rem/2.25rem var(--font-family); /* 30px/36px */
+  --font-sm-heading-lg: normal 700 1.75rem/2rem var(--font-family); /* 28px/32px */
+
+  --font-xl-heading-md: normal 700 1.625rem/2rem var(--font-family); /* 26px/32px */
+  --font-md-heading-md: normal 700 1.5rem/1.75rem var(--font-family); /* 24px/28px */
+
+  --font-heading-sm: normal 700 1.25rem/1.5rem var(--font-family); /* 20px/24px */
+
+  --font-body-lg: normal 400 1.125rem/1.75rem var(--font-family); /* 18px/28px */
+  --font-body-md: normal 400 1rem/1.5rem var(--font-family); /* 16px/24px */
+  --font-body-sm: normal 400 0.875rem/1.25rem var(--font-family); /* 14px/20px */
+
+  --font-caption: normal 400 0.75rem/1rem var(--font-family); /* 12px/16px */
+}

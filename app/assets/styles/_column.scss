@@ -1,0 +1,17 @@
+.column {
+  &__logo {
+    margin-bottom: 36px;
+  }
+
+  &__wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 24px;
+    margin-bottom: 24px;
+  }
+
+  &__title {
+    margin-bottom: 8px;
+  }
+}
