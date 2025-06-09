@@ -3,19 +3,7 @@
     <Background />
     <div class="wrapper">
       <div class="container">
-        <div class="row">
-          <div class="row__info">
-            <Text as="h1" variant="heading2xl">Hello, World!</Text>
-          </div>
-          <div class="row__divider" />
-          <div>
-            <Text as="p" variant="bodyLg">
-              Welcome to <Text as="span" tone="accent" weight="bold">115 chat</Text>.
-              This is just some text for <Text as="span" tone="success" weight="bold">hello world.</Text>
-              Good luck have fun!
-            </Text>
-          </div>
-        </div>
+        <slot />
       </div>
     </div>
   </div>
@@ -50,5 +38,6 @@
   margin: 12px;
 }
 </style>
+
 <script setup lang="ts">
 </script>

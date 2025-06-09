@@ -9,9 +9,15 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
     '@pinia-plugin-persistedstate/nuxt',
   ],
+  runtimeConfig: {
+    public: {
+      discordOauth2Url: 'https://discord.com/oauth2/authorize?client_id=$CLIENT_ID&redirect_uri=$REDIRECT&response_type=code&scope=identify+email'
+    }
+  },
   $production: {
     runtimeConfig: {
       public: {
+        discordClientId: '',
         api: 'https://chat.115.studio/api/v1',
       },
     },
@@ -22,7 +28,8 @@ export default defineNuxtConfig({
   $development: {
     runtimeConfig: {
       public: {
-        api: 'http://localhost:8787',
+        discordClientId: '1381420687230763129',
+        api: 'http://localhost:8787/api/v1',
       },
     },
   },
