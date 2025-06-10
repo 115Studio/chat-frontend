@@ -29,6 +29,16 @@
     }
   }
 
+  &__divider--horizontal {
+    border: 0;
+    border-top: 1px solid var(--color-border);
+    margin: 24px 0;
+
+    @media (max-width: 640px) {
+      display: none;
+    }
+  }
+
   &__end {
     width: 100%;
 

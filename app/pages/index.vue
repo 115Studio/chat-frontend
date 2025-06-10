@@ -2,6 +2,7 @@
 
 import { useAuthStore } from '@app/store/auth.store'
 import Discord from '@app/components/icons/Discord.vue'
+import { PhPlus, PhSpinner } from '@phosphor-icons/vue'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -10,24 +11,54 @@ if (!authStore.isAuthenticated) {
   router.push('/login')
 }
 
-setPageLayout('empty')
+setPageLayout('sidebar')
 </script>
 
 <template>
-  <div v-if="authStore.isAuthenticated" class="row">
-    <div class="row__info">
-      <Text as="h1" variant="headingXl">Welcome back!</Text>
+  <div class="page-container">
+    <div class="page-content">
+      <Text as="h1" variant="headingXl">Xd</Text>
     </div>
-    <div class="row__divider" />
-    <Text as="p" variant="bodyLg">
-      You are logged in. Your name is <Text as="span" tone="accent" weight="bold">{{ authStore.name }}</Text>.
-    </Text>
+    <div class="bottom-content">
+      <ChatInput />
+    </div>
   </div>
 </template>
 
 <style scoped lang="scss">
 @use '@app/assets/styles/row';
 @use '@app/assets/styles/mixins';
+
+.page-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 20px;
+}
+
+.page-content {
+  flex: 1;
+}
+
+.container {
+  background: var(--color-default);
+  border: 1px solid var(--color-border-default);
+  width: 292px;
+  padding: 32px;
+  border-radius: 16px;
+  margin: 12px;
+  display: flex;
+  flex-direction: column;
+  min-height: 400px; /* Adjust height as needed */
+}
+
+.container__group-item {
+  margin-bottom: 18px;
+}
+
+.bottom-content {
+  margin-top: auto;
+}
 
 .row {
   &__group {
