@@ -63,6 +63,8 @@ const login = async () => {
 definePageMeta({
   middleware: [ code ]
 })
+
+setPageLayout('default')
 </script>
 
 <template>

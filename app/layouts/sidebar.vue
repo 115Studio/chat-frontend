@@ -2,7 +2,7 @@
   <div class="layout layout--empty">
     <Background />
     <div class="wrapper">
-      <div class="container">
+      <div v-if="showSidebar" class="container">
         <div class="container__group">
           <Text as="h1" variant="headingLg" alignment="center" class="container__group-item">115 Chat</Text>
           <button
@@ -119,4 +119,6 @@ import { useAuthStore } from '@app/store/auth.store'
 import Header from '@app/components/global/Header.vue'
 
 const authStore = useAuthStore()
+
+const showSidebar = ref(true)
 </script>
