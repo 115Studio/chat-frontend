@@ -1,5 +1,5 @@
 <script setup lang="ts">
-
+import { toast } from 'vue-sonner'
 </script>
 
 <template>
@@ -14,6 +14,9 @@
         <button class="settings-button">Settings</button>
       </div>
       <div class="chat-input-actions__right">
+        <button @click="toast('This is a toast message!')">
+          Toast!
+        </button>
         <button class="send-button">Send</button>
         <button class="attach-button">Attach</button>
         <button class="emoji-button">♥️</button>
@@ -48,6 +51,7 @@
   border: 1px solid var(--color-border-default);
   border-radius: 0px;
   font-size: 20px;
+  background: none
 }
 
 .chat-input-actions {

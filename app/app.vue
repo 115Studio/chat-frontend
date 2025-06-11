@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { Toaster } from 'vue-sonner'
+import 'vue-sonner/style.css'
 </script>
 
 <template>
@@ -13,6 +15,20 @@
     </Head>
     <Body>
       <NuxtLayout>
+        <Toaster
+          position="top-center"
+          :expand="false"
+          theme="light"
+          :duration="5000"
+          :toast-options="{
+            style: {
+              background: 'var(--color-default)',
+              color: 'var(--color-text-default)',
+              border: '1px solid var(--color-border-default)',
+              borderRadius: '8px',
+            }
+          }"
+        />
         <NuxtPage />
       </NuxtLayout>
     </Body>
