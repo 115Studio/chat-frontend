@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import NotificationContainer from '@app/components/global/NotificationContainer.vue'
 </script>
 
 <template>
@@ -16,7 +15,6 @@ import NotificationContainer from '@app/components/global/NotificationContainer.
       <NuxtLayout>
         <NuxtPage />
       </NuxtLayout>
-      <NotificationContainer />
     </Body>
   </Html>
 </template>
