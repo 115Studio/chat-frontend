@@ -5,7 +5,7 @@
 <template>
   <div class="chat-input-container">
     <div class="input-container">
-      <input class="input" type="text" placeholder="Ask anything" />
+      <textarea class="input" type="text" placeholder="Ask anything" />
     </div>
     <div class="chat-input-actions">
       <div class="chat-input-actions__left">
@@ -28,7 +28,7 @@
   border: 1px solid var(--color-border-default);
   margin-right: auto;
   margin-left: auto;
-  width: 65%;
+  max-width: 768px;
   padding: 32px;
   border-radius: 24px;
   display: flex;
@@ -44,9 +44,9 @@
 .input {
   width: 100%;
   min-height: 32px;
-  padding: 12px 12px 12px 0;
+  padding: 0;
   border: 1px solid var(--color-border-default);
-  border-radius: 8px;
+  border-radius: 0px;
   font-size: 20px;
 }
 

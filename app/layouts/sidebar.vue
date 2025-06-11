@@ -64,7 +64,7 @@
 .container {
   background: var(--color-default);
   border: 1px solid var(--color-border-default);
-  width: 292px;
+  width: 276px;
   padding: 32px;
   border-radius: 16px;
   margin: 12px;

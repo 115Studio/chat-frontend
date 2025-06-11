@@ -76,7 +76,7 @@ setPageLayout('default')
     <div class="row__end row__end--between">
       <div class="row__group">
         <Text as="p" variant="headingSm" alignment="center" weight="medium">
-          Welcome to <Text as="span" tone="accent" weight="bold">115 chat</Text>.
+          Please <Text as="span" weight="bold">login</Text> to continue.
         </Text>
       </div>
       <div class="row__group">
