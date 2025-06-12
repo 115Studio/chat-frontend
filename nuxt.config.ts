@@ -49,6 +49,7 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   app: {
     pageTransition: { name: 'transition-page', mode: 'out-in' },
+    layoutTransition: { name: 'transition-page', mode: 'out-in' },
   },
   css: ['@app/assets/styles/global.scss'],
   alias: {

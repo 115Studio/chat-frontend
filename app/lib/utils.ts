@@ -13,3 +13,12 @@ export function valueUpdater<T extends Updater<any>>(updaterOrValue: T, ref: Ref
       ? updaterOrValue(ref.value)
       : updaterOrValue
 }
+
+export const normalizeAbsoluteLeaves = (el: HTMLElement) => {
+  const {marginLeft, marginTop, width, height} = window.getComputedStyle(el)
+
+  el.style.left = `${el.offsetLeft - parseFloat(marginLeft)}px`
+  el.style.top = `${el.offsetTop - parseFloat(marginTop)}px`
+  el.style.width = width
+  el.style.height = height
+}

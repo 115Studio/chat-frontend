@@ -18,7 +18,7 @@
               <PhSpinner :size="20" weight="bold" class="animate-spin" />
             </template>
           </button>
-          <div class="row__divider--horizontal"></div>
+          <div class="row__divider--horizontal"/>
           <Text as="p" variant="bodyLg">
             You are logged in. Your name is <Text as="span" tone="accent" weight="bold">{{ authStore.name }}</Text>.
           </Text>
@@ -39,8 +39,34 @@
         <slot />
       </div>
     </div>
+    <FileDrop @files-dropped="processFileDrop" />
   </div>
 </template>
+
+<script setup lang="ts">
+import { PhSpinner } from '@phosphor-icons/vue'
+import { useAuthStore } from '@app/store/auth.store'
+import Header from '@app/components/global/Header.vue'
+import { useFilesStore } from '@app/store/files.store'
+
+const authStore = useAuthStore()
+
+const showSidebar = ref(true)
+
+const store = useFilesStore()
+
+const processFileDrop = (files: File[]) => {
+  for (const file of files) {
+    store.addFile({
+      id: Date.now() + Math.random().toString(36).substring(2, 15),
+      name: file.name,
+      size: file.size,
+      type: file.type,
+      data: file
+    })
+  }
+}
+</script>
 
 <style scoped lang="scss">
 @use '@app/assets/styles/row';
@@ -112,13 +138,3 @@
   }
 }
 </style>
-
-<script setup lang="ts">
-import { PhSpinner } from '@phosphor-icons/vue'
-import { useAuthStore } from '@app/store/auth.store'
-import Header from '@app/components/global/Header.vue'
-
-const authStore = useAuthStore()
-
-const showSidebar = ref(true)
-</script>
