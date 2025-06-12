@@ -31,7 +31,7 @@ export default defineNuxtConfig({
     runtimeConfig: {
       public: {
         discordClientId: '1381420687230763129',
-        api: 'http://localhost:8787/api/v1',
+        api: 'https://cf-test.rinisle.uk/api/v1',
         ws: 'ws://localhost:8787/api/v1/sync/connection',
       },
     },
@@ -57,6 +57,9 @@ export default defineNuxtConfig({
   future: { compatibilityVersion: 4 },
   compatibilityDate: '2025-06-09',
   vite: {
+    server: {
+      allowedHosts: ['localhost', 'test2.rinisle.uk'],
+    },
     css: {
       preprocessorOptions: {
         scss: {

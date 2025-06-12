@@ -18,6 +18,7 @@ setPageLayout('sidebar')
   <div class="page-container">
     <div class="page-content">
       <Text as="h1" variant="headingXl">Xd</Text>
+      <Chat />
     </div>
     <div class="bottom-content">
       <ChatInput />
@@ -58,6 +59,10 @@ setPageLayout('sidebar')
 
 .bottom-content {
   margin-top: auto;
+}
+
+.top-content {
+  margin-bottom: auto;
 }
 
 .row {
