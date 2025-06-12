@@ -22,7 +22,7 @@ function handleOpenChange(open: boolean) {
 <template>
   <DropdownMenu @update:open="handleOpenChange">
     <DropdownMenuTrigger>
-      <TooltipProvider :delay-duration="250">
+      <TooltipProvider :disable-hoverable-content="true" :delay-duration="250">
         <Tooltip>
           <TooltipTrigger>
             <button class="button">
