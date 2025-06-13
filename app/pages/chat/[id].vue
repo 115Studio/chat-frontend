@@ -1,38 +1,24 @@
 <script setup lang="ts">
 import { useAuthStore } from '@app/store/auth.store'
-import Discord from '@app/components/icons/Discord.vue'
-import { PhPlus, PhSpinner } from '@phosphor-icons/vue'
-import { useChatStore } from '@app/store/chat.store'
-import { toast } from 'vue-sonner'
 
 const router = useRouter()
 const authStore = useAuthStore()
-const chatStore = useChatStore()
 
 if (!authStore.isAuthenticated) {
   router.push('/login')
 }
 
 setPageLayout('sidebar')
-
-const input = ref('')
-
-const createNewChat = () => {
-  const chat = chatStore.createChat(input.value)
-  input.value = ''
-
-  if (chat) router.push(`/chat/${chat.id}`)
-  else toast.error('Failed to create chat')
-}
 </script>
 
 <template>
   <div class="page-container">
-    <div class="page-content mx-auto mt-40 w-full items-center text-center">
-      <Text as="h1" variant="headingXl"> Hello, {{ authStore.name }}! </Text>
-      <div class="top-content mt-20">
-        <ChatInput v-model="input" @create-chat-event="createNewChat" />
-      </div>
+    <div class="page-content">
+      <Text as="h1" variant="headingXl">Chat</Text>
+      <Chat />
+    </div>
+    <div class="bottom-content">
+      <ChatInput />
     </div>
   </div>
 </template>

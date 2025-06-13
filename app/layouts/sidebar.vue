@@ -4,31 +4,41 @@
     <div class="wrapper">
       <div v-if="showSidebar" class="container">
         <div class="container__group">
-          <Text as="h1" variant="headingLg" alignment="center" class="container__group-item">115 Chat</Text>
+          <Text as="h1" variant="headingLg" alignment="center" class="container__group-item">
+            115 Chat
+          </Text>
           <button
-            class="row__button row__button--inner container__group-item"
+            class="row__button row__button--inner container__group-item ml-[-0.5rem]"
             type="button"
+            @click="createNewChat"
           >
             <template v-if="true">
-              <Text as="span">
-                New Chat
-              </Text>
+              <Text as="span"> New Chat </Text>
             </template>
             <template v-else>
               <PhSpinner :size="20" weight="bold" class="animate-spin" />
             </template>
           </button>
-          <div class="row__divider--horizontal"/>
+          <div class="row__divider--horizontal" />
           <Text as="p" variant="bodyLg">
-            You are logged in. Your name is <Text as="span" tone="accent" weight="bold">{{ authStore.name }}</Text>.
+            You are logged in. Your name is
+            <Text as="span" tone="accent" weight="bold">{{ authStore.name }}</Text
+            >.
           </Text>
         </div>
-        <div class="container__group">
-          <slot name="chats" />
+        <div class="container__group flex flex-col gap-0 relative">
+          <TransitionGroup name="fade-insert-right">
+            <ChatButton v-for="chat in chatsStore.chats" :id="chat.id" :key="chat.id">
+              <Text as="span">
+                {{ chat.name }}
+              </Text>
+            </ChatButton>
+          </TransitionGroup>
         </div>
         <div class="bottom-content">
           <Text as="p" variant="bodyLg">
-            Your name is <Text as="span" tone="accent" weight="bold">{{ authStore.name }}</Text>.
+            Your name is <Text as="span" tone="accent" weight="bold">{{ authStore.name }}</Text
+            >.
           </Text>
         </div>
       </div>
@@ -48,12 +58,14 @@ import { PhSpinner } from '@phosphor-icons/vue'
 import { useAuthStore } from '@app/store/auth.store'
 import Header from '@app/components/global/Header.vue'
 import { useFilesStore } from '@app/store/files.store'
+import { useChatStore } from '@app/store/chat.store'
 
 const authStore = useAuthStore()
 
 const showSidebar = ref(true)
 
 const store = useFilesStore()
+const chatsStore = useChatStore()
 
 const processFileDrop = (files: File[]) => {
   for (const file of files) {
@@ -62,9 +74,13 @@ const processFileDrop = (files: File[]) => {
       name: file.name,
       size: file.size,
       type: file.type,
-      data: file
+      data: file,
     })
   }
+}
+
+const createNewChat = () => {
+  useRouter().push('/')
 }
 </script>
 
@@ -136,5 +152,25 @@ const processFileDrop = (files: File[]) => {
       @include mixins.skeleton(128px, 16px, 4px);
     }
   }
+}
+
+.fade-insert-right-move,
+.fade-insert-right-enter-active,
+.fade-insert-right-leave-active {
+  transition:
+    opacity 0.3s ease-in-out,
+    transform 0.3s ease-in-out;
+}
+.fade-insert-right-leave-active {
+  position: absolute;
+}
+.fade-insert-right-enter-from,
+.fade-insert-right-leave-to {
+  opacity: 0;
+}
+
+.fade-insert-right-enter-to,
+.fade-insert-right-leave-from {
+  opacity: 1;
 }
 </style>

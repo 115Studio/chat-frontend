@@ -5,12 +5,18 @@ import { normalizeAbsoluteLeaves } from '@app/lib/utils'
 
 const store = useFilesStore()
 
+const emit = defineEmits<{
+  (e: 'createChatEvent'): void
+}>()
+
+const model = defineModel<string>()
+
 const fileInput = ref<HTMLInputElement | null>(null)
 
 const imagesToShow = computed(() => {
   return store.files
-    .filter(file => file.type.startsWith('image/'))
-    .map(file => ({
+    .filter((file) => file.type.startsWith('image/'))
+    .map((file) => ({
       url: URL.createObjectURL(file.data),
       id: file.id,
       name: file.name,
@@ -19,8 +25,8 @@ const imagesToShow = computed(() => {
 
 const filesToShow = computed(() => {
   return store.files
-    .filter(file => !file.type.startsWith('image/'))
-    .map(file => ({
+    .filter((file) => !file.type.startsWith('image/'))
+    .map((file) => ({
       id: file.id,
       name: file.name,
     }))
@@ -36,25 +42,37 @@ const processFileInput = (event: Event) => {
       name: file.name,
       size: file.size,
       type: file.type,
-      data: file
+      data: file,
     })
   }
 
   input.value = ''
+}
+
+const createChat = (ev?: Event) => {
+  ev?.preventDefault()
+
+  emit('createChatEvent')
 }
 </script>
 
 <template>
   <div class="chat-input-container">
     <div class="input-container">
-      <textarea class="input" type="text" placeholder="Ask anything" />
+      <textarea
+        v-model="model"
+        class="input"
+        type="text"
+        placeholder="Ask anything"
+        @keydown.enter="(e) => createChat(e)"
+      />
       <input
         ref="fileInput"
         type="file"
         accept="image/*, text/*, application/pdf, application/json"
         class="hidden"
         @change="processFileInput"
-      >
+      />
     </div>
     <div class="relative overflow-x-auto max-w-full">
       <transition-group
@@ -71,31 +89,22 @@ const processFileInput = (event: Event) => {
           alt="Attached file"
           class="max-h-24 rounded-lg flex-shrink-0"
         />
-        <ChatInputFile
-          v-for="file in filesToShow"
-          :id="file.id"
-          :key="file.id"
-          :name="file.name"
-        />
+        <ChatInputFile v-for="file in filesToShow" :id="file.id" :key="file.id" :name="file.name" />
       </transition-group>
     </div>
     <div class="chat-input-actions">
       <div class="chat-input-actions__left">
-        <button class="voice-button">Voice</button>
-        <button class="clear-button">Clear</button>
-        <button class="settings-button">Settings</button>
+        <button type="button" class="voice-button">Voice</button>
+        <button type="button" class="clear-button">Clear</button>
+        <button type="button" class="settings-button">Settings</button>
       </div>
       <div class="chat-input-actions__right">
-        <button @click="toast('This is a toast message!')">
-          Toast!
-        </button>
-        <button class="send-button">Send</button>
-        <button
-          class="attach-button"
-          @click="$refs.fileInput.click()">
+        <button type="button" @click="toast('This is a toast message!')">Toast!</button>
+        <button type="button" class="send-button" @click="createChat()">Send</button>
+        <button type="button" class="attach-button" @click="$refs.fileInput!.click()">
           Attach
         </button>
-        <button class="emoji-button">♥️</button>
+        <button type="button" class="emoji-button">♥️</button>
       </div>
     </div>
   </div>
@@ -146,12 +155,21 @@ const processFileInput = (event: Event) => {
     display: flex;
     gap: 8px;
   }
+
+  button {
+    @apply transition-opacity duration-200 ease-in-out;
+    &:hover {
+      @apply opacity-60;
+    }
+  }
 }
 
 .fade-insert-move,
 .fade-insert-enter-active,
 .fade-insert-leave-active {
-  transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
+  transition:
+    opacity 0.4s ease-in-out,
+    transform 0.4s ease-in-out;
 }
 .fade-insert-leave-active {
   position: absolute;
