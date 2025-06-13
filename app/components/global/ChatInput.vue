@@ -17,6 +17,15 @@ const imagesToShow = computed(() => {
     }))
 })
 
+const filesToShow = computed(() => {
+  return store.files
+    .filter(file => !file.type.startsWith('image/'))
+    .map(file => ({
+      id: file.id,
+      name: file.name,
+    }))
+})
+
 const processFileInput = (event: Event) => {
   const input = event.target as HTMLInputElement
   if (!input.files || input.files.length === 0) return
@@ -47,7 +56,7 @@ const processFileInput = (event: Event) => {
         @change="processFileInput"
       >
     </div>
-    <div class="relative">
+    <div class="relative overflow-x-auto max-w-full">
       <transition-group
         name="fade-insert"
         tag="div"
@@ -60,7 +69,13 @@ const processFileInput = (event: Event) => {
           :key="file.id"
           :image="file.url"
           alt="Attached file"
-          class="max-h-24 rounded-lg"
+          class="max-h-24 rounded-lg flex-shrink-0"
+        />
+        <ChatInputFile
+          v-for="file in filesToShow"
+          :id="file.id"
+          :key="file.id"
+          :name="file.name"
         />
       </transition-group>
     </div>

@@ -103,6 +103,16 @@ a, a:hover, a:active, a:visited, button {
   transition: color var(--duration-default), border var(--duration-default), background var(--duration-default);
 }
 
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
   * {
     transition-duration: 0.01ms !important;

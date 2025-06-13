@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { PhCircleNotch, PhX } from '@phosphor-icons/vue'
+import { PhCircleNotch, PhX, PhFile } from '@phosphor-icons/vue'
 import { useFilesStore } from '@app/store/files.store'
 
 const props = defineProps<{
-  image: string
   id: string
+  name: string
 }>()
 
 const store = useFilesStore()
@@ -12,11 +12,15 @@ const store = useFilesStore()
 
 <template>
   <div class="relative">
-    <img
-      :src="props.image"
-      alt="Attached file"
-      class="max-h-24 rounded-lg no-drag-no-select"
-    >
+    <div class="h-24 w-24 rounded-lg bg-stone-100 p-4 flex flex-col items-center justify-center text-center">
+      <PhFile
+        class="w-full h-full object-cover rounded-custom text-stone-700"
+        weight="fill"
+      />
+      <Text as="p" variant="bodySm" class="text-center w-full truncate">
+        {{ props.name }}
+      </Text>
+    </div>
     <transition name="fade">
       <button
         v-if="!store.isUploading(props.id)"
@@ -56,13 +60,5 @@ const store = useFilesStore()
 }
 .fade-enter-from, .fade-leave-to {
   opacity: 0;
-}
-
-.no-drag-no-select {
-  -webkit-user-drag: none;
-  user-select: none;
-  -moz-user-select: none;
-  -webkit-user-select: none;
-  -ms-user-select: none;
 }
 </style>
