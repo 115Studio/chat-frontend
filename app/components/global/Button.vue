@@ -2,9 +2,16 @@
 // pass class and emits props to the button component
 import { computed, defineProps } from 'vue'
 
-const props = defineProps<{
-  class?: string
-}>()
+const props = withDefaults(
+  defineProps<{
+    class?: string
+    type?: 'button' | 'submit' | 'reset'
+  }>(),
+  {
+    class: '',
+    type: 'button',
+  },
+)
 
 const buttonClasses = computed(() => {
   return {
@@ -16,9 +23,12 @@ const buttonClasses = computed(() => {
 </script>
 
 <template>
-  <button type="button" :class="buttonClasses">
+  <button :type="props.type" :class="buttonClasses">
     <slot />
   </button>
 </template>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+@use '@app/assets/styles/row';
+@use '@app/assets/styles/mixins';
+</style>
