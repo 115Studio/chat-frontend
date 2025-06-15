@@ -1,0 +1,15 @@
+export enum MessageStageType {
+  Unsupported,
+  Error,
+  Think,
+  Text,
+  Vision,
+  Pdf,
+  File,
+  VisionGen,
+  WebSearch,
+  Audio,
+  AudioGen,
+  Link,
+  ToBeParsed,
+}

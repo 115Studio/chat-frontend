@@ -10,5 +10,7 @@ export const useAuthStore = defineStore('auth', {
     name: '',
     plan: UserPlan.None as UserPlan,
   }),
-  persist: true,
+  persist: {
+    storage: localStorage,
+  },
 })

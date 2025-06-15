@@ -4,9 +4,9 @@ import { useWebSocket as vueUseWebSocket } from '@vueuse/core'
 import { watch } from 'vue'
 import type { WebSocketOpCode } from '@app/constants/web-socket-op-code'
 
-export interface WebSocketMessage<T = any> {
+export interface WebSocketMessage<K extends string = string, T = any> {
   op: WebSocketOpCode
-  data: { [key: string]: T }
+  data: { [key in K]: T }
 }
 
 export interface WebSocketState {
@@ -15,17 +15,22 @@ export interface WebSocketState {
   reconnectAttempts: number
 }
 
-export const useWebSocket = (url: string, jwt: string) => {
+// Singleton storage
+let webSocketInstance: ReturnType<typeof createWebSocketInstance> | null = null
+let currentUrl: string | null = null
+let currentJwt: string | null = null
+
+export const createWebSocketInstance = (url: string, jwt: string) => {
   const destroy$ = new Subject<void>()
 
   const { data, status, open, close, ws } = vueUseWebSocket(
     `${url}?auth=${jwt}`,
     {
       autoReconnect: {
-        retries: 5,
+        retries: 50,
         delay: 3000,
         onFailed() {
-          console.error('Failed to connect WebSocket after 5 retries')
+          console.error('Failed to connect WebSocket after 100500 retries')
         }
       },
       immediate: true,
@@ -106,6 +111,10 @@ export const useWebSocket = (url: string, jwt: string) => {
     destroy$.next()
     destroy$.complete()
     close()
+    // Reset singleton when destroyed
+    webSocketInstance = null
+    currentUrl = null
+    currentJwt = null
   }
 
   return {
@@ -127,14 +136,32 @@ export const useWebSocket = (url: string, jwt: string) => {
   }
 }
 
-export const subscribeOp = <T = any>(
+export const useWebSocket = (url: string, jwt: string) => {
+  // Check if we already have an instance with the same parameters
+  if (webSocketInstance && currentUrl === url && currentJwt === jwt) {
+    return webSocketInstance
+  }
+
+  // If parameters changed or no instance exists, create new one
+  if (webSocketInstance) {
+    webSocketInstance.destroy()
+  }
+
+  webSocketInstance = createWebSocketInstance(url, jwt)
+  currentUrl = url
+  currentJwt = jwt
+
+  return webSocketInstance
+}
+
+export const subscribeOp = <K extends string = string, T = any>(
   websocket: ReturnType<typeof useWebSocket>,
   opCode: WebSocketOpCode,
-  callback: (data: { [key: string]: T }) => void
+  callback: (data: { [key in K]: T }) => void
 ): Subscription => {
   return websocket.getMessagesByOpCode(opCode).subscribe({
     next: (message) => {
-      callback(message.data)
+      callback(message.data as any)
     },
     error: (error) => {
       console.error(`Error in subscription for opCode ${opCode}:`, error)

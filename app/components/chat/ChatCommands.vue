@@ -18,7 +18,7 @@ const isActive = computed(() => isDropdownOpen.value)
     <TooltipProvider :delay-duration="250">
       <Tooltip>
         <TooltipTrigger>
-          <button class="button">
+          <button class="button interactive">
             <Copy class="w-4 h-4" />
           </button>
         </TooltipTrigger>
@@ -29,7 +29,7 @@ const isActive = computed(() => isDropdownOpen.value)
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>
-    <TooltipProvider :delay-duration="250">
+    <!--TooltipProvider :delay-duration="250">
       <Tooltip>
         <TooltipTrigger>
           <button class="button">
@@ -42,14 +42,14 @@ const isActive = computed(() => isDropdownOpen.value)
           </Text>
         </TooltipContent>
       </Tooltip>
-    </TooltipProvider>
+    </TooltipProvider-->
     <ChangeModel @dropdown-open="val => isDropdownOpen = val" />
   </div>
 </template>
 
 <style scoped lang="scss">
 .button {
-  @apply p-1.5 rounded-lg hover:bg-gray-300 transition-colors;
+  @apply p-1.5 rounded-lg transition-colors;
 }
 .commands {
   opacity: 0;

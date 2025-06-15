@@ -1,4 +1,4 @@
-import type { ErrorCode } from '@app/constants/error-code'
+import type { ErrorCode } from '@app/constants/errors'
 import type { ApiError } from '@app/types/api/api-error.type'
 
 export type RawApiResponse<T> = ApiResponseSuccess<T> | ApiResponseError

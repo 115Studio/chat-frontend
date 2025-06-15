@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import type { Features } from '@app/constants/models'
 import {
   DropdownMenuItem,
   DropdownMenuSub,
@@ -9,6 +8,7 @@ import {
 import ModelFeatures from '@app/components/chat/ModelFeatures.vue'
 
 import BrainHalf from '@app/components/icons/BrainHalf.vue';
+import type { AiModelFeature } from '@app/constants/ai-model-feature'
 
 const props = defineProps<{
   model: {
@@ -16,12 +16,12 @@ const props = defineProps<{
     name: string,
     variants: Array<{
       name: string,
-      features: Features[]
+      features: AiModelFeature[]
     }>
   },
   variant: {
     name: string,
-    features: Features[]
+    features: AiModelFeature[]
   }
 }>();
 

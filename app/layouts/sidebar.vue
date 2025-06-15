@@ -20,18 +20,14 @@
             </template>
           </button>
           <div class="row__divider--horizontal" />
-          <Text as="p" variant="bodyLg">
-            You are logged in. Your name is
-            <Text as="span" tone="accent" weight="bold">{{ authStore.name }}</Text
-            >.
-          </Text>
         </div>
         <div class="container__group flex flex-col gap-0 relative">
           <TransitionGroup name="fade-insert-right">
             <ChatButton v-for="chat in chatsStore.chats" :id="chat.id" :key="chat.id">
-              <Text as="span">
+              <Text as="span" v-if="chat.name !== MagicNumber.NameShowSkeleton">
                 {{ chat.name }}
               </Text>
+              <div v-else class="name-skeleton"></div>
             </ChatButton>
           </TransitionGroup>
         </div>
@@ -58,16 +54,17 @@ import { PhSpinner } from '@phosphor-icons/vue'
 import { useAuthStore } from '@app/store/auth.store'
 import Header from '@app/components/global/Header.vue'
 import { useFilesStore } from '@app/store/files.store'
-import { useChatStore } from '@app/store/chat.store'
+import { useChatsStore } from '@app/store/chats.store'
+import { MagicNumber } from '@app/constants/magic-number'
 
 const authStore = useAuthStore()
 
 const showSidebar = ref(true)
 
-const store = useFilesStore()
-const chatsStore = useChatStore()
+const store = useFilesStore('@new')()
+const chatsStore = useChatsStore()
 
-const processFileDrop = (files: File[]) => {
+const processFileDrop = async (files: File[]) => {
   for (const file of files) {
     store.addFile({
       id: Date.now() + Math.random().toString(36).substring(2, 15),
@@ -87,6 +84,10 @@ const createNewChat = () => {
 <style scoped lang="scss">
 @use '@app/assets/styles/row';
 @use '@app/assets/styles/mixins';
+
+.name-skeleton {
+  @include mixins.skeleton(100%, 24px, 12px);
+}
 
 .layout {
   display: flex;

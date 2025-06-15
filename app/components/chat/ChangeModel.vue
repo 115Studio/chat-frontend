@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Features, models } from '@app/constants/models'
+import { models } from '@app/constants/models'
 import {
   DropdownMenu, DropdownMenuContent,
   DropdownMenuItem, DropdownMenuSub, DropdownMenuSubContent,
@@ -11,6 +11,7 @@ import { PhCaretRight } from '@phosphor-icons/vue'
 import ModelFeatures from '@app/components/chat/ModelFeatures.vue'
 import ReasoningLevel from '@app/components/chat/ReasoningLevel.vue'
 import { defineEmits } from 'vue'
+import { AiModelFeature } from '@app/constants/ai-model-feature'
 
 const emit = defineEmits(['dropdown-open'])
 
@@ -25,7 +26,7 @@ function handleOpenChange(open: boolean) {
       <TooltipProvider :disable-hoverable-content="true" :delay-duration="250">
         <Tooltip>
           <TooltipTrigger>
-            <button class="button">
+            <button class="button interactive">
               <Retry class="w-4 h-4" />
             </button>
           </TooltipTrigger>
@@ -53,7 +54,7 @@ function handleOpenChange(open: boolean) {
             <div class="grid gap-1">
               <template v-for="variant in model.variants" :key="variant.name">
                 <ReasoningLevel
-                  v-if="variant.features.includes(Features.Reasoning)"
+                  v-if="variant.features.includes(AiModelFeature.ReasoningControl)"
                   :model="model"
                   :variant="variant"
                 />
@@ -79,6 +80,6 @@ function handleOpenChange(open: boolean) {
 }
 
 .button {
-  @apply p-1.5 rounded-lg hover:bg-gray-300 transition-colors;
+  @apply p-1.5 rounded-lg transition-colors;
 }
 </style>

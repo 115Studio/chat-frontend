@@ -7,7 +7,7 @@ const props = defineProps<{
   id: string
 }>()
 
-const store = useFilesStore()
+const store = useFilesStore('@new')()
 </script>
 
 <template>

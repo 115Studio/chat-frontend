@@ -4,10 +4,13 @@ import ChatCommands from '@app/components/chat/ChatCommands.vue'
 
 <template>
   <div class="messages w-full flex flex-col gap-y-6">
-    <div class="message-container message message--right">
-      <Text as="p" variant="bodyMd">
-        Hallo!
-      </Text>
+    <div class="message message--right">
+      <div class="message-container">
+        <Text as="p" variant="bodyMd">
+          Hallo!
+        </Text>
+      </div>
+      <ChatCommands />
     </div>
     <div class="message reply message--left">
       <div>
@@ -15,7 +18,7 @@ import ChatCommands from '@app/components/chat/ChatCommands.vue'
           Hallo! Ich bin eine KI!
         </Text>
       </div>
-      <ChatCommands/>
+      <ChatCommands />
     </div>
     <div class="message-container message message--right">
       <Text as="p" variant="bodyMd">
@@ -35,11 +38,14 @@ import ChatCommands from '@app/components/chat/ChatCommands.vue'
 
 <style scoped lang="scss">
 .message-container {
-  background: var(--color-default);
-  border: 1px solid var(--color-border-default);
   max-width: 768px;
   padding: 12px 18px;
   border-radius: 24px;
+}
+
+.message-background {
+  background: var(--color-default);
+  border: 1px solid var(--color-border-default);
 }
 
 .message {

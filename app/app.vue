@@ -1,6 +1,78 @@
 <script setup lang="ts">
 import { Toaster } from 'vue-sonner'
 import 'vue-sonner/style.css'
+import { useAuthStore } from '@app/store/auth.store'
+import { wsApi } from '@app/composables/api'
+import type { Chat, Message } from '@app/types'
+import { WebSocketOpCode } from '@app/constants/web-socket-op-code'
+import { subscribeOp, useWebSocket } from '@app/composables/use-web-socket'
+import { useChatMessagesStore } from '@app/store/chat-messages.store'
+import { useChatsStore } from '@app/store/chats.store'
+
+const auth = useAuthStore()
+
+const route = useRoute()
+const router = useRouter()
+
+if (!auth.isAuthenticated) {
+  router.push('/login')
+}
+
+async function main() {
+
+  const chatId = computed(() => route.path.split('chat/')[1] ?? '@new')
+
+  const chatsStore = useChatsStore()
+
+  const messageStoreMap = new Map<string, ReturnType<ReturnType<typeof useChatMessagesStore>>>()
+
+  const messagesStore = (id: string): ReturnType<ReturnType<typeof useChatMessagesStore>> => {
+    let store = messageStoreMap.get(id)
+
+    if (!store) {
+      store = useChatMessagesStore(id)()
+      messageStoreMap.set(id, store)
+    }
+
+    return store
+  }
+
+  const ws = useWebSocket(wsApi(), auth.jwt)
+
+  subscribeOp<'channel', Chat>(ws, WebSocketOpCode.ChannelCreate, ({ channel }) => {
+    chatsStore.createChat(channel)
+  })
+
+  subscribeOp<'channel', Chat>(ws, WebSocketOpCode.ChannelUpdate, ({ channel }) => {
+    chatsStore.updateChat(channel)
+  })
+
+  subscribeOp<'channelId', string>(ws, WebSocketOpCode.ChannelDelete, ({ channelId }) => {
+    chatsStore.deleteChat(channelId)
+    messageStoreMap.delete(channelId)
+    messagesStore(channelId).clearMessages()
+  })
+
+  subscribeOp<'message', Message>(ws, WebSocketOpCode.MessageCreate, ({ message }) => {
+    messagesStore(message.channelId).addMessage(message)
+  })
+
+  subscribeOp<any, any>(ws, WebSocketOpCode.MessageStageUpdate, ({ messageId, channelId, stageUpdate, ts }) => {
+    messagesStore(channelId).updateMessagePartial(messageId, stageUpdate, ts)
+  })
+
+  subscribeOp<'message', Message>(ws, WebSocketOpCode.MessageUpdate, ({ message }) => {
+    messagesStore(message.channelId).updateMessage(message)
+  })
+
+  subscribeOp<'messageId', string>(ws, WebSocketOpCode.MessageDelete, (d) => {
+    for (const store of messageStoreMap.values()) {
+      store.deleteMessage(d.messageId)
+    }
+  })
+}
+
+onMounted(() => auth.isAuthenticated ? main() : undefined)
 </script>
 
 <template>

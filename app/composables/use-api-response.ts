@@ -1,6 +1,6 @@
 import type { AsyncData } from 'nuxt/app'
 import type { ApiResponseError, ApiResponseSuccess, RawApiResponseError, RawApiResponseSuccess } from '@app/types'
-import { ErrorCode } from '@app/constants/error-code'
+import { ErrorCode } from '@app/constants/errors'
 import type { ApiError } from '@app/types/api/api-error.type'
 
 export const parseError = (e: RawApiResponseError | string): ApiError => {

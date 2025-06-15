@@ -1,4 +1,4 @@
-import type { ErrorCode } from '@app/constants/error-code'
+import type { ErrorCode } from '@app/constants/errors'
 
 export interface ApiError {
   code: ErrorCode

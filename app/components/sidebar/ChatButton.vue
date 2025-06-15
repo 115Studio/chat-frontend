@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { PhTrash } from '@phosphor-icons/vue'
-import { useChatStore } from '@app/store/chat.store'
+import { useChatsStore } from '@app/store/chats.store'
 
-const store = useChatStore()
+const store = useChatsStore()
 
 const props = defineProps<{
   id: string

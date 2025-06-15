@@ -3,10 +3,10 @@ import { toast } from 'vue-sonner'
 import { useFilesStore } from '@app/store/files.store'
 import { normalizeAbsoluteLeaves } from '@app/lib/utils'
 
-const store = useFilesStore()
+const store = useFilesStore('@new')()
 
 const emit = defineEmits<{
-  (e: 'createChatEvent'): void
+  (e: 'createMessageEvent'): void
 }>()
 
 const model = defineModel<string>()
@@ -49,10 +49,10 @@ const processFileInput = (event: Event) => {
   input.value = ''
 }
 
-const createChat = (ev?: Event) => {
+const createMessage = (ev?: Event) => {
   ev?.preventDefault()
 
-  emit('createChatEvent')
+  emit('createMessageEvent')
 }
 </script>
 
@@ -64,7 +64,7 @@ const createChat = (ev?: Event) => {
         class="input"
         type="text"
         placeholder="Ask anything"
-        @keydown.enter="(e) => createChat(e)"
+        @keydown.enter="(e) => createMessage(e)"
       />
       <input
         ref="fileInput"
@@ -100,7 +100,7 @@ const createChat = (ev?: Event) => {
       </div>
       <div class="chat-input-actions__right">
         <button type="button" @click="toast('This is a toast message!')">Toast!</button>
-        <button type="button" class="send-button" @click="createChat()">Send</button>
+        <button type="button" class="send-button" @click="createMessage()">Send</button>
         <button type="button" class="attach-button" @click="$refs.fileInput!.click()">
           Attach
         </button>
@@ -121,7 +121,8 @@ const createChat = (ev?: Event) => {
   border-radius: 24px;
   display: flex;
   flex-direction: column;
-  min-height: 104px; /* Adjust height as needed */
+  min-height: 104px;
+  max-height: 284px;
 }
 
 .input-container {

@@ -122,4 +122,14 @@ a, a:hover, a:active, a:visited, button {
   }
 }
 
+.interactive {
+  &:hover {
+    background-color: var(--color-btn-inner-hover-bg);
+    border: var(--color-btn-inner-hover-border);
+  }
 
+  &:focus {
+    background-color: var(--color-btn-inner-selected-bg);
+    border: var(--color-btn-inner-selected-border);
+  }
+}
