@@ -182,18 +182,26 @@ export const uploadFile = async (jwt: string, file: File) => {
   const formData = new FormData()
   formData.append('file', file)
 
-  const data = await useFetch<{ value: Upload[] }, RawApiResponseErrorResponse>(
-    `${chatApi()}/images/uploads`,
-    {
-      method: 'post',
-      body: formData,
-      headers: {
-        Authorization: jwt,
-      },
+  const data = await useAsyncData<Upload, RawApiResponseErrorResponse>(
+    `upload-${file.name}-${file.size}-${Date.now()}`,
+    async () => {
+      return await $fetch(
+        `${chatApi()}/images/uploads`,
+        {
+          method: 'post',
+          body: formData,
+          headers: {
+            Authorization: jwt,
+          },
+        },
+      )
     },
+    {
+      server: false,
+    }
   )
 
-  return useApiResponse<{ value: Upload[] }>(data)
+  return useApiResponse<Upload>(data as any)
 }
 
 export type FileExistsResponse = { exists: false } | Upload

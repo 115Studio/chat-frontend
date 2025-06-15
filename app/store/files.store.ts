@@ -102,7 +102,7 @@ export const useFilesStore = (id: string) =>
             return Promise.reject(new Error('File upload failed'))
           }
 
-          const data = uploaded.result.value[0] as Upload
+          const data = uploaded.result
 
           file.url = data.url
           file.id = data.id
