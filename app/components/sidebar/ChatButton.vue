@@ -85,12 +85,12 @@ const cancelEdit = () => {
       </div>
     </div>
     <div
-      class="flex flex-row justify-end gap-1 min-w-content ml-2 overflow-hidden controls min-w-7"
+      class="flex flex-row justify-end gap-1 min-w-content ml-2 overflow-hidden controls min-w-8"
     >
       <DropdownMenu :open="dropdownOpen" @update:open="dropdownOpen = $event">
         <DropdownMenuTrigger>
           <div
-            class="dots-button bg-slate-100 p-1 rounded-md flex items-center justify-center z-[1000]"
+            class="dots-button bg-slate-100 p-1 rounded-md flex items-center justify-center z-[1000] mr-1"
             :class="{ 'dots-button--open': dropdownOpen }"
           >
             <PhDotsThree size="18" weight="bold" class="text-slate-500" />
