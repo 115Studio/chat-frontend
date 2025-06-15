@@ -113,7 +113,8 @@ watch(
               background: 'var(--color-default)',
               color: 'var(--color-text-default)',
               border: '1px solid var(--color-border-default)',
-              borderRadius: '8px',
+              borderRadius: '12px',
+              padding: '16px 16px 16px 20px',
             },
           }"
         />

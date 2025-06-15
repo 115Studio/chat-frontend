@@ -68,11 +68,11 @@ export const useFilesStore = (id: string) =>
 
         if (!file.raw) return Promise.reject(new Error('File raw data not available'))
 
-        console.log('file hash', await sha1(await file.raw.arrayBuffer()))
+        const hash = await sha1(await file.raw.arrayBuffer())
 
         const isFileExist = await fileExists(
           useAuthStore().jwt,
-          await sha1(await file.raw.arrayBuffer()),
+          hash,
         )
 
         console.log('Checking if file exists:', isFileExist, isFileExist.ok)
