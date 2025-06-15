@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { PhCircleNotch, PhX } from '@phosphor-icons/vue'
+import { PhCircleNotch, PhSpinner, PhX } from '@phosphor-icons/vue'
 import { useFilesStore } from '@app/store/files.store'
 
 const props = defineProps<{
@@ -27,7 +27,7 @@ const store = useFilesStore('@new')()
         v-if="store.isUploading(props.id)"
         class="absolute inset-0 bg-stone-950/50 flex items-center justify-center rounded-lg z-10"
       >
-        <PhCircleNotch class="animate-spin text-white" size="24" weight="bold" />
+        <PhSpinner class="animate-spin text-white" size="24" weight="bold" />
       </div>
     </transition>
   </div>
