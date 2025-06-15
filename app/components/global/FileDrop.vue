@@ -10,10 +10,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, onBeforeUnmount } from 'vue'
 const emit = defineEmits<{ (e: 'filesDropped', files: File[]): void }>()
 
 let dragCounter = 0
+let listenersAttached = false
 
 const isDragging = ref(false)
 const isVideoDragged = ref(false)
@@ -23,8 +24,7 @@ function hasVideo(dt: DataTransfer | null): boolean {
   if (!dt?.items) return false
 
   for (const item of dt.items)
-    if (item.kind === 'file' && item.type.startsWith('video/'))
-      return true
+    if (item.kind === 'file' && item.type.startsWith('video/')) return true
 
   return false
 }
@@ -50,18 +50,15 @@ function onDragEnter(e: DragEvent) {
     isDragging.value = true
     const dt = e.dataTransfer
 
-    if (hasVideo(dt))
-      isVideoDragged.value = true
-    else if (hasUnsupported(dt))
-      isUnsupportedDragged.value = true
+    if (hasVideo(dt)) isVideoDragged.value = true
+    else if (hasUnsupported(dt)) isUnsupportedDragged.value = true
   }
 }
 
 function onDragOver(e: DragEvent) {
   e.preventDefault()
 
-  if (isVideoDragged.value || isUnsupportedDragged.value)
-    e.dataTransfer!.dropEffect = 'none'
+  if (isVideoDragged.value || isUnsupportedDragged.value) e.dataTransfer!.dropEffect = 'none'
 }
 
 function onDragLeave(e: DragEvent) {
@@ -90,27 +87,55 @@ function onDrop(e: DragEvent) {
   const dt = e.dataTransfer
   if (!dt?.files) return
 
-  const files = Array.from(dt.files).filter(file =>
-    file.type.startsWith('image/') ||
-    file.type.startsWith('text/') ||
-    file.type.startsWith('application/')
+  console.log('Files dropped:', dt.files)
+
+  const files = Array.from(dt.files).filter(
+    (file) =>
+      file.type.startsWith('image/') ||
+      file.type.startsWith('text/') ||
+      file.type.startsWith('application/'),
   )
 
   emit('filesDropped', files)
 }
 
-onMounted(() => {
+function attachListeners() {
+  if (listenersAttached) return
+
   window.addEventListener('dragenter', onDragEnter)
   window.addEventListener('dragover', onDragOver)
   window.addEventListener('dragleave', onDragLeave)
   window.addEventListener('drop', onDrop)
-})
 
-onUnmounted(() => {
+  listenersAttached = true
+}
+
+function removeListeners() {
+  if (!listenersAttached) return
+
   window.removeEventListener('dragenter', onDragEnter)
   window.removeEventListener('dragover', onDragOver)
   window.removeEventListener('dragleave', onDragLeave)
   window.removeEventListener('drop', onDrop)
+
+  listenersAttached = false
+
+  dragCounter = 0
+  isDragging.value = false
+  isVideoDragged.value = false
+  isUnsupportedDragged.value = false
+}
+
+onMounted(() => {
+  attachListeners()
+})
+
+onBeforeUnmount(() => {
+  removeListeners()
+})
+
+onUnmounted(() => {
+  removeListeners()
 })
 </script>
 

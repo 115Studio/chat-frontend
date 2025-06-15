@@ -1,5 +1,13 @@
 <script setup lang="ts">
 import { useAuthStore } from '@app/store/auth.store'
+import { useFilesStore } from '@app/store/files.store'
+import { resolveMessageStageContentType, resolveMessageStageType } from '@app/lib/utils'
+import { createMessage } from '@app/composables/api'
+import { MessageStageType } from '@app/constants/message-stage-type'
+import { MessageStageContentType } from '@app/constants/message-stage-content-type'
+import { AiModel } from '@app/constants/ai-model'
+import { toast } from 'vue-sonner'
+import { useChatMessagesStore } from '@app/store/chat-messages.store'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -8,17 +16,62 @@ if (!authStore.isAuthenticated) {
   router.push('/login')
 }
 
+const chatId = useRoute().params.id as string
+
+const input = ref('')
+
+const createMessageEvent = async () => {
+  const files = useFilesStore(chatId)().files.map((file) => ({
+    type: resolveMessageStageType(file.type),
+    content: {
+      type: resolveMessageStageContentType(file.type),
+      value: file.id,
+    },
+  }))
+
+  const response = await createMessage(
+    authStore.jwt,
+    chatId,
+    [
+      {
+        type: MessageStageType.Text,
+        content: {
+          type: MessageStageContentType.Text,
+          value: input.value,
+        },
+      },
+      ...files,
+    ],
+    {
+      // TODO model settings
+      id: AiModel.OpenaiGpt4o,
+      flags: [],
+    },
+    // TODO personality settings
+  )
+
+  if (!response.ok) return toast.error('Failed to create message')
+
+  input.value = ''
+  useFilesStore(chatId)().clearFiles()
+
+  const { channel, userMessage, systemMessage } = response.result
+
+  const messages = useChatMessagesStore(channel.id)()
+  messages.addMessage(userMessage)
+  messages.addMessage(systemMessage)
+}
+
 setPageLayout('sidebar')
 </script>
 
 <template>
   <div class="page-container">
-    <div class="page-content">
-      <Text as="h1" variant="headingXl">Chat</Text>
+    <div class="page-content scrollbar-hide h-full">
       <Chat />
     </div>
-    <div class="bottom-content">
-      <ChatInput />
+    <div class="bottom-content max-h-content">
+      <ChatInput v-model="input" @create-message-event="createMessageEvent" />
     </div>
   </div>
 </template>
@@ -30,12 +83,12 @@ setPageLayout('sidebar')
 .page-container {
   display: flex;
   flex-direction: column;
-  height: 100%;
   padding: 20px;
+  max-height: 91svh;
 }
 
 .page-content {
-  flex: 1;
+  overflow-y: scroll;
 }
 
 .container {

@@ -6,21 +6,21 @@ import type {
   MessageStages,
   ModelSettings,
   Personality,
-  RawApiResponseError,
-  Upload
+  RawApiResponseErrorResponse,
+  Upload,
 } from '@app/types'
 import type { UserPlan } from '@app/constants/user-plan'
 import type { AiModel } from '@app/constants/ai-model'
 
-export const chatApi = (() => {
+export const chatApi = () => {
   const config = useRuntimeConfig()
   return config.public.api
-})
+}
 
-export const wsApi = (() => {
+export const wsApi = () => {
   const config = useRuntimeConfig()
   return config.public.ws
-})
+}
 
 export interface DiscordAuthorizeResponse {
   success: boolean
@@ -32,15 +32,15 @@ export interface DiscordAuthorizeResponse {
 }
 
 export const discordAuthorize = async (code: string, redirect: string) => {
-  const data = await useFetch<DiscordAuthorizeResponse, RawApiResponseError>(
+  const data = await useFetch<DiscordAuthorizeResponse, RawApiResponseErrorResponse>(
     `${chatApi()}/oauth/discord/authorize`,
     {
       method: 'post',
       body: { code, redirect },
       headers: {
-        'Content-Type': 'application/json'
-      }
-    }
+        'Content-Type': 'application/json',
+      },
+    },
   )
 
   return useApiResponse<DiscordAuthorizeResponse>(data)
@@ -58,18 +58,18 @@ export const createMessage = async (
   chatId: string | '@new',
   stages: MessageStages,
   model: ModelSettings,
-  personalityId?: string
+  personalityId?: string,
 ) => {
-  const data = await useFetch<CreateMessageResponse, RawApiResponseError>(
+  const data = await useFetch<CreateMessageResponse, RawApiResponseErrorResponse>(
     `${chatApi()}/channels/${chatId}/messages`,
     {
       method: 'post',
       body: { stages, model, personalityId },
       headers: {
         'Content-Type': 'application/json',
-        Authorization: jwt
-      }
-    }
+        'Authorization': jwt,
+      },
+    },
   )
 
   return useApiResponse<CreateMessageResponse>(data)
@@ -82,83 +82,83 @@ export const getChannelMessages = async (
   from?: string,
   to?: string,
 ) => {
-  const data = await useFetch<Message[], RawApiResponseError>(
-    `${chatApi()}/channels/${channelId}/messages?limit=${limit}}`
-    + (from ? `&from=${from}` : '')
-    + (to ? `&to=${to}` : ''),
+  const data = await useFetch<Message[], RawApiResponseErrorResponse>(
+    `${chatApi()}/channels/${channelId}/messages?limit=${limit}}` +
+      (from ? `&from=${from}` : '') +
+      (to ? `&to=${to}` : ''),
     {
       headers: {
-        Authorization: jwt
-      }
-    }
+        Authorization: jwt,
+      },
+    },
   )
 
   return useApiResponse<Message[]>(data)
 }
 
 export const getChannels = async (
-  jwt: string, limit = 50, pins?: boolean, from?: string, to?: string
+  jwt: string,
+  limit = 50,
+  pins?: boolean,
+  from?: string,
+  to?: string,
 ) => {
-  const data = await useFetch<Chat[], RawApiResponseError>(
-    `${chatApi()}/channels?limit=${limit}`
-    + (from ? `&from=${from}` : '')
-    + (to ? `&to=${to}` : '')
-    + (pins ? '&pins=true' : ''),
+  const data = await useFetch<Chat[], RawApiResponseErrorResponse>(
+    `${chatApi()}/channels?limit=${limit}` +
+      (from ? `&from=${from}` : '') +
+      (to ? `&to=${to}` : '') +
+      (pins ? '&pins=true' : ''),
     {
       headers: {
-        Authorization: jwt
-      }
-    }
+        Authorization: jwt,
+      },
+    },
   )
 
   return useApiResponse<Chat[]>(data)
 }
 
 export const pinChannel = async (jwt: string, channelId: string, pin: boolean) => {
-  const data = await useFetch<Chat, RawApiResponseError>(
+  const data = await useFetch<Chat, RawApiResponseErrorResponse>(
     `${chatApi()}/channels/${channelId}/pin`,
     {
       method: 'post',
       body: { pin },
       headers: {
         'Content-Type': 'application/json',
-        Authorization: jwt
-      }
-    }
+        'Authorization': jwt,
+      },
+    },
   )
 
   return useApiResponse<Chat>(data)
 }
 
-export const renameChannel = async (
-  jwt: string,
-  channelId: string,
-  name: string,
-) => {
-  const data = await useFetch<Chat, RawApiResponseError>(
+export const renameChannel = async (jwt: string, channelId: string, name: string) => {
+  const data = await useFetch<Chat, RawApiResponseErrorResponse>(
     `${chatApi()}/channels/${channelId}`,
     {
       method: 'put',
       body: { name },
       headers: {
         'Content-Type': 'application/json',
-        Authorization: jwt
-      }
-    }
+        'Authorization': jwt,
+      },
+    },
   )
 
   return useApiResponse<Chat>(data)
 }
 
 export const deleteChannel = async (jwt: string, channelId: string) => {
-  const data = await useFetch<Chat, RawApiResponseError>(
+  const data = await useFetch<Chat, RawApiResponseErrorResponse>(
     `${chatApi()}/channels/${channelId}`,
     {
       method: 'delete',
       headers: {
-        Authorization: jwt
-      }
-    }
+        Authorization: jwt,
+      },
+    },
   )
 
   return useApiResponse<Chat>(data)
@@ -168,30 +168,30 @@ export const uploadFile = async (jwt: string, file: File) => {
   const formData = new FormData()
   formData.append('file', file)
 
-  const data = await useFetch<Upload, RawApiResponseError>(
+  const data = await useFetch<{ value: Upload[] }, RawApiResponseErrorResponse>(
     `${chatApi()}/images/uploads`,
     {
       method: 'post',
       body: formData,
       headers: {
-        Authorization: jwt
-      }
-    }
+        Authorization: jwt,
+      },
+    },
   )
 
-  return useApiResponse<Upload>(data)
+  return useApiResponse<{ value: Upload[] }>(data)
 }
 
 export type FileExistsResponse = { exists: false } | Upload
 
 export const fileExists = async (jwt: string, sha: string) => {
-  const data = await useFetch<FileExistsResponse, RawApiResponseError>(
-    `${chatApi()}/images/uploads/exists?sha=${sha}`,
+  const data = await useFetch<FileExistsResponse, RawApiResponseErrorResponse>(
+    `${chatApi()}/images/exists?sha=${sha}`,
     {
       headers: {
-        Authorization: jwt
-      }
-    }
+        Authorization: jwt,
+      },
+    },
   )
 
   return useApiResponse<FileExistsResponse>(data)
@@ -202,14 +202,11 @@ export interface GetByoksResponse {
 }
 
 export const getByoks = async (jwt: string) => {
-  const data = await useFetch<GetByoksResponse, RawApiResponseError>(
-    `${chatApi()}/byok`,
-    {
-      headers: {
-        Authorization: jwt
-      }
-    }
-  )
+  const data = await useFetch<GetByoksResponse, RawApiResponseErrorResponse>(`${chatApi()}/byok`, {
+    headers: {
+      Authorization: jwt,
+    },
+  })
 
   return useApiResponse<GetByoksResponse>(data)
 }
@@ -220,16 +217,16 @@ export interface CreateByokResponse {
 }
 
 export const createByok = async (jwt: string, name: string, key: string, models: AiModel[]) => {
-  const data = await useFetch<CreateByokResponse, RawApiResponseError>(
+  const data = await useFetch<CreateByokResponse, RawApiResponseErrorResponse>(
     `${chatApi()}/byok`,
     {
       method: 'post',
       body: { name, key, models },
       headers: {
         'Content-Type': 'application/json',
-        Authorization: jwt
-      }
-    }
+        'Authorization': jwt,
+      },
+    },
   )
 
   return useApiResponse<CreateByokResponse>(data)
@@ -240,17 +237,23 @@ export interface UpdateByokResponse {
   byok: Byok
 }
 
-export const updateByok = async (jwt: string, id: string, name?: string, key?: string, models?: AiModel[]) => {
-  const data = await useFetch<UpdateByokResponse, RawApiResponseError>(
+export const updateByok = async (
+  jwt: string,
+  id: string,
+  name?: string,
+  key?: string,
+  models?: AiModel[],
+) => {
+  const data = await useFetch<UpdateByokResponse, RawApiResponseErrorResponse>(
     `${chatApi()}/byok/${id}`,
     {
       method: 'patch',
       body: { name, key, models },
       headers: {
         'Content-Type': 'application/json',
-        Authorization: jwt
-      }
-    }
+        'Authorization': jwt,
+      },
+    },
   )
 
   return useApiResponse<UpdateByokResponse>(data)
@@ -261,14 +264,14 @@ export interface DeleteByokResponse {
 }
 
 export const deleteByok = async (jwt: string, id: string) => {
-  const data = await useFetch<DeleteByokResponse, RawApiResponseError>(
+  const data = await useFetch<DeleteByokResponse, RawApiResponseErrorResponse>(
     `${chatApi()}/byok/${id}`,
     {
       method: 'delete',
       headers: {
-        Authorization: jwt
-      }
-    }
+        Authorization: jwt,
+      },
+    },
   )
 
   return useApiResponse<DeleteByokResponse>(data)
@@ -279,13 +282,13 @@ export interface GetPersonalitiesResponse {
 }
 
 export const getPersonalities = async (jwt: string) => {
-  const data = await useFetch<GetPersonalitiesResponse, RawApiResponseError>(
+  const data = await useFetch<GetPersonalitiesResponse, RawApiResponseErrorResponse>(
     `${chatApi()}/personalities`,
     {
       headers: {
-        Authorization: jwt
-      }
-    }
+        Authorization: jwt,
+      },
+    },
   )
 
   return useApiResponse<GetPersonalitiesResponse>(data)
@@ -301,16 +304,16 @@ export const createPersonality = async (
   prompt: string,
   isDefault: boolean = false,
 ) => {
-  const data = await useFetch<CreatePersonalityResponse, RawApiResponseError>(
+  const data = await useFetch<CreatePersonalityResponse, RawApiResponseErrorResponse>(
     `${chatApi()}/personalities`,
     {
       method: 'post',
       body: { name, prompt, isDefault },
       headers: {
         'Content-Type': 'application/json',
-        Authorization: jwt
-      }
-    }
+        'Authorization': jwt,
+      },
+    },
   )
 
   return useApiResponse<CreatePersonalityResponse>(data)
@@ -327,30 +330,30 @@ export const updatePersonality = async (
   prompt?: string,
   isDefault?: boolean,
 ) => {
-  const data = await useFetch<UpdatePersonalityResponse, RawApiResponseError>(
+  const data = await useFetch<UpdatePersonalityResponse, RawApiResponseErrorResponse>(
     `${chatApi()}/personalities/${id}`,
     {
       method: 'patch',
       body: { name, prompt, isDefault },
       headers: {
         'Content-Type': 'application/json',
-        Authorization: jwt
-      }
-    }
+        'Authorization': jwt,
+      },
+    },
   )
 
   return useApiResponse<UpdatePersonalityResponse>(data)
 }
 
 export const deletePersonality = async (jwt: string, id: string) => {
-  const data = await useFetch<{ success: boolean }, RawApiResponseError>(
+  const data = await useFetch<{ success: boolean }, RawApiResponseErrorResponse>(
     `${chatApi()}/personalities/${id}`,
     {
       method: 'delete',
       headers: {
-        Authorization: jwt
-      }
-    }
+        Authorization: jwt,
+      },
+    },
   )
 
   return useApiResponse<{ success: boolean }>(data)

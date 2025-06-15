@@ -7,6 +7,8 @@ import { MessageStageContentType } from '@app/constants/message-stage-content-ty
 import { AiModel } from '@app/constants/ai-model'
 import { toast } from 'vue-sonner'
 import { useChatMessagesStore } from '@app/store/chat-messages.store'
+import { useFilesStore } from '@app/store/files.store'
+import { resolveMessageStageContentType, resolveMessageStageType } from '@app/lib/utils'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -21,6 +23,14 @@ setPageLayout('sidebar')
 const input = ref('')
 
 const createMessageEvent = async () => {
+  const files = useFilesStore('@new')().files.map((file) => ({
+    type: resolveMessageStageType(file.type),
+    content: {
+      type: resolveMessageStageContentType(file.type),
+      value: file.id,
+    },
+  }))
+
   const response = await createMessage(
     authStore.jwt,
     '@new',
@@ -30,20 +40,23 @@ const createMessageEvent = async () => {
         content: {
           type: MessageStageContentType.Text,
           value: input.value,
-        }
-      }
-      // TODO add uploaded files
+        },
+      },
+      ...files,
     ],
-    { // TODO model settings
+    {
+      // TODO model settings
       id: AiModel.OpenaiGpt4o,
       flags: [],
-    }
+    },
     // TODO personality settings
   )
 
   if (!response.ok) {
     return toast.error('Failed to create message')
   }
+
+  useFilesStore('@new')().clearFiles()
 
   const { channel, userMessage, systemMessage } = response.result
 
@@ -52,6 +65,8 @@ const createMessageEvent = async () => {
   const messages = useChatMessagesStore(channel.id)()
   messages.addMessage(userMessage)
   messages.addMessage(systemMessage)
+
+  input.value = ''
 
   return router.push('/chat/' + channel.id)
 }

@@ -12,8 +12,9 @@ export default defineNuxtConfig({
   ],
   runtimeConfig: {
     public: {
-      discordOauth2Url: 'https://discord.com/oauth2/authorize?client_id=$CLIENT_ID&redirect_uri=$REDIRECT&response_type=code&scope=identify+email'
-    }
+      discordOauth2Url:
+        'https://discord.com/oauth2/authorize?client_id=$CLIENT_ID&redirect_uri=$REDIRECT&response_type=code&scope=identify+email',
+    },
   },
   $production: {
     runtimeConfig: {
@@ -31,8 +32,8 @@ export default defineNuxtConfig({
     runtimeConfig: {
       public: {
         discordClientId: '1381420687230763129',
-        api: 'https://chat.115.studio/api/v1',
-        ws: 'wss://chat.115.studio/api/v1/sync/connection'
+        api: 'https://cf-test.rinisle.uk/api/v1',
+        ws: 'wss://cf-test.rinisle.uk/api/v1/sync/connection',
       },
     },
   },

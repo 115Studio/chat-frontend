@@ -61,9 +61,13 @@ async function main() {
     messagesStore(message.channelId).addMessage(message)
   })
 
-  subscribeOp<any, any>(ws, WebSocketOpCode.MessageStageUpdate, ({ messageId, channelId, stageUpdate, ts }) => {
-    messagesStore(channelId).updateMessagePartial(messageId, stageUpdate, ts)
-  })
+  subscribeOp<any, any>(
+    ws,
+    WebSocketOpCode.MessageStageUpdate,
+    ({ messageId, channelId, stageUpdate, ts }) => {
+      messagesStore(channelId).updateMessagePartial(messageId, stageUpdate, ts)
+    },
+  )
 
   subscribeOp<'message', Message>(ws, WebSocketOpCode.MessageUpdate, ({ message }) => {
     messagesStore(message.channelId).updateMessage(message)
@@ -76,11 +80,15 @@ async function main() {
   })
 }
 
-watch(() => auth.isAuthenticated, (isAuthenticated) => {
-  if (isAuthenticated) {
-    main().catch(console.error)
-  }
-}, { immediate: true })
+watch(
+  () => auth.isAuthenticated,
+  (isAuthenticated) => {
+    if (isAuthenticated) {
+      main().catch(console.error)
+    }
+  },
+  { immediate: true },
+)
 </script>
 
 <template>
@@ -93,7 +101,7 @@ watch(() => auth.isAuthenticated, (isAuthenticated) => {
       <Meta property="og:type" content="website" />
       <Link rel="shortcut icon" type="image/x-icon" href="/favicon.png" />
     </Head>
-    <Body>
+    <Body class="w-full max-h-screen">
       <NuxtLayout>
         <Toaster
           position="top-center"
@@ -106,7 +114,7 @@ watch(() => auth.isAuthenticated, (isAuthenticated) => {
               color: 'var(--color-text-default)',
               border: '1px solid var(--color-border-default)',
               borderRadius: '8px',
-            }
+            },
           }"
         />
         <NuxtPage />

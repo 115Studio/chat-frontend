@@ -1,7 +1,7 @@
 <template>
   <div class="layout layout--empty">
     <Background />
-    <div class="wrapper">
+    <div class="wrapper max-h-screen">
       <div v-if="showSidebar" class="container">
         <div class="container__group">
           <Text as="h1" variant="headingLg" alignment="center" class="container__group-item">
@@ -24,10 +24,10 @@
         <div class="container__group flex flex-col gap-0 relative">
           <TransitionGroup name="fade-insert-right">
             <ChatButton v-for="chat in chatsStore.chats" :id="chat.id" :key="chat.id">
-              <Text as="span" v-if="chat.name !== MagicNumber.NameShowSkeleton">
+              <Text v-if="chat.name !== MagicNumber.NameShowSkeleton" as="span">
                 {{ chat.name }}
               </Text>
-              <div v-else class="name-skeleton"></div>
+              <div v-else class="name-skeleton" />
             </ChatButton>
           </TransitionGroup>
         </div>
@@ -38,7 +38,7 @@
           </Text>
         </div>
       </div>
-      <div class="content">
+      <div class="content max-h-screen">
         <div class="header">
           <Header />
         </div>
@@ -61,18 +61,15 @@ const authStore = useAuthStore()
 
 const showSidebar = ref(true)
 
-const store = useFilesStore('@new')()
+const chatId = useRoute().params.id as string | undefined
+
+const store = useFilesStore(chatId ?? '@new')()
 const chatsStore = useChatsStore()
 
 const processFileDrop = async (files: File[]) => {
+  console.log('Files dropped func:', files)
   for (const file of files) {
-    store.addFile({
-      id: Date.now() + Math.random().toString(36).substring(2, 15),
-      name: file.name,
-      size: file.size,
-      type: file.type,
-      data: file,
-    })
+    await store.addFile(file)
   }
 }
 

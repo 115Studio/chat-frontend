@@ -1,46 +1,122 @@
 import { defineStore } from 'pinia'
 import { toast } from 'vue-sonner'
 import type { Upload } from '@app/types'
+import { fileExists, uploadFile } from '@app/composables/api'
+import { useAuthStore } from '@app/store/auth.store'
+import { sha1, stringToArrayBuffer } from '@app/lib/utils'
+import { wait } from '@app/composables/wait'
 
-export interface PendingFile {
-  id: string
-  sha: string
-  file: File
+export interface StoreFile {
+  isUploading: boolean
+  url: string
+  id?: string
+  internalId: string
+
+  raw?: File
+  name: string
+  type: string
 }
 
-export const useFilesStore = (id: string) => defineStore(`files-channel-${id}`, {
-  state: () => ({
-    files: [] as Array<PendingFile | Upload>
-  }),
+export const useFilesStore = (id: string) =>
+  defineStore(`files-channel-${id}`, {
+    state: () => ({
+      files: [] as Array<StoreFile>,
+    }),
 
-  actions: {
-    addFile(file: File, sha: string) {
-      if ((this.files.length + this.pendingFiles.length) >= 3) {
-        toast.error('File limit reached (3 files max)')
-        return
-      }
+    actions: {
+      async addFile(file: File) {
+        if (this.files.length >= 3) {
+          toast.error('You can only upload up to 3 files at a time.')
+          return
+        }
 
-      this.files.push({
-        file,
-        sha,
-      })
+        const internalId = await sha1(stringToArrayBuffer(file.name + Date.now()))
+
+        this.files.push({
+          url: URL.createObjectURL(file),
+          isUploading: true,
+          internalId,
+
+          raw: file,
+          type: file.type,
+          name: file.name,
+        })
+
+        this.uploadFile(internalId).then(() => {})
+      },
+
+      removeFile(fileId: string) {
+        this.files = this.files.filter((file) => file.id !== fileId && file.internalId !== fileId)
+      },
+
+      isUploading(fileId: string): boolean {
+        const file = this.files.find((file) => file.internalId === fileId)
+        return !!file?.isUploading
+      },
+
+      canSend(): boolean {
+        return this.files.every((f) => !!f.id)
+      },
+
+      clearFiles() {
+        this.files = []
+      },
+
+      async uploadFile(internalId: string): Promise<Upload> {
+        const file = this.files.find((f) => f.internalId === internalId)
+        if (!file) return Promise.reject(new Error('File not found'))
+
+        if (!file.raw) return Promise.reject(new Error('File raw data not available'))
+
+        console.log('file hash', await sha1(await file.raw.arrayBuffer()))
+
+        const isFileExist = await fileExists(
+          useAuthStore().jwt,
+          await sha1(await file.raw.arrayBuffer()),
+        )
+
+        console.log('Checking if file exists:', isFileExist, isFileExist.ok)
+
+        if (isFileExist.ok) {
+          const data = isFileExist.result as Upload
+          file.id = data.id
+          file.url = data.url
+          file.isUploading = false
+
+          console.log('File already exists:', data)
+
+          return data
+        }
+
+        try {
+          await wait(1000)
+          const uploaded = await uploadFile(useAuthStore().jwt, file.raw)
+
+          if (!uploaded.ok) {
+            this.removeFile(file.internalId)
+
+            for (const error of uploaded.errors) {
+              toast.error(error.message)
+            }
+
+            return Promise.reject(new Error('File upload failed'))
+          }
+
+          const data = uploaded.result.value[0] as Upload
+
+          file.url = data.url
+          file.id = data.id
+          file.isUploading = false
+
+          return data
+        } catch (e) {
+          console.log('File upload error:', e)
+
+          this.removeFile(file.internalId)
+
+          toast.error('File upload failed')
+          return Promise.reject(new Error('File upload failed'))
+        }
+      },
     },
-
-    removeFile(fileId: string) {
-      this.files = this.files.filter(file => file.id !== fileId)
-    },
-
-    isUploading(fileId: string): boolean {
-      const file = this.files.find(file => file.id === fileId)
-      return !!file?.url
-    },
-
-    canSend(): boolean {
-      return this.files.every(f => !!file.url)
-    },
-
-    clearFiles() {
-      this.files = []
-    },
-  }
-})
+  })

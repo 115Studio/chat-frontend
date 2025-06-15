@@ -3,7 +3,9 @@ import { toast } from 'vue-sonner'
 import { useFilesStore } from '@app/store/files.store'
 import { normalizeAbsoluteLeaves } from '@app/lib/utils'
 
-const store = useFilesStore('@new')()
+const chatId = useRoute().params.id as string | undefined
+
+const store = useFilesStore(chatId ?? '@new')()
 
 const emit = defineEmits<{
   (e: 'createMessageEvent'): void
@@ -17,8 +19,8 @@ const imagesToShow = computed(() => {
   return store.files
     .filter((file) => file.type.startsWith('image/'))
     .map((file) => ({
-      url: URL.createObjectURL(file.data),
-      id: file.id,
+      url: file.url,
+      id: file.internalId,
       name: file.name,
     }))
 })
@@ -27,7 +29,7 @@ const filesToShow = computed(() => {
   return store.files
     .filter((file) => !file.type.startsWith('image/'))
     .map((file) => ({
-      id: file.id,
+      id: file.internalId,
       name: file.name,
     }))
 })
@@ -37,13 +39,7 @@ const processFileInput = (event: Event) => {
   if (!input.files || input.files.length === 0) return
 
   for (const file of Array.from(input.files)) {
-    store.addFile({
-      id: Date.now() + Math.random().toString(36).substring(2, 15),
-      name: file.name,
-      size: file.size,
-      type: file.type,
-      data: file,
-    })
+    store.addFile(file)
   }
 
   input.value = ''
@@ -54,10 +50,24 @@ const createMessage = (ev?: Event) => {
 
   emit('createMessageEvent')
 }
+
+const onPaste = (event: ClipboardEvent) => {
+  const items = event.clipboardData?.items
+  if (!items) return
+  for (const item of items) {
+    if (item.type.startsWith('image/')) {
+      const file = item.getAsFile()
+      if (file) {
+        store.addFile(file)
+        event.preventDefault()
+      }
+    }
+  }
+}
 </script>
 
 <template>
-  <div class="chat-input-container">
+  <div class="chat-input-container" @paste="onPaste">
     <div class="input-container">
       <textarea
         v-model="model"
