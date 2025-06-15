@@ -90,7 +90,7 @@ const cancelEdit = () => {
       <DropdownMenu :open="dropdownOpen" @update:open="dropdownOpen = $event">
         <DropdownMenuTrigger>
           <div
-            class="dots-button bg-slate-100 p-1 rounded-md flex items-center justify-center z-[1000] mr-1"
+            class="dots-button p-1 rounded-md flex items-center justify-center z-[1000] mr-1"
             :class="{ 'dots-button--open': dropdownOpen }"
           >
             <PhDotsThree size="18" weight="bold" class="text-slate-500" />
@@ -128,6 +128,13 @@ const cancelEdit = () => {
   &:hover {
     background-color: var(--color-btn-inner-hover-bg);
     border: 1px solid var(--color-btn-inner-hover-border);
+  }
+
+  &:active,
+  &:focus-visible,
+  &--active {
+    background-color: var(--color-btn-inner-selected-bg);
+    border: 1px solid var(--color-btn-inner-selected-border);
   }
 
   &--active {
