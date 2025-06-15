@@ -21,10 +21,22 @@
           </button>
           <div class="row__divider--horizontal" />
         </div>
-        <div class="container__group flex flex-col gap-0 relative">
+        <div class="container__group flex flex-col gap-2 relative">
+          <template v-if="chatsStore.getPinnedChats().length > 0">
+            <Text as="span" variant="bodyMd"> Pinned Chats </Text>
+            <TransitionGroup name="fade-insert-right">
+              <ChatButton v-for="chat in chatsStore.getPinnedChats()" :id="chat.id" :key="chat.id">
+                <Text v-if="chat.name !== MagicNumber.NameShowSkeleton" :truncate="true" as="span">
+                  {{ chat.name }}
+                </Text>
+                <div v-else class="name-skeleton" />
+              </ChatButton>
+            </TransitionGroup>
+            <hr />
+          </template>
           <TransitionGroup name="fade-insert-right">
-            <ChatButton v-for="chat in chatsStore.chats" :id="chat.id" :key="chat.id">
-              <Text v-if="chat.name !== MagicNumber.NameShowSkeleton" as="span">
+            <ChatButton v-for="chat in chatsStore.getUnpinnedChats()" :id="chat.id" :key="chat.id">
+              <Text v-if="chat.name !== MagicNumber.NameShowSkeleton" :truncate="true" as="span">
                 {{ chat.name }}
               </Text>
               <div v-else class="name-skeleton" />
@@ -56,6 +68,7 @@ import Header from '@app/components/global/Header.vue'
 import { useFilesStore } from '@app/store/files.store'
 import { useChatsStore } from '@app/store/chats.store'
 import { MagicNumber } from '@app/constants/magic-number'
+import { getChannels } from '@app/composables/api'
 
 const authStore = useAuthStore()
 
@@ -76,6 +89,16 @@ const processFileDrop = async (files: File[]) => {
 const createNewChat = () => {
   useRouter().push('/')
 }
+
+onMounted(async () => {
+  const chats = await getChannels(useAuthStore().jwt, undefined, true)
+
+  if (chats.ok) {
+    chatsStore.syncChatsWithBackend(chats.result.channels)
+  } else {
+    console.error('Failed to fetch chats:', chats.errors)
+  }
+})
 </script>
 
 <style scoped lang="scss">

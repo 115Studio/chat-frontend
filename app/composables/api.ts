@@ -82,8 +82,13 @@ export const getChannelMessages = async (
   from?: string,
   to?: string,
 ) => {
-  const data = await useFetch<Message[], RawApiResponseErrorResponse>(
-    `${chatApi()}/channels/${channelId}/messages?limit=${limit}}` +
+  const data = await useFetch<
+    {
+      messages: Message[]
+    },
+    RawApiResponseErrorResponse
+  >(
+    `${chatApi()}/channels/${channelId}/messages?limit=${limit}` +
       (from ? `&from=${from}` : '') +
       (to ? `&to=${to}` : ''),
     {
@@ -93,7 +98,9 @@ export const getChannelMessages = async (
     },
   )
 
-  return useApiResponse<Message[]>(data)
+  return useApiResponse<{
+    messages: Message[]
+  }>(data)
 }
 
 export const getChannels = async (
@@ -103,7 +110,12 @@ export const getChannels = async (
   from?: string,
   to?: string,
 ) => {
-  const data = await useFetch<Chat[], RawApiResponseErrorResponse>(
+  const data = await useFetch<
+    {
+      channels: Chat[]
+    },
+    RawApiResponseErrorResponse
+  >(
     `${chatApi()}/channels?limit=${limit}` +
       (from ? `&from=${from}` : '') +
       (to ? `&to=${to}` : '') +
@@ -115,7 +127,9 @@ export const getChannels = async (
     },
   )
 
-  return useApiResponse<Chat[]>(data)
+  return useApiResponse<{
+    channels: Chat[]
+  }>(data)
 }
 
 export const pinChannel = async (jwt: string, channelId: string, pin: boolean) => {
@@ -138,7 +152,7 @@ export const renameChannel = async (jwt: string, channelId: string, name: string
   const data = await useFetch<Chat, RawApiResponseErrorResponse>(
     `${chatApi()}/channels/${channelId}`,
     {
-      method: 'put',
+      method: 'patch',
       body: { name },
       headers: {
         'Content-Type': 'application/json',

@@ -49,5 +49,32 @@ export const useChatsStore = defineStore('chats', {
 
       return before !== after
     },
+
+    getChat(id: string): Chat | null {
+      const chat = this.chats.find((c) => c.id === id)
+      return chat || null
+    },
+
+    syncChatsWithBackend(chats: Chat[]) {
+      this.chats = chats.map((chat) => {
+        const existingIndex = this.chats.findIndex((c) => c.id === chat.id)
+
+        if (existingIndex !== -1) {
+          const existing = this.chats[existingIndex]!
+          Object.assign(existing, chat)
+          return existing
+        }
+
+        return chat
+      })
+    },
+
+    getPinnedChats(): Chat[] {
+      return this.chats.filter((chat) => chat.isPinned)
+    },
+
+    getUnpinnedChats(): Chat[] {
+      return this.chats.filter((chat) => !chat.isPinned)
+    },
   },
 })

@@ -45,9 +45,11 @@ const processFileInput = (event: Event) => {
   input.value = ''
 }
 
-const createMessage = (ev?: Event) => {
-  ev?.preventDefault()
-
+const createMessage = () => {
+  if (model.value!.trim().length === 0 && store.files.length === 0) {
+    toast.error('Please enter a message or attach a file.')
+    return
+  }
   emit('createMessageEvent')
 }
 
@@ -74,7 +76,8 @@ const onPaste = (event: ClipboardEvent) => {
         class="input"
         type="text"
         placeholder="Ask anything"
-        @keydown.enter="(e) => createMessage(e)"
+        @keydown.enter.exact.prevent="(e) => createMessage(e)"
+        @keydown.enter.shift.exact.prevent="model += '\n'"
       />
       <input
         ref="fileInput"

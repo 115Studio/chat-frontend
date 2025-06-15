@@ -2,7 +2,7 @@
 import { useAuthStore } from '@app/store/auth.store'
 import { useFilesStore } from '@app/store/files.store'
 import { resolveMessageStageContentType, resolveMessageStageType } from '@app/lib/utils'
-import { createMessage } from '@app/composables/api'
+import { createMessage, getChannelMessages } from '@app/composables/api'
 import { MessageStageType } from '@app/constants/message-stage-type'
 import { MessageStageContentType } from '@app/constants/message-stage-content-type'
 import { AiModel } from '@app/constants/ai-model'
@@ -61,6 +61,18 @@ const createMessageEvent = async () => {
   messages.addMessage(userMessage)
   messages.addMessage(systemMessage)
 }
+
+onMounted(async () => {
+  const store = useChatMessagesStore(chatId)()
+
+  const messages = await getChannelMessages(useAuthStore().jwt, chatId)
+
+  if (messages.ok) {
+    store.syncMessagesWithBackend(messages.result.messages)
+  } else {
+    console.error('Failed to fetch messages:', messages.errors)
+  }
+})
 
 setPageLayout('sidebar')
 </script>
