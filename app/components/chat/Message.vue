@@ -62,7 +62,7 @@ const isLink = (stage: MessageStage) => {
         </div>
         <div v-else-if="isImage(stage)">
           <div v-if="isLoadingImage(stage)" class="image image-loading" />
-          <img v-else alt="image" :src="stage.content!.value" class="image" />
+          <img v-else alt="image" :src="stage.content!.value" class="image no-drag-no-select" />
         </div>
         <div v-else-if="isFile(stage)">
           <Text as="p" variant="bodyMd" tone="muted">

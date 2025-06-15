@@ -12,11 +12,7 @@ const store = useFilesStore('@new')()
 
 <template>
   <div class="relative">
-    <img
-      :src="props.image"
-      alt="Attached file"
-      class="max-h-24 rounded-lg no-drag-no-select"
-    >
+    <img :src="props.image" alt="Attached file" class="max-h-24 rounded-lg no-drag-no-select" />
     <transition name="fade">
       <button
         v-if="!store.isUploading(props.id)"
@@ -31,11 +27,7 @@ const store = useFilesStore('@new')()
         v-if="store.isUploading(props.id)"
         class="absolute inset-0 bg-stone-950/50 flex items-center justify-center rounded-lg z-10"
       >
-        <PhCircleNotch
-          class="animate-spin text-white"
-          size="24"
-          weight="bold"
-        />
+        <PhCircleNotch class="animate-spin text-white" size="24" weight="bold" />
       </div>
     </transition>
   </div>
@@ -51,18 +43,12 @@ const store = useFilesStore('@new')()
   border-top-right-radius: 0.6rem;
 }
 
-.fade-enter-active, .fade-leave-active {
+.fade-enter-active,
+.fade-leave-active {
   transition: opacity 0.3s;
 }
-.fade-enter-from, .fade-leave-to {
+.fade-enter-from,
+.fade-leave-to {
   opacity: 0;
-}
-
-.no-drag-no-select {
-  -webkit-user-drag: none;
-  user-select: none;
-  -moz-user-select: none;
-  -webkit-user-select: none;
-  -ms-user-select: none;
 }
 </style>

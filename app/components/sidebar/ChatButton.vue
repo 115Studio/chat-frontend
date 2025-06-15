@@ -54,11 +54,6 @@ const startEditing = () => {
 }
 
 const saveEdit = async () => {
-  console.log(
-    'Saving edit:',
-    editingName.value,
-    editingName.value.trim() && editingName.value !== chatName.value,
-  )
   if (editingName.value.trim() && editingName.value !== chatName.value)
     await renameChannel(useAuthStore().jwt, props.id, editingName.value.trim())
 
@@ -73,7 +68,7 @@ const cancelEdit = () => {
 
 <template>
   <button type="button" class="chat-button" :class="{ 'chat-button--active': chatIsActive }">
-    <div class="w-full" @click="!isEditing && move()" @dblclick="startEditing">
+    <div class="w-full px-2 py-2.5" @click="!isEditing && move()" @dblclick="startEditing">
       <input
         v-if="isEditing"
         ref="inputRef"
@@ -127,7 +122,7 @@ const cancelEdit = () => {
 
 <style scoped lang="scss">
 .chat-button {
-  @apply px-1.5 py-1.5 border border-transparent rounded-lg transition-colors duration-200 text-left flex flex-row w-full items-center justify-between text-ellipsis line-clamp-1;
+  @apply border border-transparent rounded-lg transition-colors duration-200 text-left flex flex-row w-full items-center justify-between text-ellipsis line-clamp-1;
   color: var(--color-btn-inner-text);
 
   &:hover {
