@@ -18,7 +18,11 @@ if (!auth.isAuthenticated) {
   router.push('/login')
 }
 
+let init = false
+
 async function main() {
+  if (init) return
+  init = true
 
   const chatId = computed(() => route.path.split('chat/')[1] ?? '@new')
 
@@ -72,7 +76,11 @@ async function main() {
   })
 }
 
-onMounted(() => auth.isAuthenticated ? main() : undefined)
+watch(() => auth.isAuthenticated, (isAuthenticated) => {
+  if (isAuthenticated) {
+    main().catch(console.error)
+  }
+}, { immediate: true })
 </script>
 
 <template>

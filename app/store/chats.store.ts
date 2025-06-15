@@ -23,7 +23,7 @@ export const useChatsStore = defineStore('chats', {
         return existing
       }
 
-      this.chats.push(chat)
+      this.chats.unshift(chat)
       return chat
     },
 
