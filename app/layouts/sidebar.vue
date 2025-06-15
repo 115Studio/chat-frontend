@@ -21,27 +21,29 @@
           </button>
           <div class="row__divider--horizontal" />
         </div>
-        <div class="container__group flex flex-col gap-2 relative">
-          <template v-if="chatsStore.getPinnedChats().length > 0">
-            <Text as="span" variant="bodyMd"> Pinned Chats </Text>
-            <TransitionGroup name="fade-insert-right">
-              <ChatButton v-for="chat in chatsStore.getPinnedChats()" :id="chat.id" :key="chat.id">
+        <div class="container__group container__group--scrollable">
+          <div class="chats-wrapper">
+            <template v-if="chatsStore.getPinnedChats().length > 0">
+              <Text as="span" variant="bodyMd" class="section-title"> Pinned Chats </Text>
+              <TransitionGroup name="fade-insert-right" class="chat-list">
+                <ChatButton v-for="chat in chatsStore.getPinnedChats()" :id="chat.id" :key="chat.id">
+                  <Text v-if="chat.name !== MagicNumber.NameShowSkeleton" :truncate="true" as="span">
+                    {{ chat.name }}
+                  </Text>
+                  <div v-else class="name-skeleton" />
+                </ChatButton>
+              </TransitionGroup>
+              <hr class="section-divider" />
+            </template>
+            <TransitionGroup name="fade-insert-right" class="chat-list">
+              <ChatButton v-for="chat in chatsStore.getUnpinnedChats()" :id="chat.id" :key="chat.id">
                 <Text v-if="chat.name !== MagicNumber.NameShowSkeleton" :truncate="true" as="span">
                   {{ chat.name }}
                 </Text>
                 <div v-else class="name-skeleton" />
               </ChatButton>
             </TransitionGroup>
-            <hr />
-          </template>
-          <TransitionGroup name="fade-insert-right">
-            <ChatButton v-for="chat in chatsStore.getUnpinnedChats()" :id="chat.id" :key="chat.id">
-              <Text v-if="chat.name !== MagicNumber.NameShowSkeleton" :truncate="true" as="span">
-                {{ chat.name }}
-              </Text>
-              <div v-else class="name-skeleton" />
-            </ChatButton>
-          </TransitionGroup>
+          </div>
         </div>
         <div class="bottom-content">
           <Text as="p" variant="bodyLg">
@@ -133,7 +135,9 @@ onMounted(async () => {
   margin: 12px;
   display: flex;
   flex-direction: column;
-  min-height: 400px; /* Adjust height as needed */
+  height: calc(100vh - 24px); /* Full height minus margin */
+  max-height: calc(100vh - 24px);
+  overflow: hidden; /* Prevent container from overflowing */
 }
 
 .header {
@@ -153,8 +157,55 @@ onMounted(async () => {
   margin-bottom: 18px;
 }
 
+.container__group--scrollable {
+  flex: 1 1 0; /* Allow grow, shrink, and set basis to 0 */
+  overflow-y: auto;
+  overflow-x: hidden;
+  margin-bottom: 16px;
+  min-height: 0; /* Allow flex item to shrink below content size */
+  
+  /* Custom scrollbar styling */
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: var(--color-border-default);
+    border-radius: 3px;
+    
+    &:hover {
+      background: var(--color-border-hover);
+    }
+  }
+}
+
+.chats-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.chat-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.section-title {
+  margin-bottom: 8px;
+}
+
+.section-divider {
+  margin: 12px 0;
+}
+
 .bottom-content {
   margin-top: auto;
+  flex-shrink: 0;
 }
 
 .row {
@@ -172,6 +223,15 @@ onMounted(async () => {
     &.skeleton {
       @include mixins.skeleton(128px, 16px, 4px);
     }
+  }
+}
+
+/* Ensure TransitionGroup displays as flex container */
+.chat-list {
+  &.fade-insert-right {
+    display: flex !important;
+    flex-direction: column;
+    gap: 8px;
   }
 }
 
