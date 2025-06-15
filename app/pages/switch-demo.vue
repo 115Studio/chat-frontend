@@ -76,7 +76,7 @@ setPageLayout('default')
             </div>
             <Switch v-model="settingsSwitch" />
           </div>
-          
+
           <div class="flex items-center justify-between">
             <div>
               <h3 class="font-medium text-card-foreground">Push Notifications</h3>
@@ -101,15 +101,15 @@ const isEnabled = ref(false)
 &lt;template&gt;
   &lt;!-- Basic usage --&gt;
   &lt;Switch v-model="isEnabled" /&gt;
-  
+
   &lt;!-- With different sizes --&gt;
   &lt;Switch v-model="isEnabled" size="sm" /&gt;
   &lt;Switch v-model="isEnabled" size="md" /&gt;
   &lt;Switch v-model="isEnabled" size="lg" /&gt;
-  
+
   &lt;!-- Disabled state --&gt;
   &lt;Switch v-model="isEnabled" disabled /&gt;
-  
+
   &lt;!-- With custom classes --&gt;
   &lt;Switch v-model="isEnabled" class="my-custom-class" /&gt;
 &lt;/template&gt;</code></pre>
@@ -132,4 +132,4 @@ const isEnabled = ref(false)
       </div>
     </div>
   </div>
-</template> 
+</template>

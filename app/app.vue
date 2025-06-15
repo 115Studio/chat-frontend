@@ -139,4 +139,20 @@ watch(
 .transition-page-leave-to {
   opacity: 0;
 }
+
+.transition-page-fast-enter-active,
+.transition-page-fast-leave-active {
+  transition: 0.15s;
+  transform-origin: center 96px;
+}
+.transition-page-fast-leave-active {
+  position: relative;
+}
+.transition-page-fast-enter-from {
+  opacity: 0;
+  transform: scale(0.99);
+}
+.transition-page-fast-leave-to {
+  opacity: 0;
+}
 </style>

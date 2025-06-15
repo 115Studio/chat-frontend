@@ -1,5 +1,4 @@
 <script setup lang="ts">
-
 import { useAuthStore } from '@app/store/auth.store'
 import Discord from '@app/components/icons/Discord.vue'
 import { useAuthWindow } from '@app/composables/use-auth-window'
@@ -61,10 +60,9 @@ const login = async () => {
 }
 
 definePageMeta({
-  middleware: [ code ]
+  middleware: [ code ],
+  layout: 'default',
 })
-
-setPageLayout('default')
 </script>
 
 <template>

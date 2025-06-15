@@ -69,9 +69,7 @@ import ChatCommands from '@app/components/chat/ChatCommands.vue'
 
 .messages {
   display: flex;
-  margin-right: auto;
-  margin-left: auto;
-  max-width: 768px;
+  width: 100%;
 }
 
 .button {

@@ -18,8 +18,6 @@ if (!authStore.isAuthenticated) {
   router.push('/login')
 }
 
-setPageLayout('sidebar')
-
 const input = ref('')
 
 const createMessageEvent = async () => {
@@ -78,12 +76,16 @@ const createMessageEvent = async () => {
 //   if (chat) router.push(`/chat/${chat.id}`)
 //   else toast.error('Failed to create chat')
 // }
+
+definePageMeta({
+  layout: 'sidebar',
+})
 </script>
 
 <template>
   <div class="page-container">
     <div class="page-content mx-auto mt-40 w-full items-center text-center">
-      <Text as="h1" variant="headingXl"> Hello, {{ authStore.name }}! </Text>
+      <Text as="h1" variant="headingLg">Welcome back.</Text>
       <div class="top-content mt-20">
         <ChatInput v-model="input" @create-message-event="createMessageEvent" />
       </div>

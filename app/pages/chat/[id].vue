@@ -20,6 +20,31 @@ const chatId = useRoute().params.id as string
 
 const input = ref('')
 
+const shadowTop = ref(true)
+const shadowBottom = ref(false)
+const pageContentRef = ref<HTMLElement | null>(null)
+
+const updateShadows = () => {
+  const el = pageContentRef.value
+  if (!el) return
+
+  shadowTop.value = el.scrollTop <= 0
+  shadowBottom.value = el.scrollTop + el.clientHeight >= el.scrollHeight
+}
+
+onMounted(() => {
+  if (pageContentRef.value) {
+    pageContentRef.value.addEventListener('scroll', updateShadows)
+    updateShadows() // Initial check
+  }
+})
+
+onUnmounted(() => {
+  if (pageContentRef.value) {
+    pageContentRef.value.removeEventListener('scroll', updateShadows)
+  }
+})
+
 const createMessageEvent = async () => {
   const files = useFilesStore(chatId)().files.map((file) => ({
     type: resolveMessageStageType(file.type),
@@ -74,12 +99,21 @@ onMounted(async () => {
   }
 })
 
-setPageLayout('sidebar')
+definePageMeta({
+  layout: 'sidebar'
+})
 </script>
 
 <template>
   <div class="page-container">
-    <div class="page-content scrollbar-hide h-full">
+    <div
+      ref="pageContentRef"
+      class="page-content scrollbar-hide h-full"
+      :class="{
+        'page-content--shadow-top': shadowTop,
+        'page-content--shadow-bottom': shadowBottom,
+      }"
+    >
       <Chat />
     </div>
     <div class="bottom-content max-h-content">
@@ -96,11 +130,54 @@ setPageLayout('sidebar')
   display: flex;
   flex-direction: column;
   padding: 20px;
-  max-height: 91svh;
+  height: 91svh;
+}
+
+.page-container {
+  position: relative;
 }
 
 .page-content {
+  flex: 1;
   overflow-y: scroll;
+}
+
+.page-container::before,
+.page-container::after {
+  content: '';
+  position: absolute;
+  left: 20px;
+  right: 20px;
+  height: 40px;
+  pointer-events: none;
+  z-index: 10;
+  transition: opacity 0.3s ease;
+}
+
+.page-container::before {
+  top: 20px;
+  background: linear-gradient(to bottom, var(--color-bg) 0%, var(--color-bg) 20%, transparent 100%);
+}
+
+.page-container::after {
+  bottom: 0;
+  background: linear-gradient(to top, var(--color-bg) 0%, var(--color-bg) 20%, transparent 100%);
+}
+
+.page-content--shadow-top + .bottom-content::before {
+  opacity: 0;
+}
+
+.page-content--shadow-bottom + .bottom-content::after {
+  opacity: 0;
+}
+
+.page-container:has(.page-content--shadow-top)::before {
+  opacity: 0;
+}
+
+.page-container:has(.page-content--shadow-bottom)::after {
+  opacity: 0;
 }
 
 .container {

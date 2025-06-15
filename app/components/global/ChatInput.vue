@@ -146,6 +146,7 @@ const onPaste = (event: ClipboardEvent) => {
 .input {
   width: 100%;
   min-height: 32px;
+  max-height: 128px;
   padding: 0;
   border: 1px solid var(--color-border-default);
   border-radius: 0;
