@@ -7,18 +7,14 @@
           <Text as="h1" variant="headingLg" alignment="center" class="container__group-item">
             115 Chat
           </Text>
-          <button
-            class="row__button row__button--inner container__group-item ml-[-0.5rem]"
-            type="button"
-            @click="createNewChat"
-          >
+          <Button class="container__group-item ml-[-0.5rem]" @click="createNewChat">
             <template v-if="true">
               <Text as="span"> New Chat </Text>
             </template>
             <template v-else>
               <PhSpinner :size="20" weight="bold" class="animate-spin" />
             </template>
-          </button>
+          </Button>
           <div class="row__divider--horizontal" />
         </div>
         <div class="container__group container__group--scrollable">
@@ -26,8 +22,16 @@
             <template v-if="chatsStore.getPinnedChats().length > 0">
               <Text as="span" variant="bodyMd" class="section-title"> Pinned Chats </Text>
               <TransitionGroup name="fade-insert-right" class="chat-list">
-                <ChatButton v-for="chat in chatsStore.getPinnedChats()" :id="chat.id" :key="chat.id">
-                  <Text v-if="chat.name !== MagicNumber.NameShowSkeleton" :truncate="true" as="span">
+                <ChatButton
+                  v-for="chat in chatsStore.getPinnedChats()"
+                  :id="chat.id"
+                  :key="chat.id"
+                >
+                  <Text
+                    v-if="chat.name !== MagicNumber.NameShowSkeleton"
+                    :truncate="true"
+                    as="span"
+                  >
                     {{ chat.name }}
                   </Text>
                   <div v-else class="name-skeleton" />
@@ -36,7 +40,11 @@
               <hr class="section-divider" />
             </template>
             <TransitionGroup name="fade-insert-right" class="chat-list">
-              <ChatButton v-for="chat in chatsStore.getUnpinnedChats()" :id="chat.id" :key="chat.id">
+              <ChatButton
+                v-for="chat in chatsStore.getUnpinnedChats()"
+                :id="chat.id"
+                :key="chat.id"
+              >
                 <Text v-if="chat.name !== MagicNumber.NameShowSkeleton" :truncate="true" as="span">
                   {{ chat.name }}
                 </Text>
@@ -163,20 +171,20 @@ onMounted(async () => {
   overflow-x: hidden;
   margin-bottom: 16px;
   min-height: 0; /* Allow flex item to shrink below content size */
-  
+
   /* Custom scrollbar styling */
   &::-webkit-scrollbar {
     width: 6px;
   }
-  
+
   &::-webkit-scrollbar-track {
     background: transparent;
   }
-  
+
   &::-webkit-scrollbar-thumb {
     background: var(--color-border-default);
     border-radius: 3px;
-    
+
     &:hover {
       background: var(--color-border-hover);
     }
