@@ -12,6 +12,11 @@ export type ListItem = {
   subItems?: { text: InlineToken[] }[]
 }
 
+export type NumberedListItem = {
+  number: number
+  text: InlineToken[]
+}
+
 export type Token =
   | { type: 'text'; content: string; inline?: InlineToken[] }
   | { type: 'link'; text: string; href: string }
@@ -20,7 +25,7 @@ export type Token =
   | { type: 'italic'; content: string; inline?: InlineToken[] }
   | { type: 'bold-italic'; content: string; inline?: InlineToken[] }
   | { type: 'strike'; content: string; inline?: InlineToken[] }
-  | { type: 'list'; items: string[] }
+  | { type: 'list'; items: NumberedListItem[] }
   | { type: 'ulist'; items: ListItem[] }
   | { type: 'code', content: string, language?: string }
   | { type: 'inline-code', content: string }
@@ -217,7 +222,7 @@ export function parseMarkdown(markdown: string): Token[] {
   const subItemRegex = /^\s{2,}[-*+]\s+(.*)$/
 
   let inNumberedList = false
-  let numberedListItems: string[] = []
+  let numberedListItems: NumberedListItem[] = []
 
   let inUnorderedList = false
   let unorderedListItems: ListItem[] = []
@@ -235,7 +240,10 @@ export function parseMarkdown(markdown: string): Token[] {
         inUnorderedList = false
       }
       inNumberedList = true
-      numberedListItems.push(numberedMatch[2] || '')
+      numberedListItems.push({
+        number: parseInt(numberedMatch[1] || '1'),
+        text: parseInlineMarkdown(numberedMatch[2] || '')
+      })
     } else if (unorderedMatch && !subItemMatch) {
       if (inNumberedList) {
         tokens.push({ type: 'list', items: numberedListItems })
@@ -275,7 +283,10 @@ export function parseMarkdown(markdown: string): Token[] {
       }
       tokens.push({ type: 'break' })
     } else if (inNumberedList) {
-      numberedListItems[numberedListItems.length - 1] += '\n' + trimmed
+      const lastItem = numberedListItems[numberedListItems.length - 1]
+      if (lastItem) {
+        lastItem.text.push({ type: 'text', content: '\n' + trimmed })
+      }
     } else if (inUnorderedList) {
       const lastItem = unorderedListItems[unorderedListItems.length - 1]
       if (lastItem && lastItem.text.length > 0) {
