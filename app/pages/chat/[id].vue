@@ -114,7 +114,7 @@ definePageMeta({
         'page-content--shadow-bottom': shadowBottom,
       }"
     >
-      <Chat />
+      <Chat class="mt-20 mb-16" />
     </div>
     <div class="bottom-content max-h-content">
       <ChatInput v-model="input" @create-message-event="createMessageEvent" />
@@ -129,8 +129,8 @@ definePageMeta({
 .page-container {
   display: flex;
   flex-direction: column;
-  padding: 20px;
-  height: 91svh;
+  height: 100svh;
+  padding-bottom: 12px;
 }
 
 .page-container {

@@ -23,6 +23,7 @@ import { PhChatCircleSlash, PhMoonStars, PhSidebarSimple } from '@phosphor-icons
 <style scoped lang="scss">
 .header-container {
   display: flex;
+  position: absolute;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
