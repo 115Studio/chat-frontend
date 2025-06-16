@@ -87,20 +87,32 @@ const createMessageEvent = async () => {
   messages.addMessage(systemMessage)
 }
 
+const scrollDown = () => {
+  if (pageContentRef.value) {
+    pageContentRef.value.scrollTo({
+      top: pageContentRef.value.scrollHeight,
+      behavior: 'smooth',
+    })
+  }
+}
+
 onMounted(async () => {
+  scrollDown()
+
   const store = useChatMessagesStore(chatId)()
 
   const messages = await getChannelMessages(useAuthStore().jwt, chatId)
 
   if (messages.ok) {
     store.syncMessagesWithBackend(messages.result.messages)
+    scrollDown()
   } else {
     console.error('Failed to fetch messages:', messages.errors)
   }
 })
 
 definePageMeta({
-  layout: 'sidebar'
+  layout: 'sidebar',
 })
 </script>
 
@@ -114,7 +126,7 @@ definePageMeta({
         'page-content--shadow-bottom': shadowBottom,
       }"
     >
-      <Chat class="mt-20 mb-16" />
+      <Chat class="mt-20 mb-16 h-fit" @scroll-down="scrollDown" />
     </div>
     <div class="bottom-content max-h-content">
       <ChatInput v-model="input" @create-message-event="createMessageEvent" />

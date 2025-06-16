@@ -3,6 +3,10 @@ import { useChatsStore } from '@app/store/chats.store'
 import { useChatMessagesStore } from '@app/store/chat-messages.store'
 import { useAuthStore } from '@app/store/auth.store'
 
+const emit = defineEmits<{
+  (e: 'scroll-down'): void
+}>()
+
 const route = useRoute()
 
 const id = route.path.split('chat/')[1]
@@ -25,23 +29,13 @@ if (!authStore.isAuthenticated) {
   throw new Error('User must be authenticated to view chat messages')
 }
 
-const chatContainerRef = ref<HTMLElement | null>(null)
-
 onUpdated(() => {
-  if (chatContainerRef.value) {
-    chatContainerRef.value.scrollTo({
-      top: chatContainerRef.value.scrollHeight,
-      behavior: 'smooth',
-    })
-  }
+  emit('scroll-down')
 })
 </script>
 
 <template>
-  <div
-    ref="chatContainerRef"
-    class="flex flex-col gap-8 chat-container mx-auto rounded-xl min-h-full"
-  >
+  <div class="flex flex-col gap-8 chat-container mx-auto rounded-xl min-h-full">
     <template
       v-for="message in messagesStore.messages"
       v-if="messagesStore.messages.length"
@@ -51,23 +45,23 @@ onUpdated(() => {
     </template>
     <div v-else>
       <!-- User message skeletons (right aligned) -->
-      <div class="skeleton skeleton-user skeleton-user-medium"></div>
+      <div class="skeleton skeleton-user skeleton-user-medium" />
 
-      <div class="separator"></div>
+      <div class="separator" />
 
       <!-- AI message skeletons (left aligned) -->
-      <div class="skeleton skeleton-ai skeleton-ai-long"></div>
+      <div class="skeleton skeleton-ai skeleton-ai-long" />
 
-      <div class="separator"></div>
+      <div class="separator" />
 
       <!-- More user messages -->
-      <div class="skeleton skeleton-user skeleton-user-short"></div>
+      <div class="skeleton skeleton-user skeleton-user-short" />
 
-      <div class="separator"></div>
+      <div class="separator" />
 
       <!-- More AI messages -->
-      <div class="skeleton skeleton-ai"></div>
-      <div class="skeleton skeleton-ai skeleton-ai-image"></div>
+      <div class="skeleton skeleton-ai" />
+      <div class="skeleton skeleton-ai skeleton-ai-image" />
     </div>
   </div>
 </template>
