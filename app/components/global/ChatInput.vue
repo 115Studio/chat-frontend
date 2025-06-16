@@ -14,6 +14,7 @@ const emit = defineEmits<{
 const model = defineModel<string>()
 
 const fileInput = ref<HTMLInputElement | null>(null)
+const textareaRef = ref<HTMLTextAreaElement | null>(null)
 
 const imagesToShow = computed(() => {
   return store.files
@@ -66,6 +67,25 @@ const onPaste = (event: ClipboardEvent) => {
     }
   }
 }
+
+const resizeTextarea = () => {
+  if (!textareaRef.value) return
+
+  // Reset to minimum height to get accurate scrollHeight measurement
+  textareaRef.value.style.height = '28px'
+
+  // If content exceeds the minimum height, resize to fit
+  if (textareaRef.value.scrollHeight > 28) {
+    textareaRef.value.style.height = textareaRef.value.scrollHeight + 'px'
+  }
+}
+
+// Watch for changes in model value to trigger resize
+watch(model, () => {
+  nextTick(() => {
+    resizeTextarea()
+  })
+}, { immediate: true })
 </script>
 
 <template>
@@ -76,8 +96,9 @@ const onPaste = (event: ClipboardEvent) => {
         class="input"
         type="text"
         placeholder="Ask anything"
-        @keydown.enter.exact.prevent="(e) => createMessage(e)"
+        @keydown.enter.exact.prevent="(e) => createMessage()"
         @keydown.enter.shift.exact.prevent="model += '\n'"
+        ref="textareaRef"
       />
       <input
         ref="fileInput"
@@ -130,7 +151,7 @@ const onPaste = (event: ClipboardEvent) => {
   margin-right: auto;
   margin-left: auto;
   max-width: 768px;
-  padding: 32px;
+  padding: 28px;
   border-radius: 24px;
   display: flex;
   flex-direction: column;
@@ -140,18 +161,21 @@ const onPaste = (event: ClipboardEvent) => {
 
 .input-container {
   flex-grow: 1;
-  margin-bottom: 12px;
 }
 
 .input {
   width: 100%;
-  min-height: 32px;
+  height: 28px;
+  min-height: 24px;
   max-height: 128px;
-  padding: 0;
+  padding: 2px 0;
   border: 1px solid var(--color-border-default);
   border-radius: 0;
-  font-size: 20px;
+  font-size: 18px;
   background: none;
+  resize: none;
+  overflow-y: hidden;
+  line-height: 1.25;
 
   @apply focus:outline-none focus:ring-0;
 }

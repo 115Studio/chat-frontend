@@ -61,7 +61,7 @@ const isLink = (stage: MessageStage) => {
           </Text>
         </div>
         <div v-else-if="isImage(stage)">
-          <div v-if="isLoadingImage(stage)" class="image image-loading" />
+          <div v-if="isLoadingImage(stage)" class="image image-loading"></div>
           <img v-else alt="image" :src="stage.content!.value" class="image no-drag-no-select" >
         </div>
         <div v-else-if="isFile(stage)">
@@ -90,29 +90,30 @@ const isLink = (stage: MessageStage) => {
 
 .message-container {
   max-width: 768px;
-  padding: 12px 18px;
-  border-radius: 24px;
-  background: var(--color-default);
-  border: 1px solid var(--color-border-default);
 
   &-user {
     margin-left: auto;
     margin-right: 0;
+    border-radius: 24px;
+    background: var(--color-default);
+    border: 1px solid var(--color-border-default);
+    padding: 12px 18px;
   }
 
   &-bot {
     margin-right: auto;
     margin-left: 0;
-    background: none !important;
-    border: none !important;
   }
 
   &-skeleton {
-    @include mixins.skeleton(100%, 40px, 12px);
+    @include mixins.skeleton(75%, 40px, 12px);
   }
 
   &-error {
-    background: var(--color-critical);
+    padding: 12px 18px;
+    border-radius: 24px;
+    background: var(--color-critial-bg);
+    border: 1px solid var(--color-critical-border);
   }
 }
 
@@ -124,7 +125,7 @@ const isLink = (stage: MessageStage) => {
   @apply max-w-96;
 
   &-loading {
-    @include mixins.skeleton(100%, 200px, 12px);
+    @include mixins.skeleton(300px, 300px, 24px);
   }
 }
 </style>

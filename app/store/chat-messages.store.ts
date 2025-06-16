@@ -49,8 +49,6 @@ export const useChatMessagesStore = (id: string) =>
       updateMessagePartial(id: string, stage: MessageStage, ts: number) {
         const messageIndex = this.messages.findIndex((m) => m.id === id)
 
-        console.log('messageIndex', messageIndex)
-
         if (messageIndex === -1) {
           this.unprocessedStages.push({ id, stage, ts })
           return

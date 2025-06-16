@@ -1,11 +1,14 @@
 <script setup lang="ts">
 import { PhChatCircleSlash, PhMoonStars, PhSidebarSimple } from '@phosphor-icons/vue'
+import { useSidebarStore } from '@app/store/sidebar.store'
+
+const sidebar = useSidebarStore()
 </script>
 
 <template>
   <div class="header-container">
     <div class="header-items header-items__left">
-      <div class="header-item">
+      <div class="header-item" @click="sidebar.toggle()">
         <PhSidebarSimple :size="20" weight="bold" />
       </div>
     </div>
@@ -45,11 +48,23 @@ import { PhChatCircleSlash, PhMoonStars, PhSidebarSimple } from '@phosphor-icons
 }
 
 .header-item {
-  background: var(--color-default);
-  border: 1px solid var(--color-border-default);
   padding: 16px;
   border-radius: 14px;
   margin: 12px 12px 12px 0;
+
+  background: var(--color-btn-inner-bg);
+  border: 1px solid var(--color-btn-inner-border);
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--color-btn-inner-hover-bg);
+    border: 1px solid var(--color-btn-inner-hover-border);
+  }
+
+  &:active, &:focus-visible {
+    background-color: var(--color-btn-inner-selected-bg);
+    border: 1px solid var(--color-btn-inner-selected-border);
+  }
 }
 
 </style>

@@ -2,9 +2,9 @@
   <div class="layout layout--empty">
     <Background />
     <div class="wrapper max-h-screen">
-      <div v-if="showSidebar" class="container">
+      <div v-if="sidebar.isOpen" class="container">
         <div class="container__group">
-          <Text as="h1" variant="headingLg" alignment="center" class="container__group-item">
+          <Text as="h1" variant="headingMd" alignment="center" class="container__group-item">
             115 Chat
           </Text>
           <Button class="container__group-item ml-[-0.5rem]" @click="createNewChat">
@@ -28,6 +28,7 @@
                 v-for="chat in chatsStore.getPinnedChats()"
                 :id="chat.id"
                 :key="chat.id"
+                class="mb-1"
               >
                 <Text
                   v-if="chat.name !== MagicNumber.NameShowSkeleton"
@@ -59,7 +60,7 @@
           </Text>
         </div>
       </div>
-      <div class="content max-h-screen">
+      <div class="content max-h-screen" :class="{ 'content--sidebar-closed': !sidebar.isOpen }">
         <div class="header">
           <Header />
         </div>
@@ -78,10 +79,10 @@ import { useFilesStore } from '@app/store/files.store'
 import { useChatsStore } from '@app/store/chats.store'
 import { MagicNumber } from '@app/constants/magic-number'
 import { getChannels } from '@app/composables/api'
+import { useSidebarStore } from '@app/store/sidebar.store'
 
 const authStore = useAuthStore()
-
-const showSidebar = ref(true)
+const sidebar = useSidebarStore()
 
 const chatId = useRoute().params.id as string | undefined
 
@@ -115,7 +116,7 @@ onMounted(async () => {
 @use '@app/assets/styles/mixins';
 
 .name-skeleton {
-  @include mixins.skeleton(100%, 24px, 12px);
+  @include mixins.skeleton(100%, 20px, 12px);
 }
 
 .layout {
@@ -158,6 +159,10 @@ onMounted(async () => {
   flex-grow: 1;
   display: flex;
   flex-direction: column;
+
+  &--sidebar-closed {
+    margin-left: 12px;
+  }
 }
 
 .container__group-item {
