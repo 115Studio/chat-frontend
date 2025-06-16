@@ -68,7 +68,7 @@ const cancelEdit = () => {
 
 <template>
   <button type="button" class="chat-button" :class="{ 'chat-button--active': chatIsActive }">
-    <div class="w-full px-2 py-2.5" @click="!isEditing && move()" @dblclick="startEditing">
+    <div class="w-full p-2 pl-3" @click="!isEditing && move()" @dblclick="startEditing">
       <input
         v-if="isEditing"
         ref="inputRef"
@@ -122,29 +122,25 @@ const cancelEdit = () => {
 
 <style scoped lang="scss">
 .chat-button {
-  @apply border border-transparent rounded-lg transition-colors duration-200 text-left flex flex-row w-full items-center justify-between text-ellipsis line-clamp-1;
+  @apply border border-transparent transition-colors duration-200 text-left flex flex-row w-full items-center justify-between text-ellipsis line-clamp-1;
   color: var(--color-btn-inner-text);
+  border-radius: 12px;
 
   &:hover {
-    background-color: var(--color-btn-inner-hover-bg);
-    border: 1px solid var(--color-btn-inner-hover-border);
+    background-color: var(--color-btn-inner-selected-bg);
+    // border: 1px solid var(--color-btn-inner-hover-border);
   }
 
   &:active,
   &:focus-visible,
   &--active {
     background-color: var(--color-btn-inner-selected-bg);
-    border: 1px solid var(--color-btn-inner-selected-border);
-  }
-
-  &--active {
-    background-color: var(--color-btn-inner-hover-bg);
-    border: 1px solid var(--color-btn-inner-hover-border);
+    // border: 1px solid var(--color-btn-inner-selected-border);
   }
 }
 
 .controls {
-  background-color: var(--color-btn-inner-hover-bg);
+  background-color: transparent;
 }
 
 .dots-button {
@@ -156,7 +152,7 @@ const cancelEdit = () => {
     background-color 0.3s ease;
 
   &:hover {
-    @apply bg-slate-200 text-slate-600;
+    background: var(--color-btn-inner-selected-bg);
   }
 
   &--open {

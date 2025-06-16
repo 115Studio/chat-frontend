@@ -20,37 +20,36 @@
         <div class="container__group container__group--scrollable">
           <div class="chats-wrapper">
             <template v-if="chatsStore.getPinnedChats().length > 0">
-              <Text as="span" variant="bodyMd" class="section-title"> Pinned Chats </Text>
-              <TransitionGroup name="fade-insert-right" class="chat-list">
-                <ChatButton
-                  v-for="chat in chatsStore.getPinnedChats()"
-                  :id="chat.id"
-                  :key="chat.id"
-                >
-                  <Text
-                    v-if="chat.name !== MagicNumber.NameShowSkeleton"
-                    :truncate="true"
-                    as="span"
-                  >
-                    {{ chat.name }}
-                  </Text>
-                  <div v-else class="name-skeleton" />
-                </ChatButton>
-              </TransitionGroup>
-              <hr class="section-divider" />
-            </template>
-            <TransitionGroup name="fade-insert-right" class="chat-list">
+              <div class="flex flex-row items-center ml-2 mb-2">
+                <PhPushPin size="16" weight="bold" />
+                <Text as="span" variant="bodyMd" class="ml-1.5">Pinned Chats</Text>
+              </div>
               <ChatButton
-                v-for="chat in chatsStore.getUnpinnedChats()"
+                v-for="chat in chatsStore.getPinnedChats()"
                 :id="chat.id"
                 :key="chat.id"
               >
-                <Text v-if="chat.name !== MagicNumber.NameShowSkeleton" :truncate="true" as="span">
+                <Text
+                  v-if="chat.name !== MagicNumber.NameShowSkeleton"
+                  :truncate="true"
+                  as="span" variant="bodySm" tone="muted"
+                >
                   {{ chat.name }}
                 </Text>
                 <div v-else class="name-skeleton" />
               </ChatButton>
-            </TransitionGroup>
+              <hr class="section-divider" />
+            </template>
+            <ChatButton
+              v-for="chat in chatsStore.getUnpinnedChats()"
+              :id="chat.id"
+              :key="chat.id"
+            >
+              <Text v-if="chat.name !== MagicNumber.NameShowSkeleton" :truncate="true" as="span" variant="bodySm" tone="muted">
+                {{ chat.name }}
+              </Text>
+              <div v-else class="name-skeleton" />
+            </ChatButton>
           </div>
         </div>
         <div class="bottom-content">
@@ -72,7 +71,7 @@
 </template>
 
 <script setup lang="ts">
-import { PhSpinner } from '@phosphor-icons/vue'
+import { PhMapPin, PhPushPin, PhSpinner } from '@phosphor-icons/vue'
 import { useAuthStore } from '@app/store/auth.store'
 import Header from '@app/components/global/Header.vue'
 import { useFilesStore } from '@app/store/files.store'
@@ -194,13 +193,11 @@ onMounted(async () => {
 .chats-wrapper {
   display: flex;
   flex-direction: column;
-  gap: 8px;
 }
 
 .chat-list {
   display: flex;
   flex-direction: column;
-  gap: 8px;
 }
 
 .section-title {
