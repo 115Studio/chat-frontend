@@ -23,6 +23,10 @@ export const useFilesStore = (id: string) =>
       files: [] as Array<StoreFile>,
     }),
 
+    persist: {
+      storage: localStorage
+    },
+
     actions: {
       async addFile(file: File) {
         if (this.files.length >= 3) {

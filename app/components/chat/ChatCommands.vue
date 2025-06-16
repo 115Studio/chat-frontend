@@ -17,7 +17,7 @@ const isActive = computed(() => isDropdownOpen.value)
 
 <template>
   <div
-    class="my-1 commands flex gap-x-2"
+    class="my-1 commands gap-x-2 flex flex-row items-center"
     :class="{ 'commands--active': isDropdownOpen }"
   >
     <TooltipProvider :delay-duration="250">

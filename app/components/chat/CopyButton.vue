@@ -34,10 +34,10 @@ const copyCode = async (content: string) => {
     <transition
       name="fade"
       mode="out-in">
-      <div v-if="!copied" class="bg-neutral-100 hover:bg-neutral-200 transition-all rounded-lg p-1.5 active:scale-90">
+      <div v-if="!copied" class="hover:bg-neutral-200 transition-all rounded-lg p-1.5 active:scale-90 flex items-center justify-center">
         <Copy class="text-slate-800 w-4 h-4" />
       </div>
-      <div v-else class="bg-emerald-200 transition-all rounded-lg p-1.5 active:scale-90">
+      <div v-else class="bg-emerald-200 transition-all rounded-lg p-1.5 active: flex items-center justify-center">
         <PhCheck size="16" weight="bold" class="text-emerald-600" />
       </div>
     </transition>

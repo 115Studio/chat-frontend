@@ -8,7 +8,8 @@ import { AiModel } from '@app/constants/ai-model'
 import { toast } from 'vue-sonner'
 import { useChatMessagesStore } from '@app/store/chat-messages.store'
 import { useFilesStore } from '@app/store/files.store'
-import { resolveMessageStageContentType, resolveMessageStageType } from '@app/lib/utils'
+import { convertStorageToAiRequest } from '@app/lib/utils'
+import { Inputs, useInputsStore } from '@app/store/useInputsStore'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -18,33 +19,36 @@ if (!authStore.isAuthenticated) {
   router.push('/login')
 }
 
-const input = ref('')
+const inputsStore = useInputsStore('@new')()
+
+if (!inputsStore.getInput(Inputs.SelectedModel)?.model) {
+  inputsStore.writeInput(Inputs.SelectedModel, {
+    model: AiModel.GoogleGemini20Flash,
+  })
+}
 
 const createMessageEvent = async () => {
-  const files = useFilesStore('@new')().files.map((file) => ({
-    type: resolveMessageStageType(file.type),
-    content: {
-      type: resolveMessageStageContentType(file.type),
-      value: file.id,
-    },
-  }))
+  const convertedStages = convertStorageToAiRequest(inputsStore.getInput(Inputs.ChatInput)?.stages)
 
-  const response = await createMessage(
-    authStore.jwt,
-    '@new',
-    [
+  inputsStore.writeInput(Inputs.ChatInput, {
+    stages: [
       {
         type: MessageStageType.Text,
         content: {
           type: MessageStageContentType.Text,
-          value: input.value,
+          value: '',
         },
       },
-      ...files,
-    ],
+    ]
+  })
+
+  const response = await createMessage(
+    authStore.jwt,
+    '@new',
+    convertedStages,
     {
       // TODO model settings
-      id: AiModel.OpenaiGpt4o,
+      id: inputsStore.getInput(Inputs.SelectedModel)?.model as AiModel,
       flags: [],
     },
     // TODO personality settings
@@ -63,8 +67,6 @@ const createMessageEvent = async () => {
   const messages = useChatMessagesStore(channel.id)()
   messages.addMessage(userMessage)
   messages.addMessage(systemMessage)
-
-  input.value = ''
 
   return router.push('/chat/' + channel.id)
 }
@@ -87,7 +89,7 @@ definePageMeta({
     <div class="page-content mx-auto w-full items-center text-center">
       <Text as="h1" variant="headingLg">Welcome home.</Text>
       <div class="top-content mt-12">
-        <ChatInput v-model="input" @create-message-event="createMessageEvent" />
+        <ChatInput @create-message-event="createMessageEvent" />
       </div>
     </div>
   </div>

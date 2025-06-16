@@ -14,6 +14,9 @@ import { AiModelFeature } from '@app/constants/ai-model-feature'
 import type { ReasoningLevelEnum, AiModel } from '@app/constants/ai-model'
 import { Inputs, useInputsStore } from '@app/store/useInputsStore'
 
+const chatId = useRoute().params.id as string
+
+const store = useInputsStore(chatId)()
 
 const emit = defineEmits(['dropdown-open'])
 
@@ -22,8 +25,8 @@ function handleOpenChange(open: boolean) {
 }
 
 const selectModel = (selectedModel: AiModel, level?: ReasoningLevelEnum) => {
-  useInputsStore().writeInput(Inputs.SelectedModel, { model: selectedModel })
-  if (level) useInputsStore().writeInput(Inputs.ReasoningLevel, { level })
+  store.writeInput(Inputs.SelectedModel, { model: selectedModel })
+  if (level) store.writeInput(Inputs.ReasoningLevel, { level })
 
   handleOpenChange(false)
 }
@@ -35,7 +38,7 @@ const selectModel = (selectedModel: AiModel, level?: ReasoningLevelEnum) => {
       <TooltipProvider :disable-hoverable-content="true" :delay-duration="250">
         <Tooltip>
           <TooltipTrigger>
-            <button type="button" class="bg-neutral-100 hover:bg-neutral-200 transition-all rounded-lg p-1.5 active:scale-90">
+            <button type="button" class="hover:bg-neutral-200 transition-all rounded-lg p-1.5 active:scale-90">
               <Retry class="w-4 h-4" />
             </button>
           </TooltipTrigger>

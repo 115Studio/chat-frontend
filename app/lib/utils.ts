@@ -4,6 +4,7 @@ import { type ClassValue, clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 import { MessageStageType } from '@app/constants/message-stage-type'
 import { MessageStageContentType } from '@app/constants/message-stage-content-type'
+import type { MessageStages } from '@app/types'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -46,4 +47,22 @@ export const resolveMessageStageContentType = (type: string): MessageStageConten
   if (type.startsWith('application')) return MessageStageContentType.File
   if (type.startsWith('text')) return MessageStageContentType.File
   else return MessageStageContentType.Text
+}
+
+export const convertStorageToAiRequest = (stages: MessageStages) => {
+  return stages.map((stage) => {
+    if (stage.type === MessageStageType.Vision)
+      if (stage.content!.type === MessageStageContentType.Vision) {
+        const [id] = stage.content!.value!.split('::') ?? []
+        return {
+          type: stage.type,
+          content: {
+            type: stage.content!.type,
+            value: id ?? stage.content!.value,
+          },
+        }
+      }
+
+    return stage
+  })
 }

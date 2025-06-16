@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useAuthStore } from '@app/store/auth.store'
 import { useFilesStore } from '@app/store/files.store'
-import { resolveMessageStageContentType, resolveMessageStageType } from '@app/lib/utils'
+import { convertStorageToAiRequest } from '@app/lib/utils'
 import { createMessage, getChannelMessages } from '@app/composables/api'
 import { MessageStageType } from '@app/constants/message-stage-type'
 import { MessageStageContentType } from '@app/constants/message-stage-content-type'
@@ -20,8 +20,6 @@ if (!authStore.isAuthenticated) {
 const chatId = useRoute().params.id as string
 
 const inputsStore = useInputsStore(chatId)()
-
-const input = ref('')
 
 const shadowTop = ref(true)
 const shadowBottom = ref(false)
@@ -54,27 +52,24 @@ onUnmounted(() => {
 })
 
 const createMessageEvent = async () => {
-  const files = useFilesStore(chatId)().files.map((file) => ({
-    type: resolveMessageStageType(file.type),
-    content: {
-      type: resolveMessageStageContentType(file.type),
-      value: file.id,
-    },
-  }))
+  const convertedStages = convertStorageToAiRequest(inputsStore.getInput(Inputs.ChatInput)?.stages)
 
-  const response = await createMessage(
-    authStore.jwt,
-    chatId,
-    [
+  inputsStore.writeInput(Inputs.ChatInput, {
+    stages: [
       {
         type: MessageStageType.Text,
         content: {
           type: MessageStageContentType.Text,
-          value: input.value,
+          value: '',
         },
       },
-      ...files,
-    ],
+    ]
+  })
+
+  const response = await createMessage(
+    authStore.jwt,
+    chatId,
+    convertedStages,
     {
       // TODO model settings
       id: inputsStore.getInput(Inputs.SelectedModel)?.model as AiModel,
@@ -85,7 +80,6 @@ const createMessageEvent = async () => {
 
   if (!response.ok) return toast.error('Failed to create message')
 
-  input.value = ''
   useFilesStore(chatId)().clearFiles()
 
   const { channel, userMessage, systemMessage } = response.result
@@ -99,7 +93,6 @@ const scrollDown = () => {
   if (pageContentRef.value) {
     pageContentRef.value.scrollTo({
       top: pageContentRef.value.scrollHeight,
-      behavior: 'smooth',
     })
   }
 }

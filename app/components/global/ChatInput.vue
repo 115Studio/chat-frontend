@@ -21,7 +21,6 @@ const emit = defineEmits<{
 }>()
 
 const model = ref('')
-const incommingMessage = ref()
 
 const fileInput = ref<HTMLInputElement | null>(null)
 const textareaRef = ref<HTMLTextAreaElement | null>(null)
@@ -118,9 +117,10 @@ const syncMessages = debounce(() => {
 }, 200)
 
 const receivingMessages = ref(false)
+const writingSelf = ref(false)
 
 watch(model, () => {
-  console.log('model changed', receivingMessages.value, model.value)
+  saveToStore()
 
   nextTick(() => {
     resizeTextarea()
@@ -132,12 +132,14 @@ watch(model, () => {
 })
 
 watch(() => store.files, () => {
-  console.log('files changed', receivingMessages.value, store.files)
+  saveToStore()
   if (receivingMessages.value) return
   syncMessages()
 }, { deep: true })
 
 watch(() => inputsStore.inputs.get(Inputs.ChatInput), () => {
+  if (writingSelf.value) return
+
   receivingMessages.value = true
 
   const chatInput = inputsStore.getInput(Inputs.ChatInput)
@@ -159,7 +161,7 @@ watch(() => inputsStore.inputs.get(Inputs.ChatInput), () => {
 
   // store.clearFiles()
 
-  let existing = []
+  const existing = []
 
   for (const file of store.files) {
     if (images.some((i: any) => i.id === file.id)) {
@@ -183,7 +185,38 @@ watch(() => inputsStore.inputs.get(Inputs.ChatInput), () => {
   setTimeout(() => {
     receivingMessages.value = false
   }, 3)
-}, { immediate: true })
+})
+
+const saveToStore = () => {
+  const files = store.files
+    .filter(file => !file.isUploading)
+    .map((file) => ({
+    type: resolveMessageStageType(file.type),
+    content: {
+      type: resolveMessageStageContentType(file.type),
+      value: `${file.id}::${file.type}::${file.url}`,
+    },
+  }))
+
+  writingSelf.value = true
+
+  inputsStore.writeInput(Inputs.ChatInput, {
+    stages: [
+      {
+        type: MessageStageType.Text,
+        content: {
+          type: MessageStageContentType.Text,
+          value: model.value,
+        },
+      },
+      ...files,
+    ]
+  })
+
+  setTimeout(() => {
+    writingSelf.value = false
+  }, 3)
+}
 </script>
 
 <template>
