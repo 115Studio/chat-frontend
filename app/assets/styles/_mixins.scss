@@ -8,7 +8,7 @@
   animation-name: shimmer;
   animation-timing-function: cubic-bezier(.4, 0, .2, 1);
   background-size: $shimmer-width 100%;
-  background-attachment: fixed;
+  background-attachment: local;
   will-change: background-position;
   height: $height;
   width: $width;
