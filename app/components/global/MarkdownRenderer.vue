@@ -222,7 +222,7 @@ import MarkdownInline from '@app/components/markdown/MarkdownInline.vue'
 
 const props = defineProps<{ markdown: string }>()
 
-const tokens: Token[] = parseMarkdown(props.markdown)
+const tokens: Ref<Token[]> = computed(() => parseMarkdown(props.markdown))
 
 const copiedStates = ref<Record<number, boolean>>({})
 
