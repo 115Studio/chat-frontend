@@ -105,7 +105,7 @@
             <Text v-else-if="inlineToken.type === 'bold'" as="strong">
               <template v-if="inlineToken.inline">
                 <template v-for="(nestedToken, k) in inlineToken.inline" :key="k">
-                  <MarkdownNested :nested-token="nestedToken" />
+                  <MarkdownInline :inline-token="nestedToken" />
                 </template>
               </template>
               <template v-else>
@@ -115,7 +115,7 @@
             <Text v-else-if="inlineToken.type === 'italic'" as="span" class="italic">
               <template v-if="inlineToken.inline">
                 <template v-for="(nestedToken, k) in inlineToken.inline" :key="k">
-                  <MarkdownNested :nested-token="nestedToken" />
+                  <MarkdownInline :inline-token="nestedToken" />
                 </template>
               </template>
               <template v-else>
@@ -125,7 +125,7 @@
             <Text v-else-if="inlineToken.type === 'bold-italic'" as="strong" class="italic">
               <template v-if="inlineToken.inline">
                 <template v-for="(nestedToken, k) in inlineToken.inline" :key="k">
-                  <MarkdownNested :nested-token="nestedToken" />
+                  <MarkdownInline :inline-token="nestedToken" />
                 </template>
               </template>
               <template v-else>
@@ -135,7 +135,7 @@
             <Text v-else-if="inlineToken.type === 'strike'" as="span" class="line-through">
               <template v-if="inlineToken.inline">
                 <template v-for="(nestedToken, k) in inlineToken.inline" :key="k">
-                  <MarkdownNested :nested-token="nestedToken" />
+                  <MarkdownInline :inline-token="nestedToken" />
                 </template>
               </template>
               <template v-else>
@@ -160,7 +160,7 @@
                 <Text v-else-if="inlineToken.type === 'bold'" as="strong">
                   <template v-if="inlineToken.inline">
                     <template v-for="(nestedToken, m) in inlineToken.inline" :key="m">
-                      <MarkdownNested :nested-token="nestedToken" />
+                      <MarkdownInline :inline-token="nestedToken" />
                     </template>
                   </template>
                   <template v-else>
@@ -170,7 +170,7 @@
                 <Text v-else-if="inlineToken.type === 'italic'" as="span" class="italic">
                   <template v-if="inlineToken.inline">
                     <template v-for="(nestedToken, m) in inlineToken.inline" :key="m">
-                      <MarkdownNested :nested-token="nestedToken" />
+                      <MarkdownInline :inline-token="nestedToken" />
                     </template>
                   </template>
                   <template v-else>
@@ -180,7 +180,7 @@
                 <Text v-else-if="inlineToken.type === 'bold-italic'" as="strong" class="italic">
                   <template v-if="inlineToken.inline">
                     <template v-for="(nestedToken, m) in inlineToken.inline" :key="m">
-                      <MarkdownNested :nested-token="nestedToken" />
+                      <MarkdownInline :inline-token="nestedToken" />
                     </template>
                   </template>
                   <template v-else>
@@ -190,7 +190,7 @@
                 <Text v-else-if="inlineToken.type === 'strike'" as="span" class="line-through">
                   <template v-if="inlineToken.inline">
                     <template v-for="(nestedToken, m) in inlineToken.inline" :key="m">
-                      <MarkdownNested :nested-token="nestedToken" />
+                      <MarkdownInline :inline-token="nestedToken" />
                     </template>
                   </template>
                   <template v-else>
@@ -218,7 +218,7 @@ import type { Token, } from '@app/lib/parse-md';
 import { parseMarkdown } from '@app/lib/parse-md'
 import { PhCheck, PhCopy } from '@phosphor-icons/vue'
 import MarkdownInline from '@app/components/markdown/MarkdownInline.vue'
-import MarkdownNested from '@app/components/markdown/MarkdownNested.vue'
+
 
 const props = defineProps<{ markdown: string }>()
 

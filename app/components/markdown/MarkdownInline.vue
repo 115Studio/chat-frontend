@@ -16,7 +16,7 @@ defineProps<{
     <Text as="span" tone="accent" variant="bodyMd">{{ inlineToken.text }}</Text>
   </a>
   <span v-else-if="inlineToken.type === 'inline-code'" class="bg-white px-1 py-0.5 rounded text-sm font-mono">
-            {{ inlineToken.content }}
+    {{ inlineToken.content }}
   </span>
 </template>
 
