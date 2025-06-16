@@ -55,7 +55,7 @@ const isLink = (stage: MessageStage) => {
           'message-container-bot': message.role === MessageRole.Assistant,
         }"
       >
-        <div v-if="isText(stage)" class="whitespace-pre-wrap">
+        <div v-if="isText(stage)" class="whitespace-pre-wrap break-all">
           <Text as="p" variant="bodyMd" :tone="isReasoning(stage) ? 'muted' : 'content'">
             <MarkdownRenderer :markdown="stage.content?.value || ''" />
           </Text>
