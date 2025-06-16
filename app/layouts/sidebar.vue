@@ -2,64 +2,66 @@
   <div class="layout layout--empty">
     <Background />
     <div class="wrapper max-h-screen">
-      <div v-if="sidebar.isOpen" class="container">
-        <div class="container__group">
-          <Text as="h1" variant="headingMd" alignment="center" class="container__group-item">
-            115 Chat
-          </Text>
-          <Button class="container__group-item ml-[-0.5rem]" @click="createNewChat">
-            <template v-if="true">
-              <Text as="span"> New Chat </Text>
-            </template>
-            <template v-else>
-              <PhSpinner :size="20" weight="bold" class="animate-spin" />
-            </template>
-          </Button>
-          <div class="row__divider--horizontal" />
-        </div>
-        <div class="container__group container__group--scrollable">
-          <div class="chats-wrapper">
-            <template v-if="chatsStore.getPinnedChats().length > 0">
-              <div class="flex flex-row items-center ml-2 mb-2">
-                <PhPushPin size="16" weight="bold" />
-                <Text as="span" variant="bodyMd" class="ml-1.5">Pinned Chats</Text>
-              </div>
+      <div class="container" :class="{ 'container--closed': !sidebar.isOpen }">
+        <div v-if="sidebar.isOpen" class="container__content">
+          <div class="container__group">
+            <Text as="h1" variant="headingMd" alignment="center" class="container__group-item">
+              115 Chat
+            </Text>
+            <Button class="container__group-item ml-[-0.5rem]" @click="createNewChat">
+              <template v-if="true">
+                <Text as="span"> New Chat </Text>
+              </template>
+              <template v-else>
+                <PhSpinner :size="20" weight="bold" class="animate-spin" />
+              </template>
+            </Button>
+            <div class="row__divider--horizontal" />
+          </div>
+          <div class="container__group container__group--scrollable">
+            <div class="chats-wrapper">
+              <template v-if="chatsStore.getPinnedChats().length > 0">
+                <div class="flex flex-row items-center ml-2 mb-2">
+                  <PhPushPin size="16" weight="bold" />
+                  <Text as="span" variant="bodyMd" class="ml-1.5">Pinned Chats</Text>
+                </div>
+                <ChatButton
+                  v-for="chat in chatsStore.getPinnedChats()"
+                  :id="chat.id"
+                  :key="chat.id"
+                  class="mb-1"
+                >
+                  <Text
+                    v-if="chat.name !== MagicNumber.NameShowSkeleton"
+                    :truncate="true"
+                    as="span"
+                    variant="bodySm"
+                    tone="muted"
+                  >
+                    {{ chat.name }}
+                  </Text>
+                  <div v-else class="name-skeleton" />
+                </ChatButton>
+                <hr class="section-divider" >
+              </template>
               <ChatButton
-                v-for="chat in chatsStore.getPinnedChats()"
+                v-for="chat in chatsStore.getUnpinnedChats()"
                 :id="chat.id"
                 :key="chat.id"
-                class="mb-1"
               >
-                <Text
-                  v-if="chat.name !== MagicNumber.NameShowSkeleton"
-                  :truncate="true"
-                  as="span"
-variant="bodySm"
-tone="muted"
-                >
+                <Text v-if="chat.name !== MagicNumber.NameShowSkeleton" :truncate="true" as="span" variant="bodySm" tone="muted">
                   {{ chat.name }}
                 </Text>
                 <div v-else class="name-skeleton" />
               </ChatButton>
-              <hr class="section-divider" >
-            </template>
-            <ChatButton
-              v-for="chat in chatsStore.getUnpinnedChats()"
-              :id="chat.id"
-              :key="chat.id"
-            >
-              <Text v-if="chat.name !== MagicNumber.NameShowSkeleton" :truncate="true" as="span" variant="bodySm" tone="muted">
-                {{ chat.name }}
-              </Text>
-              <div v-else class="name-skeleton" />
-            </ChatButton>
+            </div>
           </div>
-        </div>
-        <div class="bottom-content">
-          <Text as="p" variant="bodyLg">
-            Your name is <Text as="span" tone="accent" weight="bold">{{ authStore.name }}</Text
+          <div class="bottom-content">
+            <Text as="p" variant="bodyLg">
+              Your name is <Text as="span" tone="accent" weight="bold">{{ authStore.name }}</Text
             >.
-          </Text>
+            </Text>
+          </div>
         </div>
       </div>
       <div class="content max-h-screen" :class="{ 'content--sidebar-closed': !sidebar.isOpen }">
@@ -148,6 +150,22 @@ onMounted(async () => {
   height: calc(100vh - 24px); /* Full height minus margin */
   max-height: calc(100vh - 24px);
   overflow: hidden; /* Prevent container from overflowing */
+  transition: width 0.3s ease-in-out, padding 0.3s ease-in-out, margin 0.3s ease-in-out;
+
+  &--closed {
+    width: 0;
+    padding: 0;
+    margin: 12px 0;
+    border: none;
+  }
+}
+
+.container__content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  min-width: 212px;
 }
 
 .header {
@@ -161,6 +179,7 @@ onMounted(async () => {
   flex-grow: 1;
   display: flex;
   flex-direction: column;
+  transition: margin-left 0.3s ease-in-out;
 
   &--sidebar-closed {
     margin-left: 12px;

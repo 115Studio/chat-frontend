@@ -7,17 +7,7 @@
       <Text v-if="token.type === 'text'" as="p" variant="bodyMd">
         <template v-if="token.inline">
           <template v-for="(inlineToken, j) in token.inline" :key="j">
-            <Text v-if="inlineToken.type === 'text'" as="span">{{ inlineToken.content }}</Text>
-            <Text v-else-if="inlineToken.type === 'bold'" as="strong">{{ inlineToken.content }}</Text>
-            <Text v-else-if="inlineToken.type === 'italic'" as="span" class="italic">{{ inlineToken.content }}</Text>
-            <Text v-else-if="inlineToken.type === 'bold-italic'" as="strong" class="italic">{{ inlineToken.content }}</Text>
-            <Text v-else-if="inlineToken.type === 'strike'" as="span" class="line-through">{{ inlineToken.content }}</Text>
-            <a v-else-if="inlineToken.type === 'link'" :href="inlineToken.href" target="_blank" rel="noopener noreferrer" class="max-w-fit link">
-              <Text as="span" tone="accent" variant="bodyMd">{{ inlineToken.text }}</Text>
-            </a>
-            <span v-else-if="inlineToken.type === 'inline-code'" class="bg-white px-1 py-0.5 rounded text-sm font-mono">
-              {{ inlineToken.content }}
-            </span>
+            <MarkdownInline :inline-token="inlineToken" />
           </template>
         </template>
         <template v-else>
@@ -33,17 +23,7 @@
       <Text v-else-if="token.type === 'bold'" as="strong" class="">
         <template v-if="token.inline">
           <template v-for="(inlineToken, j) in token.inline" :key="j">
-            <Text v-if="inlineToken.type === 'text'" as="span">{{ inlineToken.content }}</Text>
-            <Text v-else-if="inlineToken.type === 'bold'" as="strong">{{ inlineToken.content }}</Text>
-            <Text v-else-if="inlineToken.type === 'italic'" as="span" class="italic">{{ inlineToken.content }}</Text>
-            <Text v-else-if="inlineToken.type === 'bold-italic'" as="strong" class="italic">{{ inlineToken.content }}</Text>
-            <Text v-else-if="inlineToken.type === 'strike'" as="span" class="line-through">{{ inlineToken.content }}</Text>
-            <a v-else-if="inlineToken.type === 'link'" :href="inlineToken.href" target="_blank" rel="noopener noreferrer" class="max-w-fit link">
-              <Text as="span" tone="accent" variant="bodyMd">{{ inlineToken.text }}</Text>
-            </a>
-            <span v-else-if="inlineToken.type === 'inline-code'" class="bg-white px-1 py-0.5 rounded text-sm font-mono">
-              {{ inlineToken.content }}
-            </span>
+            <MarkdownInline :inline-token="inlineToken" />
           </template>
         </template>
         <template v-else>
@@ -53,17 +33,7 @@
       <Text v-else-if="token.type === 'italic'" as="p" class="italic">
         <template v-if="token.inline">
           <template v-for="(inlineToken, j) in token.inline" :key="j">
-            <Text v-if="inlineToken.type === 'text'" as="span">{{ inlineToken.content }}</Text>
-            <Text v-else-if="inlineToken.type === 'bold'" as="strong">{{ inlineToken.content }}</Text>
-            <Text v-else-if="inlineToken.type === 'italic'" as="span" class="italic">{{ inlineToken.content }}</Text>
-            <Text v-else-if="inlineToken.type === 'bold-italic'" as="strong" class="italic">{{ inlineToken.content }}</Text>
-            <Text v-else-if="inlineToken.type === 'strike'" as="span" class="line-through">{{ inlineToken.content }}</Text>
-            <a v-else-if="inlineToken.type === 'link'" :href="inlineToken.href" target="_blank" rel="noopener noreferrer" class="max-w-fit link">
-              <Text as="span" tone="accent" variant="bodyMd">{{ inlineToken.text }}</Text>
-            </a>
-            <span v-else-if="inlineToken.type === 'inline-code'" class="bg-white px-1 py-0.5 rounded text-sm font-mono">
-              {{ inlineToken.content }}
-            </span>
+            <MarkdownInline :inline-token="inlineToken" />
           </template>
         </template>
         <template v-else>
@@ -73,17 +43,7 @@
       <Text v-else-if="token.type === 'bold-italic'" as="strong" class="italic">
         <template v-if="token.inline">
           <template v-for="(inlineToken, j) in token.inline" :key="j">
-            <Text v-if="inlineToken.type === 'text'" as="span">{{ inlineToken.content }}</Text>
-            <Text v-else-if="inlineToken.type === 'bold'" as="strong">{{ inlineToken.content }}</Text>
-            <Text v-else-if="inlineToken.type === 'italic'" as="span" class="italic">{{ inlineToken.content }}</Text>
-            <Text v-else-if="inlineToken.type === 'bold-italic'" as="strong" class="italic">{{ inlineToken.content }}</Text>
-            <Text v-else-if="inlineToken.type === 'strike'" as="span" class="line-through">{{ inlineToken.content }}</Text>
-            <a v-else-if="inlineToken.type === 'link'" :href="inlineToken.href" target="_blank" rel="noopener noreferrer" class="max-w-fit link">
-              <Text as="span" tone="accent" variant="bodyMd">{{ inlineToken.text }}</Text>
-            </a>
-            <span v-else-if="inlineToken.type === 'inline-code'" class="bg-white px-1 py-0.5 rounded text-sm font-mono">
-              {{ inlineToken.content }}
-            </span>
+            <MarkdownInline :inline-token="inlineToken" />
           </template>
         </template>
         <template v-else>
@@ -93,17 +53,7 @@
       <Text v-else-if="token.type === 'strike'" as="p" class="line-through">
         <template v-if="token.inline">
           <template v-for="(inlineToken, j) in token.inline" :key="j">
-            <Text v-if="inlineToken.type === 'text'" as="span">{{ inlineToken.content }}</Text>
-            <Text v-else-if="inlineToken.type === 'bold'" as="strong">{{ inlineToken.content }}</Text>
-            <Text v-else-if="inlineToken.type === 'italic'" as="span" class="italic">{{ inlineToken.content }}</Text>
-            <Text v-else-if="inlineToken.type === 'bold-italic'" as="strong" class="italic">{{ inlineToken.content }}</Text>
-            <Text v-else-if="inlineToken.type === 'strike'" as="span" class="line-through">{{ inlineToken.content }}</Text>
-            <a v-else-if="inlineToken.type === 'link'" :href="inlineToken.href" target="_blank" rel="noopener noreferrer" class="max-w-fit link">
-              <Text as="span" tone="accent" variant="bodyMd">{{ inlineToken.text }}</Text>
-            </a>
-            <span v-else-if="inlineToken.type === 'inline-code'" class="bg-white px-1 py-0.5 rounded text-sm font-mono">
-              {{ inlineToken.content }}
-            </span>
+            <MarkdownInline :inline-token="inlineToken" />
           </template>
         </template>
         <template v-else>
@@ -155,17 +105,7 @@
             <Text v-else-if="inlineToken.type === 'bold'" as="strong">
               <template v-if="inlineToken.inline">
                 <template v-for="(nestedToken, k) in inlineToken.inline" :key="k">
-                  <Text v-if="nestedToken.type === 'text'" as="span">{{ nestedToken.content }}</Text>
-                  <Text v-else-if="nestedToken.type === 'bold'" as="strong">{{ nestedToken.content }}</Text>
-                  <Text v-else-if="nestedToken.type === 'italic'" as="span" class="italic">{{ nestedToken.content }}</Text>
-                  <Text v-else-if="nestedToken.type === 'bold-italic'" as="strong" class="italic">{{ nestedToken.content }}</Text>
-                  <Text v-else-if="nestedToken.type === 'strike'" as="span" class="line-through">{{ nestedToken.content }}</Text>
-                  <a v-else-if="nestedToken.type === 'link'" :href="nestedToken.href" target="_blank" rel="noopener noreferrer" class="max-w-fit link">
-                    <Text as="span" tone="accent" variant="bodyMd">{{ nestedToken.text }}</Text>
-                  </a>
-                  <span v-else-if="nestedToken.type === 'inline-code'" class="bg-white px-1 py-0.5 rounded text-sm font-mono">
-                    {{ nestedToken.content }}
-                  </span>
+                  <MarkdownNested :nested-token="nestedToken" />
                 </template>
               </template>
               <template v-else>
@@ -175,17 +115,7 @@
             <Text v-else-if="inlineToken.type === 'italic'" as="span" class="italic">
               <template v-if="inlineToken.inline">
                 <template v-for="(nestedToken, k) in inlineToken.inline" :key="k">
-                  <Text v-if="nestedToken.type === 'text'" as="span">{{ nestedToken.content }}</Text>
-                  <Text v-else-if="nestedToken.type === 'bold'" as="strong">{{ nestedToken.content }}</Text>
-                  <Text v-else-if="nestedToken.type === 'italic'" as="span" class="italic">{{ nestedToken.content }}</Text>
-                  <Text v-else-if="nestedToken.type === 'bold-italic'" as="strong" class="italic">{{ nestedToken.content }}</Text>
-                  <Text v-else-if="nestedToken.type === 'strike'" as="span" class="line-through">{{ nestedToken.content }}</Text>
-                  <a v-else-if="nestedToken.type === 'link'" :href="nestedToken.href" target="_blank" rel="noopener noreferrer" class="max-w-fit link">
-                    <Text as="span" tone="accent" variant="bodyMd">{{ nestedToken.text }}</Text>
-                  </a>
-                  <span v-else-if="nestedToken.type === 'inline-code'" class="bg-white px-1 py-0.5 rounded text-sm font-mono">
-                    {{ nestedToken.content }}
-                  </span>
+                  <MarkdownNested :nested-token="nestedToken" />
                 </template>
               </template>
               <template v-else>
@@ -195,17 +125,7 @@
             <Text v-else-if="inlineToken.type === 'bold-italic'" as="strong" class="italic">
               <template v-if="inlineToken.inline">
                 <template v-for="(nestedToken, k) in inlineToken.inline" :key="k">
-                  <Text v-if="nestedToken.type === 'text'" as="span">{{ nestedToken.content }}</Text>
-                  <Text v-else-if="nestedToken.type === 'bold'" as="strong">{{ nestedToken.content }}</Text>
-                  <Text v-else-if="nestedToken.type === 'italic'" as="span" class="italic">{{ nestedToken.content }}</Text>
-                  <Text v-else-if="nestedToken.type === 'bold-italic'" as="strong" class="italic">{{ nestedToken.content }}</Text>
-                  <Text v-else-if="nestedToken.type === 'strike'" as="span" class="line-through">{{ nestedToken.content }}</Text>
-                  <a v-else-if="nestedToken.type === 'link'" :href="nestedToken.href" target="_blank" rel="noopener noreferrer" class="max-w-fit link">
-                    <Text as="span" tone="accent" variant="bodyMd">{{ nestedToken.text }}</Text>
-                  </a>
-                  <span v-else-if="nestedToken.type === 'inline-code'" class="bg-white px-1 py-0.5 rounded text-sm font-mono">
-                    {{ nestedToken.content }}
-                  </span>
+                  <MarkdownNested :nested-token="nestedToken" />
                 </template>
               </template>
               <template v-else>
@@ -215,17 +135,7 @@
             <Text v-else-if="inlineToken.type === 'strike'" as="span" class="line-through">
               <template v-if="inlineToken.inline">
                 <template v-for="(nestedToken, k) in inlineToken.inline" :key="k">
-                  <Text v-if="nestedToken.type === 'text'" as="span">{{ nestedToken.content }}</Text>
-                  <Text v-else-if="nestedToken.type === 'bold'" as="strong">{{ nestedToken.content }}</Text>
-                  <Text v-else-if="nestedToken.type === 'italic'" as="span" class="italic">{{ nestedToken.content }}</Text>
-                  <Text v-else-if="nestedToken.type === 'bold-italic'" as="strong" class="italic">{{ nestedToken.content }}</Text>
-                  <Text v-else-if="nestedToken.type === 'strike'" as="span" class="line-through">{{ nestedToken.content }}</Text>
-                  <a v-else-if="nestedToken.type === 'link'" :href="nestedToken.href" target="_blank" rel="noopener noreferrer" class="max-w-fit link">
-                    <Text as="span" tone="accent" variant="bodyMd">{{ nestedToken.text }}</Text>
-                  </a>
-                  <span v-else-if="nestedToken.type === 'inline-code'" class="bg-white px-1 py-0.5 rounded text-sm font-mono">
-                    {{ nestedToken.content }}
-                  </span>
+                  <MarkdownNested :nested-token="nestedToken" />
                 </template>
               </template>
               <template v-else>
@@ -250,17 +160,7 @@
                 <Text v-else-if="inlineToken.type === 'bold'" as="strong">
                   <template v-if="inlineToken.inline">
                     <template v-for="(nestedToken, m) in inlineToken.inline" :key="m">
-                      <Text v-if="nestedToken.type === 'text'" as="span">{{ nestedToken.content }}</Text>
-                      <Text v-else-if="nestedToken.type === 'bold'" as="strong">{{ nestedToken.content }}</Text>
-                      <Text v-else-if="nestedToken.type === 'italic'" as="span" class="italic">{{ nestedToken.content }}</Text>
-                      <Text v-else-if="nestedToken.type === 'bold-italic'" as="strong" class="italic">{{ nestedToken.content }}</Text>
-                      <Text v-else-if="nestedToken.type === 'strike'" as="span" class="line-through">{{ nestedToken.content }}</Text>
-                      <a v-else-if="nestedToken.type === 'link'" :href="nestedToken.href" target="_blank" rel="noopener noreferrer" class="max-w-fit link">
-                        <Text as="span" tone="accent" variant="bodyMd">{{ nestedToken.text }}</Text>
-                      </a>
-                      <span v-else-if="nestedToken.type === 'inline-code'" class="bg-white px-1 py-0.5 rounded text-sm font-mono">
-                        {{ nestedToken.content }}
-                      </span>
+                      <MarkdownNested :nested-token="nestedToken" />
                     </template>
                   </template>
                   <template v-else>
@@ -270,17 +170,7 @@
                 <Text v-else-if="inlineToken.type === 'italic'" as="span" class="italic">
                   <template v-if="inlineToken.inline">
                     <template v-for="(nestedToken, m) in inlineToken.inline" :key="m">
-                      <Text v-if="nestedToken.type === 'text'" as="span">{{ nestedToken.content }}</Text>
-                      <Text v-else-if="nestedToken.type === 'bold'" as="strong">{{ nestedToken.content }}</Text>
-                      <Text v-else-if="nestedToken.type === 'italic'" as="span" class="italic">{{ nestedToken.content }}</Text>
-                      <Text v-else-if="nestedToken.type === 'bold-italic'" as="strong" class="italic">{{ nestedToken.content }}</Text>
-                      <Text v-else-if="nestedToken.type === 'strike'" as="span" class="line-through">{{ nestedToken.content }}</Text>
-                      <a v-else-if="nestedToken.type === 'link'" :href="nestedToken.href" target="_blank" rel="noopener noreferrer" class="max-w-fit link">
-                        <Text as="span" tone="accent" variant="bodyMd">{{ nestedToken.text }}</Text>
-                      </a>
-                      <span v-else-if="nestedToken.type === 'inline-code'" class="bg-white px-1 py-0.5 rounded text-sm font-mono">
-                        {{ nestedToken.content }}
-                      </span>
+                      <MarkdownNested :nested-token="nestedToken" />
                     </template>
                   </template>
                   <template v-else>
@@ -290,17 +180,7 @@
                 <Text v-else-if="inlineToken.type === 'bold-italic'" as="strong" class="italic">
                   <template v-if="inlineToken.inline">
                     <template v-for="(nestedToken, m) in inlineToken.inline" :key="m">
-                      <Text v-if="nestedToken.type === 'text'" as="span">{{ nestedToken.content }}</Text>
-                      <Text v-else-if="nestedToken.type === 'bold'" as="strong">{{ nestedToken.content }}</Text>
-                      <Text v-else-if="nestedToken.type === 'italic'" as="span" class="italic">{{ nestedToken.content }}</Text>
-                      <Text v-else-if="nestedToken.type === 'bold-italic'" as="strong" class="italic">{{ nestedToken.content }}</Text>
-                      <Text v-else-if="nestedToken.type === 'strike'" as="span" class="line-through">{{ nestedToken.content }}</Text>
-                      <a v-else-if="nestedToken.type === 'link'" :href="nestedToken.href" target="_blank" rel="noopener noreferrer" class="max-w-fit link">
-                        <Text as="span" tone="accent" variant="bodyMd">{{ nestedToken.text }}</Text>
-                      </a>
-                      <span v-else-if="nestedToken.type === 'inline-code'" class="bg-white px-1 py-0.5 rounded text-sm font-mono">
-                        {{ nestedToken.content }}
-                      </span>
+                      <MarkdownNested :nested-token="nestedToken" />
                     </template>
                   </template>
                   <template v-else>
@@ -310,17 +190,7 @@
                 <Text v-else-if="inlineToken.type === 'strike'" as="span" class="line-through">
                   <template v-if="inlineToken.inline">
                     <template v-for="(nestedToken, m) in inlineToken.inline" :key="m">
-                      <Text v-if="nestedToken.type === 'text'" as="span">{{ nestedToken.content }}</Text>
-                      <Text v-else-if="nestedToken.type === 'bold'" as="strong">{{ nestedToken.content }}</Text>
-                      <Text v-else-if="nestedToken.type === 'italic'" as="span" class="italic">{{ nestedToken.content }}</Text>
-                      <Text v-else-if="nestedToken.type === 'bold-italic'" as="strong" class="italic">{{ nestedToken.content }}</Text>
-                      <Text v-else-if="nestedToken.type === 'strike'" as="span" class="line-through">{{ nestedToken.content }}</Text>
-                      <a v-else-if="nestedToken.type === 'link'" :href="nestedToken.href" target="_blank" rel="noopener noreferrer" class="max-w-fit link">
-                        <Text as="span" tone="accent" variant="bodyMd">{{ nestedToken.text }}</Text>
-                      </a>
-                      <span v-else-if="nestedToken.type === 'inline-code'" class="bg-white px-1 py-0.5 rounded text-sm font-mono">
-                        {{ nestedToken.content }}
-                      </span>
+                      <MarkdownNested :nested-token="nestedToken" />
                     </template>
                   </template>
                   <template v-else>
@@ -347,6 +217,8 @@
 import type { Token, } from '@app/lib/parse-md';
 import { parseMarkdown } from '@app/lib/parse-md'
 import { PhCheck, PhCopy } from '@phosphor-icons/vue'
+import MarkdownInline from '@app/components/markdown/MarkdownInline.vue'
+import MarkdownNested from '@app/components/markdown/MarkdownNested.vue'
 
 const props = defineProps<{ markdown: string }>()
 
