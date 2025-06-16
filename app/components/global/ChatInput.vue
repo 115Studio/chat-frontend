@@ -115,7 +115,7 @@ const syncMessages = debounce(() => {
       ],
     },
   })
-}, 1)
+}, 200)
 
 const receivingMessages = ref(false)
 
@@ -157,15 +157,25 @@ watch(() => inputsStore.inputs.get(Inputs.ChatInput), () => {
       }
     }) || []
 
-  store.clearFiles()
+  // store.clearFiles()
+
+  let existing = []
+
+  for (const file of store.files) {
+    if (images.some((i: any) => i.id === file.id)) {
+      existing.push(file.id)
+    } else {
+      store.removeFile(file.id!)
+    }
+  }
 
   for (const image of images) {
-    if (!store.files.some((f) => f.internalId === image.id)) {
+    if (!existing.includes(image.id)) {
       store.addExisting({
         id: image.id,
-        url: image.url,
         type: image.type,
-        name: image.id,
+        url: image.url,
+        name: image.id
       })
     }
   }
