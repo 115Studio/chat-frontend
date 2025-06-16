@@ -374,13 +374,13 @@ const copyCode = async (content: string, index: number) => {
 const resolveHeadingVariant = (strength: number) => {
   switch (strength) {
     case 1:
-      return 'headingXl'
-    case 2:
       return 'headingLg'
-    case 3:
+    case 2:
       return 'headingMd'
-    case 4:
+    case 3:
       return 'headingSm'
+    case 4:
+      return 'bodyLg'
     default:
       return 'bodyMd'
   }

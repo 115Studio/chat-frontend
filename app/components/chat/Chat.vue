@@ -41,7 +41,7 @@ onUpdated(() => {
       v-if="messagesStore.messages.length"
       :key="message.id"
     >
-      <Message v-bind="message" />
+      <Message v-bind="message" class="ml-3 mr-3" />
     </template>
     <div v-else>
       <!-- User message skeletons (right aligned) -->
