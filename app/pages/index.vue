@@ -85,7 +85,7 @@ definePageMeta({
 <template>
   <div class="page-container">
     <div class="page-content mx-auto mt-40 w-full items-center text-center">
-      <Text as="h1" variant="headingLg">Welcome back.</Text>
+      <Text as="h1" variant="headingLg">Welcome home</Text>
       <div class="top-content mt-20">
         <ChatInput v-model="input" @create-message-event="createMessageEvent" />
       </div>

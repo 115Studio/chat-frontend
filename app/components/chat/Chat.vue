@@ -50,7 +50,7 @@ onUpdated(() => {
       <Message v-bind="message" />
     </template>
     <div v-else class="flex items-center justify-center h-full">
-      <p class="text-muted">No messages yet. Start the conversation!</p>
+      <Text as="p" variant="bodyMd" tone="muted">No messages yet.</Text>
     </div>
   </div>
 </template>
