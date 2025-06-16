@@ -132,6 +132,10 @@ a, a:hover, a:active, a:visited, button {
     background-color: var(--color-btn-inner-selected-bg);
     border: var(--color-btn-inner-selected-border);
   }
+
+  &:active {
+    transform: scale(0.9);
+  }
 }
 
 .no-drag-no-select {
@@ -143,5 +147,5 @@ a, a:hover, a:active, a:visited, button {
 }
 
 pre code.hljs {
-  @apply rounded-lg
+  @apply rounded-lg w-full
 }

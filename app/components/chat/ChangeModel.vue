@@ -9,14 +9,23 @@ import {
 import Retry from '@app/components/icons/Retry.vue'
 import { PhCaretRight } from '@phosphor-icons/vue'
 import ModelFeatures from '@app/components/chat/ModelFeatures.vue'
-import ReasoningLevel from '@app/components/chat/ReasoningLevel.vue'
 import { defineEmits } from 'vue'
 import { AiModelFeature } from '@app/constants/ai-model-feature'
+import type { ReasoningLevelEnum, AiModel } from '@app/constants/ai-model'
+import { Inputs, useInputsStore } from '@app/store/useInputsStore'
+
 
 const emit = defineEmits(['dropdown-open'])
 
 function handleOpenChange(open: boolean) {
   emit('dropdown-open', open)
+}
+
+const selectModel = (selectedModel: AiModel, level?: ReasoningLevelEnum) => {
+  useInputsStore().writeInput(Inputs.SelectedModel, { model: selectedModel })
+  if (level) useInputsStore().writeInput(Inputs.ReasoningLevel, { level })
+
+  handleOpenChange(false)
 }
 </script>
 
@@ -26,7 +35,7 @@ function handleOpenChange(open: boolean) {
       <TooltipProvider :disable-hoverable-content="true" :delay-duration="250">
         <Tooltip>
           <TooltipTrigger>
-            <button class="button interactive">
+            <button type="button" class="bg-neutral-100 hover:bg-neutral-200 transition-all rounded-lg p-1.5 active:scale-90">
               <Retry class="w-4 h-4" />
             </button>
           </TooltipTrigger>
@@ -57,8 +66,9 @@ function handleOpenChange(open: boolean) {
                   v-if="variant.features.includes(AiModelFeature.ReasoningControl)"
                   :model="model"
                   :variant="variant"
+                  @update:level="(level) => selectModel(variant.id, level as ReasoningLevelEnum)"
                 />
-                <DropdownMenuItem v-else class="cursor-pointer gap-0 items-center">
+                <DropdownMenuItem v-else class="cursor-pointer gap-0 items-center" @click="selectModel(variant.id)">
                   <component :is="model.icon" class="w-4 text-accent h-4 mr-2" />
                   <Text as="p" variant="bodySm">
                     {{ variant.name }}

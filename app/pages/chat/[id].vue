@@ -8,6 +8,7 @@ import { MessageStageContentType } from '@app/constants/message-stage-content-ty
 import { AiModel } from '@app/constants/ai-model'
 import { toast } from 'vue-sonner'
 import { useChatMessagesStore } from '@app/store/chat-messages.store'
+import { Inputs, useInputsStore } from '@app/store/useInputsStore'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -18,11 +19,18 @@ if (!authStore.isAuthenticated) {
 
 const chatId = useRoute().params.id as string
 
+const inputsStore = useInputsStore(chatId)()
+
 const input = ref('')
 
 const shadowTop = ref(true)
 const shadowBottom = ref(false)
 const pageContentRef = ref<HTMLElement | null>(null)
+
+if (!inputsStore.getInput(Inputs.SelectedModel)?.model)
+  inputsStore.writeInput(Inputs.SelectedModel, {
+    model: AiModel.OpenaiGpt4o
+  })
 
 const updateShadows = () => {
   const el = pageContentRef.value
@@ -69,7 +77,7 @@ const createMessageEvent = async () => {
     ],
     {
       // TODO model settings
-      id: AiModel.OpenaiGpt4o,
+      id: inputsStore.getInput(Inputs.SelectedModel)?.model as AiModel,
       flags: [],
     },
     // TODO personality settings
@@ -129,7 +137,7 @@ definePageMeta({
       <Chat class="mt-20 mb-16 h-fit" @scroll-down="scrollDown" />
     </div>
     <div class="bottom-content max-h-content">
-      <ChatInput v-model="input" @create-message-event="createMessageEvent" />
+      <ChatInput @create-message-event="createMessageEvent" />
     </div>
   </div>
 </template>

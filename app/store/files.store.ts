@@ -45,6 +45,16 @@ export const useFilesStore = (id: string) =>
         this.uploadFile(internalId).then(() => {})
       },
 
+      async addExisting(file: Omit<StoreFile, 'internalId' | 'isUploading'>) {
+        const internalId = await sha1(stringToArrayBuffer(file.name + Date.now()))
+
+        this.files.push({
+          ...file,
+          internalId,
+          isUploading: false,
+        })
+      },
+
       removeFile(fileId: string) {
         this.files = this.files.filter((file) => file.id !== fileId && file.internalId !== fileId)
       },

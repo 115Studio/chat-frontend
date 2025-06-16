@@ -43,7 +43,7 @@ const isLink = (stage: MessageStage) => {
 </script>
 
 <template>
-  <div class="flex flex-col gap-2">
+  <div class="flex flex-col gap-2 reply">
     <template v-if="message.stages.length">
       <div
         v-for="stage in message.stages"
@@ -80,6 +80,9 @@ const isLink = (stage: MessageStage) => {
           </Text>
         </div>
       </div>
+      <template v-if="message.role === MessageRole.Assistant">
+        <ChatCommands :copy-content="stages.find(isText)?.content?.value || ''"/>
+      </template>
     </template>
     <div v-else class="message-container message-container-skeleton" />
   </div>
@@ -127,5 +130,14 @@ const isLink = (stage: MessageStage) => {
   &-loading {
     @include mixins.skeleton(300px, 300px, 24px);
   }
+}
+
+.reply .commands {
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.reply:hover .commands {
+  opacity: 1;
 }
 </style>

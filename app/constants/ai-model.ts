@@ -46,3 +46,9 @@ export enum AiModel {
 
   GrokBeta = 'grok-beta',
 }
+
+export enum ReasoningLevelEnum {
+  high = 'High',
+  medium = 'Medium',
+  low = 'Low'
+}

@@ -7,7 +7,9 @@ const props = defineProps<{
   id: string
 }>()
 
-const store = useFilesStore('@new')()
+const chatId = useRoute().params.id as string | undefined
+
+const store = useFilesStore(chatId ?? '@new')()
 </script>
 
 <template>
@@ -16,6 +18,7 @@ const store = useFilesStore('@new')()
     <transition name="fade">
       <button
         v-if="!store.isUploading(props.id)"
+        type="button"
         class="bg-default absolute top-0 right-0 rounded-bl-lg p-1"
         @click="store.removeFile(props.id)"
       >

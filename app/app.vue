@@ -8,6 +8,7 @@ import { WebSocketOpCode } from '@app/constants/web-socket-op-code'
 import { subscribeOp, useWebSocket } from '@app/composables/use-web-socket'
 import { useChatMessagesStore } from '@app/store/chat-messages.store'
 import { useChatsStore } from '@app/store/chats.store'
+import { Inputs, useInputsStore } from '@app/store/useInputsStore'
 
 const auth = useAuthStore()
 
@@ -77,6 +78,12 @@ async function main() {
     for (const store of messageStoreMap.values()) {
       store.deleteMessage(d.messageId)
     }
+  })
+
+  subscribeOp<any, any>(ws, WebSocketOpCode.SyncInput, ({ stages, channelId }) => {
+    useInputsStore(channelId)().writeInput(Inputs.ChatInput, {
+      stages
+    })
   })
 }
 

@@ -24,7 +24,7 @@ let currentJwt: string | null = null
 export const createWebSocketInstance = (url: string, jwt: string) => {
   const destroy$ = new Subject<void>()
 
-  const { data, status, open, close, ws } = vueUseWebSocket(
+  const { data, status, open, close, send, ws } = vueUseWebSocket(
     `${url}?auth=${jwt}`,
     {
       autoReconnect: {
@@ -108,6 +108,24 @@ export const createWebSocketInstance = (url: string, jwt: string) => {
     return connection$
   }
 
+  const sendMessage = <K extends string = string, T = any>(
+    message: WebSocketMessage<K, T>
+  ): boolean => {
+    if (status.value !== 'OPEN') {
+      console.error('Cannot send message: WebSocket is not connected')
+      return false
+    }
+
+    try {
+      const messageString = JSON.stringify(message)
+      send(messageString)
+      return true
+    } catch (error) {
+      console.error('Failed to send WebSocket message:', error)
+      return false
+    }
+  }
+
   const destroy = () => {
     destroy$.next()
     destroy$.complete()
@@ -124,6 +142,7 @@ export const createWebSocketInstance = (url: string, jwt: string) => {
     connection$,
 
     connect,
+    sendMessage,
     getMessagesByOpCode,
     destroy,
 

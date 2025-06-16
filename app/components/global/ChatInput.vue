@@ -1,17 +1,27 @@
 <script setup lang="ts">
 import { toast } from 'vue-sonner'
 import { useFilesStore } from '@app/store/files.store'
-import { normalizeAbsoluteLeaves } from '@app/lib/utils'
+import { normalizeAbsoluteLeaves, resolveMessageStageContentType, resolveMessageStageType } from '@app/lib/utils'
+import { Inputs, useInputsStore } from '@app/store/useInputsStore'
+import { debounce } from '@app/lib/debouce'
+import { useWebSocket } from '@app/composables/use-web-socket'
+import { wsApi } from '@app/composables/api'
+import { useAuthStore } from '@app/store/auth.store'
+import { WebSocketOpCode } from '@app/constants/web-socket-op-code'
+import { MessageStageType } from '@app/constants/message-stage-type'
+import { MessageStageContentType } from '@app/constants/message-stage-content-type'
 
 const chatId = useRoute().params.id as string | undefined
 
 const store = useFilesStore(chatId ?? '@new')()
+const inputsStore = useInputsStore(chatId ?? '@new')()
 
 const emit = defineEmits<{
   (e: 'createMessageEvent'): void
 }>()
 
-const model = defineModel<string>()
+const model = ref('')
+const incommingMessage = ref()
 
 const fileInput = ref<HTMLInputElement | null>(null)
 const textareaRef = ref<HTMLTextAreaElement | null>(null)
@@ -71,20 +81,87 @@ const onPaste = (event: ClipboardEvent) => {
 const resizeTextarea = () => {
   if (!textareaRef.value) return
 
-  // Reset to minimum height to get accurate scrollHeight measurement
   textareaRef.value.style.height = '28px'
 
-  // If content exceeds the minimum height, resize to fit
   if (textareaRef.value.scrollHeight > 28) {
     textareaRef.value.style.height = textareaRef.value.scrollHeight + 'px'
   }
 }
 
-// Watch for changes in model value to trigger resize
+const syncMessages = debounce(() => {
+  const files = store.files.map((file) => ({
+    type: resolveMessageStageType(file.type),
+    content: {
+      type: resolveMessageStageContentType(file.type),
+      value: `${file.id}::${file.type}::${file.url}`,
+    },
+  }))
+
+  const ws = useWebSocket(wsApi(), useAuthStore().jwt)
+
+  void ws.sendMessage({
+    op: WebSocketOpCode.SyncInput,
+    data: {
+      channelId: chatId,
+      stages: [
+        {
+          type: MessageStageType.Text,
+          content: {
+            type: MessageStageContentType.Text,
+            value: model.value,
+          },
+        },
+        ...files,
+      ],
+    },
+  })
+}, 1000)
+
+const receivingMessages = ref(false)
+
 watch(model, () => {
+  if (!receivingMessages.value) syncMessages()
+
   nextTick(() => {
     resizeTextarea()
   })
+})
+
+watch(() => store.files, () => {
+  if (receivingMessages.value) return
+  syncMessages()
+}, { deep: true })
+
+watch(() => inputsStore.inputs.get(Inputs.ChatInput), () => {
+  const chatInput = inputsStore.getInput(Inputs.ChatInput)
+  if (chatInput?.stages)
+    model.value = chatInput.stages.find((s) => s.type === MessageStageType.Text)?.content?.value || ''
+  else
+    model.value = ''
+
+  const images = chatInput?.stages
+    .filter((s) => [MessageStageType.Vision, MessageStageType.File].includes(s.type))
+    .map((s) => {
+      const [id, type, url] = s.content?.value?.split('::') ?? []
+      return {
+        id,
+        type,
+        url: url || '',
+      }
+    }) || []
+
+  store.clearFiles()
+
+  for (const image of images) {
+    if (!store.files.some((f) => f.internalId === image.id)) {
+      store.addExisting({
+        id: image.id,
+        url: image.url,
+        type: image.type,
+        name: image.id,
+      })
+    }
+  }
 }, { immediate: true })
 </script>
 

@@ -1,11 +1,16 @@
 <script setup lang="ts">
-import Copy from '@app/components/icons/Copy.vue'
-import Split from '@app/components/icons/Split.vue'
 import ChangeModel from '@app/components/chat/ChangeModel.vue'
 import { Tooltip } from '@app/components/ui/tooltip'
 import { ref, computed } from 'vue'
+import type { AiModel } from '@app/constants/ai-model'
 
 const isDropdownOpen = ref(false)
+
+const props = defineProps<{
+  copyContent: string
+}>()
+
+const model = defineModel<AiModel>()
 
 const isActive = computed(() => isDropdownOpen.value)
 </script>
@@ -18,9 +23,7 @@ const isActive = computed(() => isDropdownOpen.value)
     <TooltipProvider :delay-duration="250">
       <Tooltip>
         <TooltipTrigger>
-          <button class="button interactive">
-            <Copy class="w-4 h-4" />
-          </button>
+          <CopyButton :value="props.copyContent" />
         </TooltipTrigger>
         <TooltipContent>
           <Text as="p" variant="bodySm">
@@ -43,14 +46,15 @@ const isActive = computed(() => isDropdownOpen.value)
         </TooltipContent>
       </Tooltip>
     </TooltipProvider-->
-    <ChangeModel @dropdown-open="val => isDropdownOpen = val" />
+    <ChangeModel v-model="model" @dropdown-open="val => isDropdownOpen = val" />
   </div>
 </template>
 
 <style scoped lang="scss">
 .button {
-  @apply p-1.5 rounded-lg transition-colors;
+  @apply p-1.5 rounded-lg transition-all;
 }
+
 .commands {
   opacity: 0;
   transition: opacity 0.3s ease-in-out;

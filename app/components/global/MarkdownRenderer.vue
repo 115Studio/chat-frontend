@@ -56,22 +56,7 @@
           <Text v-if="token.language" as="p" class="font-mono text-sm">
             {{ token.language }}
           </Text>
-          <button
-            :class="{ 'copied': copiedStates[index] }"
-            type="button"
-            @click="copyCode(token.content, index)"
-          >
-            <transition
-              name="fade"
-              mode="out-in">
-              <div v-if="!copiedStates[index]" class="bg-neutral-100 hover:bg-neutral-200 transition-all rounded-lg p-1.5 active:scale-90">
-                <PhCopy size="16" weight="bold" class="text-slate-800" />
-              </div>
-              <div v-else class="bg-emerald-200 transition-all rounded-lg p-1.5 active:scale-90">
-                <PhCheck size="16" weight="bold" class="text-emerald-600" />
-              </div>
-            </transition>
-          </button>
+          <CopyButton :value="token.content" />
         </div>
         <highlightjs :code="token.content" :language="token.language || 'plaintext'" class="rounded-b-md"/>
       </div>
@@ -111,32 +96,12 @@
 <script setup lang="ts">
 import type { Token } from '@app/lib/parse-md';
 import { parseMarkdown } from '@app/lib/parse-md'
-import { PhCheck, PhCopy } from '@phosphor-icons/vue'
 import MarkdownInlineList from '@app/components/markdown/MarkdownInlineList.vue'
 
 
 const props = defineProps<{ markdown: string }>()
 
 const tokens: Ref<Token[]> = computed(() => parseMarkdown(props.markdown))
-
-const copiedStates = ref<Record<number, boolean>>({})
-
-const copiedTimeout = ref<NodeJS.Timeout | null>(null)
-
-const copyCode = async (content: string, index: number) => {
-  try {
-    if (copiedTimeout.value) clearTimeout(copiedTimeout.value)
-
-    await navigator.clipboard.writeText(content)
-    copiedStates.value[index] = true
-
-    copiedTimeout.value = setTimeout(() => {
-      copiedStates.value[index] = false
-    }, 2000)
-  } catch (err) {
-    console.error('Failed to copy code:', err)
-  }
-}
 
 const resolveHeadingVariant = (strength: number) => {
   switch (strength) {
@@ -177,17 +142,5 @@ const resolveHeadingVariant = (strength: number) => {
 .code-block-header {
   @apply flex justify-between items-center px-4 py-2 bg-white border-b border-neutral-200;
   min-height: 44px;
-}
-
-.fade-enter-active, .fade-leave-active {
-  transition: opacity 0.1s ease-in-out;
-}
-
-.fade-enter-from, .fade-leave-to {
-  opacity: 0;
-}
-
-.fade-enter-to, .fade-leave-from {
-  opacity: 1;
 }
 </style>
