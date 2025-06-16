@@ -79,7 +79,7 @@ const cancelEdit = () => {
         @keydown.exact.enter="saveEdit()"
         @keydown.exact.esc="cancelEdit"
         @click.stop
-      />
+      >
       <div v-else class="channel-name">
         <slot />
       </div>

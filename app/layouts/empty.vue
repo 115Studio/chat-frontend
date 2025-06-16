@@ -7,6 +7,8 @@
   </div>
 </template>
 
+<script setup lang="ts">
+</script>
 <style scoped lang="scss">
 .layout {
   display: flex;
@@ -23,5 +25,3 @@
   height: 100%;
 }
 </style>
-<script setup lang="ts">
-</script>

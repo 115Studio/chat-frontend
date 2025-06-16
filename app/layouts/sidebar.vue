@@ -33,13 +33,15 @@
                 <Text
                   v-if="chat.name !== MagicNumber.NameShowSkeleton"
                   :truncate="true"
-                  as="span" variant="bodySm" tone="muted"
+                  as="span"
+variant="bodySm"
+tone="muted"
                 >
                   {{ chat.name }}
                 </Text>
                 <div v-else class="name-skeleton" />
               </ChatButton>
-              <hr class="section-divider" />
+              <hr class="section-divider" >
             </template>
             <ChatButton
               v-for="chat in chatsStore.getUnpinnedChats()"
@@ -72,7 +74,7 @@
 </template>
 
 <script setup lang="ts">
-import { PhMapPin, PhPushPin, PhSpinner } from '@phosphor-icons/vue'
+import { PhPushPin, PhSpinner } from '@phosphor-icons/vue'
 import { useAuthStore } from '@app/store/auth.store'
 import Header from '@app/components/global/Header.vue'
 import { useFilesStore } from '@app/store/files.store'

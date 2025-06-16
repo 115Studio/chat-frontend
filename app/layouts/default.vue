@@ -9,6 +9,9 @@
   </div>
 </template>
 
+<script setup lang="ts">
+</script>
+
 <style scoped lang="scss">
 @use '@app/assets/styles/row';
 
@@ -38,6 +41,3 @@
   margin: 12px;
 }
 </style>
-
-<script setup lang="ts">
-</script>

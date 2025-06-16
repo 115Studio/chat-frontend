@@ -3,7 +3,8 @@
     <h1 class="text-3xl font-bold mb-8">WebSocket RxJS Demo</h1>
 
     <!-- Connection Status -->
-    <div class="p-6 rounded-lg shadow-sm flex flex-col"
+    <div
+class="p-6 rounded-lg shadow-sm flex flex-col"
          :class="connectionState.connected ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'">
       <h2 class="font-semibold text-lg mb-2 pl-3">Connection Status</h2>
       <p class="mb-1">{{ connectionState.connected ? 'Connected' : 'Disconnected' }}</p>
@@ -13,9 +14,10 @@
 
     <!-- Controls -->
     <div class="flex gap-4">
-      <button @click="toggleMessageSubscription"
-              class="px-6 py-3 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors font-medium"
-              :disabled="!connectionState.connected">
+      <button
+class="px-6 py-3 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors font-medium"
+              :disabled="!connectionState.connected"
+              @click="toggleMessageSubscription">
         {{ messageSubscribed ? 'Unsubscribe from' : 'Subscribe to' }} All Messages
       </button>
     </div>
@@ -24,7 +26,9 @@
     <div class="space-y-4">
       <h2 class="text-xl font-semibold">All Messages</h2>
       <div class="bg-gray-50 p-6 rounded-lg h-80 overflow-y-auto border">
-        <div v-for="message in allMessages" :key="message.id"
+        <div
+v-for="message in allMessages"
+:key="message.id"
              class="mb-4 p-4 bg-white rounded-lg border-l-4 shadow-sm"
              :class="getOpCodeColor(message.opCode)">
           <div class="text-sm text-gray-500 mb-2 font-medium">
@@ -58,7 +62,7 @@
 
 <script setup lang="ts">
 import { ref, reactive, onMounted, onUnmounted } from 'vue'
-import { Subscription } from 'rxjs'
+import type { Subscription } from 'rxjs'
 import { useWebSocket, type WebSocketMessage, type WebSocketState } from '../composables/use-web-socket'
 import { useAuthStore } from '@app/store/auth.store'
 

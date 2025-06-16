@@ -1,4 +1,5 @@
-import { Observable, Subject, BehaviorSubject, Subscription } from 'rxjs'
+import type { Subscription } from 'rxjs';
+import { Observable, Subject, BehaviorSubject } from 'rxjs'
 import { filter, map, takeUntil, share } from 'rxjs/operators'
 import { useWebSocket as vueUseWebSocket } from '@vueuse/core'
 import { watch } from 'vue'

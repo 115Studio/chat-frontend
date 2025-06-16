@@ -92,13 +92,13 @@ watch(model, () => {
   <div class="chat-input-container" @paste="onPaste">
     <div class="input-container">
       <textarea
+        ref="textareaRef"
         v-model="model"
         class="input"
         type="text"
         placeholder="Ask anything"
-        @keydown.enter.exact.prevent="(e) => createMessage()"
+        @keydown.enter.exact.prevent="() => createMessage()"
         @keydown.enter.shift.exact.prevent="model += '\n'"
-        ref="textareaRef"
       />
       <input
         ref="fileInput"
@@ -106,7 +106,7 @@ watch(model, () => {
         accept="image/*, text/*, application/pdf, application/json"
         class="hidden"
         @change="processFileInput"
-      />
+      >
     </div>
     <div class="relative overflow-x-auto max-w-full">
       <transition-group

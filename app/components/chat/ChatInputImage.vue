@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { PhCircleNotch, PhSpinner, PhX } from '@phosphor-icons/vue'
+import { PhSpinner, PhX } from '@phosphor-icons/vue'
 import { useFilesStore } from '@app/store/files.store'
 
 const props = defineProps<{
@@ -12,7 +12,7 @@ const store = useFilesStore('@new')()
 
 <template>
   <div class="relative">
-    <img :src="props.image" alt="Attached file" class="max-h-24 rounded-lg no-drag-no-select" />
+    <img :src="props.image" alt="Attached file" class="max-h-24 rounded-lg no-drag-no-select" >
     <transition name="fade">
       <button
         v-if="!store.isUploading(props.id)"
