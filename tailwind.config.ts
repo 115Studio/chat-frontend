@@ -70,6 +70,9 @@ export default {
         },
       },
       fontFamily: {
+        mono: [
+          'JetBrains Mono',
+        ],
         sans: [
           'Onest',
           'system-ui',

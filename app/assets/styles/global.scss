@@ -28,8 +28,8 @@ body {
 }
 
 code, kbd, samp, pre {
-  font-size: 1rem;
-  font-family: ui-monospace, "SFMono-Regular", "Consolas", 'Liberation Mono', "Menlo", monospace;
+  font-size: 0.9rem;
+  font-family: 'JetBrains Mono', monospace;
 }
 
 small {
@@ -140,4 +140,8 @@ a, a:hover, a:active, a:visited, button {
   -moz-user-select: none;
   -webkit-user-select: none;
   -ms-user-select: none;
+}
+
+pre code.hljs {
+  @apply rounded-lg
 }
