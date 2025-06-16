@@ -115,33 +115,40 @@ const syncMessages = debounce(() => {
       ],
     },
   })
-}, 1000)
+}, 1)
 
 const receivingMessages = ref(false)
 
 watch(model, () => {
-  if (!receivingMessages.value) syncMessages()
+  console.log('model changed', receivingMessages.value, model.value)
 
   nextTick(() => {
     resizeTextarea()
   })
+
+  if (receivingMessages.value) return
+
+  syncMessages()
 })
 
 watch(() => store.files, () => {
+  console.log('files changed', receivingMessages.value, store.files)
   if (receivingMessages.value) return
   syncMessages()
 }, { deep: true })
 
 watch(() => inputsStore.inputs.get(Inputs.ChatInput), () => {
+  receivingMessages.value = true
+
   const chatInput = inputsStore.getInput(Inputs.ChatInput)
   if (chatInput?.stages)
-    model.value = chatInput.stages.find((s) => s.type === MessageStageType.Text)?.content?.value || ''
+    model.value = chatInput.stages.find((s: any) => s.type === MessageStageType.Text)?.content?.value || ''
   else
     model.value = ''
 
   const images = chatInput?.stages
-    .filter((s) => [MessageStageType.Vision, MessageStageType.File].includes(s.type))
-    .map((s) => {
+    .filter((s: any) => [MessageStageType.Vision, MessageStageType.File].includes(s.type))
+    .map((s: any) => {
       const [id, type, url] = s.content?.value?.split('::') ?? []
       return {
         id,
@@ -162,6 +169,10 @@ watch(() => inputsStore.inputs.get(Inputs.ChatInput), () => {
       })
     }
   }
+
+  setTimeout(() => {
+    receivingMessages.value = false
+  }, 3)
 }, { immediate: true })
 </script>
 

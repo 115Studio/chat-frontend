@@ -1,27 +1,24 @@
-export const useSidebarStore = defineStore('sidebar', () => {
-  const isOpen = ref(true)
-  const isMobile = ref(false) // todo
+export const useSidebarStore = defineStore('sidebar', {
+  state: () => ({
+    isOpen: true,
+    isMobile: false, // todo
+  }),
 
-  function toggle() {
-    isOpen.value = !isOpen.value
-  }
+  actions: {
+    toggle() {
+      this.isOpen = !this.isOpen
+    },
 
-  function open() {
-    isOpen.value = true
-  }
+    open() {
+      this.isOpen = true
+    },
 
-  function close() {
-    isOpen.value = false
-  }
+    close() {
+      this.isOpen = false
+    },
+  },
 
-  return {
-    isOpen,
-    isMobile,
-    toggle,
-    open,
-    close,
-    persist: {
-      storage: localStorage,
-    }
-  }
+  persist: {
+    storage: localStorage,
+  },
 })
