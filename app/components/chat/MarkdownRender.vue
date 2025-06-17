@@ -137,7 +137,7 @@ onMounted(() => {
     }
   }
 
-  p code {
+  p code, strong code, em code, b code, i code {
     @apply bg-white px-1 py-0.5 rounded text-sm font-mono;
   }
 

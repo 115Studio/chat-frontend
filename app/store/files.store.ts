@@ -29,6 +29,11 @@ export const useFilesStore = (id: string) =>
 
     actions: {
       async addFile(file: File) {
+        if (file.size >= 8 * 1024 * 1024) {
+          toast.error('File size exceeds 8MB limit.')
+          return
+        }
+
         if (this.files.length >= 3) {
           toast.error('You can only upload up to 3 files at a time.')
           return
@@ -132,5 +137,16 @@ export const useFilesStore = (id: string) =>
           return Promise.reject(new Error('File upload failed'))
         }
       },
+
+      async checkStore() {
+        for (const file of this.files) {
+          if (file.isUploading && file.raw?.arrayBuffer)
+            this.uploadFile(file.internalId).catch(() => {})
+          else if (!file.url && file.raw?.arrayBuffer)
+            file.url = URL.createObjectURL(file.raw)
+          else
+            this.removeFile(file.internalId)
+        }
+      }
     },
   })

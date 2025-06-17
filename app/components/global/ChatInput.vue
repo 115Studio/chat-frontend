@@ -15,11 +15,10 @@ import { useAuthStore } from '@app/store/auth.store'
 import { WebSocketOpCode } from '@app/constants/web-socket-op-code'
 import { MessageStageType } from '@app/constants/message-stage-type'
 import { MessageStageContentType } from '@app/constants/message-stage-content-type'
-import Retry from '@app/components/icons/Retry.vue'
 import ChangeModel from '@app/components/chat/ChangeModel.vue'
-import { AiModel } from '@app/constants/ai-model'
 import { PhPaperclip, PhPaperPlaneRight } from '@phosphor-icons/vue'
 import Button from '@app/components/global/Button.vue'
+import { allowedTypes } from '@app/constants/allowed-file-types'
 
 const chatId = useRoute().params.id as string | undefined
 
@@ -77,7 +76,7 @@ const onPaste = (event: ClipboardEvent) => {
   const items = event.clipboardData?.items
   if (!items) return
   for (const item of items) {
-    if (item.type.startsWith('image/')) {
+    if (allowedTypes.includes(item.type)) {
       const file = item.getAsFile()
       if (file) {
         store.addFile(file)
@@ -234,6 +233,8 @@ onMounted(() => {
     model.value = chatInput.stages.find((s: any) => s.type === MessageStageType.Text)?.content?.value || ''
   else
     model.value = ''
+
+  store.checkStore()
 })
 </script>
 
@@ -264,7 +265,6 @@ onMounted(() => {
         class="input"
         type="text"
         placeholder="Ask anything"
-        @keydown.enter.shift.exact.prevent="model += '\n'"
         @keydown.enter.exact.prevent="() => createMessage()"
       />
       <input
@@ -280,9 +280,9 @@ onMounted(() => {
         <Button size="sm" class="max-w-4" @click="fileInput?.click()">
           <PhPaperclip size="20" />
         </Button>
-        <ChangeModel class="w-fit" tooltip-disabled v-model="model">
+        <ChangeModel v-model="model" class="w-fit" tooltip-disabled>
           <Button weight="normal" size="sm">
-            <component class="w-4 h-4" :is="resolveModelIcon(inputsStore.getInput(Inputs.SelectedModel)?.model)" />
+            <component :is="resolveModelIcon(inputsStore.getInput(Inputs.SelectedModel)?.model)" class="w-4 h-4" />
             {{ resolveModelName(inputsStore.getInput(Inputs.SelectedModel)?.model) }}
           </Button>
         </ChangeModel>

@@ -5,6 +5,7 @@ import { MessageStageType } from '@app/constants/message-stage-type'
 import { MessageRole } from '@app/constants/message-role'
 import UserChatCommands from '@app/components/chat/UserChatCommands.vue'
 import MarkdownRender from '@app/components/chat/MarkdownRender.vue'
+import { PhFile } from '@phosphor-icons/vue'
 
 
 const message = defineProps<Message>()
@@ -70,9 +71,13 @@ const isLink = (stage: MessageStage) => {
           <div v-if="isLoadingImage(stage)" class="image image-loading"/>
           <img v-else alt="image" :src="stage.content!.value" class="image no-drag-no-select" >
         </div>
-        <div v-else-if="isFile(stage)">
-          <Text as="p" variant="bodyMd" tone="muted">
-            {{ stage.content?.value }}
+        <div v-else-if="isFile(stage)" class="max-w-48">
+          <PhFile
+            class="w-full h-full object-cover rounded-custom text-stone-700"
+            weight="fill"
+          />
+          <Text as="p" variant="bodySm" class="text-center w-full truncate">
+            {{ stage.content?.value?.split('/').at(-1) || '' }}
           </Text>
         </div>
         <div v-else-if="isSearch(stage)">

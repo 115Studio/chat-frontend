@@ -11,6 +11,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, onBeforeUnmount } from 'vue'
+import { allowedTypes } from '@app/constants/allowed-file-types'
 const emit = defineEmits<{ (e: 'filesDropped', files: File[]): void }>()
 
 let dragCounter = 0
@@ -19,18 +20,6 @@ let listenersAttached = false
 const isDragging = ref(false)
 const isVideoDragged = ref(false)
 const isUnsupportedDragged = ref(false)
-
-const allowedTypes = [
-  'image/png',
-  'image/gif',
-  'image/jpeg',
-  'image/avif',
-  'image/avifs',
-  'image/heic',
-  'image/webp',
-  'application/pdf',
-  'text/plain'
-]
 
 function hasFiles(dt: DataTransfer | null): boolean {
   if (!dt?.items) return false

@@ -10,21 +10,29 @@ const emit = defineEmits<{
 
 const route = useRoute()
 
-const id = route.path.split('chat/')[1] ?? '@new'
+const id = computed(() => {
+  return route.params.id ?? '@new'
+})
 
-if (!id) {
+if (!id.value) {
   toast.error(`Chat Id is required`)
   useRouter().push('/')
 }
 
-const chat = useChatsStore().chats.find((c) => c.id === id)
+const chat = computed(() => {
+  return useChatsStore().chats.find((c) => c.id === id.value)
+})
 
-if (!chat) {
-  toast.error(`Chat with id ${id} not found`)
-  useRouter().push('/')
+if (!chat.value) {
+  if (id.value !== '@new') {
+    toast.error(`Chat with id ${id.value} not found`)
+    useRouter().push('/')
+  }
 }
 
-const messagesStore = useChatMessagesStore(id)()
+const messagesStore = computed(() => {
+  return useChatMessagesStore(id.value as string)()
+})
 
 const authStore = useAuthStore()
 
