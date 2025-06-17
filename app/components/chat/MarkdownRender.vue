@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import markdownit from 'markdown-it'
 import { useHljs } from '@app/lib/useHljs'
+import { debounce } from '@app/lib/debouce'
 
 const hljs = useHljs()
 
@@ -8,8 +9,17 @@ const props = defineProps<{
   content: string
 }>()
 
-const codeMap = ref<Record<number, [ string, string ]>>({})
-const codeHeaderOrdinal = ref(0)
+const codeMap = ref<Record<string, [ string, string ]>>({})
+
+const recordHeader = (lang: string, code: string) => {
+  codeMap.value = {}
+
+  const actualId = Math.random().toString(36).substring(2, 15)
+
+  codeMap.value[actualId] = [ lang, code ]
+
+  return 'code-header-' + actualId
+}
 
 const md = markdownit({
   linkify: true,
@@ -17,15 +27,13 @@ const md = markdownit({
   highlight: (str: string, lang: string) => {
     if (lang && hljs.getLanguage(lang)) {
       try {
-        return `<div class="internal-code-block-header lang-${lang}"><p class="c-b-c" style="display: none">${str}</p></div>`
-          + `<div class="code">${hljs.highlight(str, { language: lang }).value}</div>`
+        return `<div id="${recordHeader(lang, str)}"></div>` + hljs.highlight(str, { language: lang }).value
       } catch (e) {
         console.error(`Error highlighting code: ${e}`)
       }
     }
 
-    return `<div class="internal-code-block-header lang-${lang}"><p class="c-b-c" style="display: none">${str}</p></div>`
-      + `<div class="code">${str}</div>`
+    return ''
   }
 })
 
@@ -37,31 +45,38 @@ md.renderer.rules.link_open = (tokens: any, idx: any, options: any, env: any, se
   tokens[idx].attrSet('target', '_blank')
   return defaultRender(tokens, idx, options, env, self)
 }
-
-function addCodeHeaders() {
-  document.querySelectorAll('.internal-code-block-header').forEach((preEl) => {
-    if (preEl.querySelector('.internal-ignore')) return
-
-    const ordinal = codeHeaderOrdinal.value
-    const language = preEl.classList.item(1)?.split('lang-')[1] || 'txt'
-    const code = preEl.querySelector('.c-b-c')!.innerHTML.trim()
-
-    const codeHeaderIgnore = document.createElement('div')
-    codeHeaderIgnore.id = `code-header-${ordinal}`
-    codeHeaderIgnore.className = `internal-ignore`
-    preEl.prepend(codeHeaderIgnore)
-
-    codeMap.value[ordinal] = [ language, code ]
-
-    codeHeaderOrdinal.value++
-  })
-}
-
-onMounted(() => {
-  addCodeHeaders()
-
-  document.getElementById('copy-btn')
-})
+//
+// function addCodeHeaders() {
+//   document.querySelectorAll('.internal-code-block-header').forEach((preEl) => {
+//     const id = preEl.classList.item(2)?.split('id-')[1] || randomId()
+//     const language = preEl.classList.item(1)?.split('lang-')[1] || 'txt'
+//     const code = preEl.querySelector('.c-b-c')!.innerHTML.trim()
+//
+//     codeMap.value[id] = [ language, code ]
+//
+//     const exists = document.getElementById(`code-header-${id}`)
+//
+//     if (!exists) {
+//       const codeHeaderIgnore = document.createElement('div')
+//       codeHeaderIgnore.id = `code-header-${id}`
+//       codeHeaderIgnore.className = `internal-ignore`
+//       preEl.prepend(codeHeaderIgnore)
+//     }
+//   })
+// }
+//
+// onMounted(() => {
+//   addCodeHeaders()
+// })
+//
+// const codeHeadersDebounced = debounce(() => {
+//   addCodeHeaders()
+//   console.log('Code headers updated:', codeMap.value)
+// }, 100)
+//
+// watch(() => props.content, () => {
+//   codeHeadersDebounced()
+// })
 </script>
 
 <template>
@@ -204,7 +219,7 @@ onMounted(() => {
   }
 
   pre {
-    @apply relative rounded-2xl p-3 px-5 my-4;
+    @apply relative rounded-2xl p-3 px-5 mt-4 mb-8;
     background: white;
 
     border: 1px solid var(--color-border-default);
