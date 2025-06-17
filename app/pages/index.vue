@@ -64,6 +64,10 @@ const createMessageEvent = async () => {
 
   chatStore.createChat(channel)
 
+  useInputsStore(channel.id)().writeInput(Inputs.SelectedModel, {
+    model: inputsStore.getInput(Inputs.SelectedModel)?.model,
+  })
+
   const messages = useChatMessagesStore(channel.id)()
   messages.addMessage(userMessage)
   messages.addMessage(systemMessage)

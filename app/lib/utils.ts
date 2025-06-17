@@ -5,6 +5,8 @@ import { twMerge } from 'tailwind-merge'
 import { MessageStageType } from '@app/constants/message-stage-type'
 import { MessageStageContentType } from '@app/constants/message-stage-content-type'
 import type { MessageStages } from '@app/types'
+import type { AiModel } from '@app/constants/ai-model'
+import { models } from '@app/constants/models'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -65,4 +67,8 @@ export const convertStorageToAiRequest = (stages: MessageStages) => {
 
     return stage
   })
+}
+
+export const resolveModelName = (model: AiModel): string => {
+  return models.flatMap((m) => m.variants).find(variant => variant.id === model)?.name ?? model
 }

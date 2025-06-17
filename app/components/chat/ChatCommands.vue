@@ -3,14 +3,14 @@ import ChangeModel from '@app/components/chat/ChangeModel.vue'
 import { Tooltip } from '@app/components/ui/tooltip'
 import { ref, computed } from 'vue'
 import type { AiModel } from '@app/constants/ai-model'
+import Retry from '@app/components/icons/Retry.vue'
 
 const isDropdownOpen = ref(false)
 
 const props = defineProps<{
   copyContent: string
+  usedModel?: AiModel
 }>()
-
-const model = defineModel<AiModel>()
 
 const isActive = computed(() => isDropdownOpen.value)
 </script>
@@ -46,7 +46,11 @@ const isActive = computed(() => isDropdownOpen.value)
         </TooltipContent>
       </Tooltip>
     </TooltipProvider-->
-    <ChangeModel v-model="model" @dropdown-open="val => isDropdownOpen = val" />
+    <ChangeModel :used-model="usedModel" @dropdown-open="val => isDropdownOpen = val">
+      <button type="button" class="hover:bg-neutral-200 transition-all rounded-lg p-1.5 active:scale-90">
+        <Retry class="w-4 h-4" />
+      </button>
+    </ChangeModel>
   </div>
 </template>
 

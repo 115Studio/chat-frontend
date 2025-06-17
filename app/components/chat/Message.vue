@@ -81,7 +81,7 @@ const isLink = (stage: MessageStage) => {
         </div>
       </div>
       <template v-if="message.role === MessageRole.Assistant">
-        <ChatCommands :copy-content="stages.find(isText)?.content?.value || ''"/>
+        <ChatCommands :used-model="message.model.id" :copy-content="stages.find(isText)?.content?.value || ''"/>
       </template>
     </template>
     <div v-else class="message-container message-container-skeleton" />

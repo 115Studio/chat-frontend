@@ -49,7 +49,7 @@
                 :id="chat.id"
                 :key="chat.id"
               >
-                <Text v-if="chat.name !== MagicNumber.NameShowSkeleton" :truncate="true" as="span" variant="bodySm" tone="muted">
+                <Text v-if="chat.name !== MagicNumber.NameShowSkeleton" :truncate="true" as="p" variant="bodySm" tone="muted">
                   {{ chat.name }}
                 </Text>
                 <div v-else class="name-skeleton" />

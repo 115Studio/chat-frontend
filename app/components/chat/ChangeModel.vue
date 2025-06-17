@@ -6,7 +6,6 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger
 } from '@app/components/ui/dropdown-menu'
-import Retry from '@app/components/icons/Retry.vue'
 import { PhCaretRight } from '@phosphor-icons/vue'
 import ModelFeatures from '@app/components/chat/ModelFeatures.vue'
 import { defineEmits } from 'vue'
@@ -16,7 +15,11 @@ import { Inputs, useInputsStore } from '@app/store/useInputsStore'
 
 const chatId = useRoute().params.id as string
 
-const store = useInputsStore(chatId)()
+const store = useInputsStore(chatId ?? '@new')()
+
+const props = defineProps<{
+  usedModel?: AiModel
+}>()
 
 const emit = defineEmits(['dropdown-open'])
 
@@ -38,13 +41,11 @@ const selectModel = (selectedModel: AiModel, level?: ReasoningLevelEnum) => {
       <TooltipProvider :disable-hoverable-content="true" :delay-duration="250">
         <Tooltip>
           <TooltipTrigger>
-            <button type="button" class="hover:bg-neutral-200 transition-all rounded-lg p-1.5 active:scale-90">
-              <Retry class="w-4 h-4" />
-            </button>
+            <slot/>
           </TooltipTrigger>
           <TooltipContent>
             <Text as="p" variant="bodySm">
-              Change model (gpt-4o)
+              Change model ({{ props.usedModel || store.getInput(Inputs.SelectedModel)?.model || 'Select Model' }})
             </Text>
           </TooltipContent>
         </Tooltip>

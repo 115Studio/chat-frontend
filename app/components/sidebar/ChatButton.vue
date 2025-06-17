@@ -67,8 +67,8 @@ const cancelEdit = () => {
 </script>
 
 <template>
-  <button type="button" class="chat-button" :class="{ 'chat-button--active': chatIsActive }">
-    <div class="w-full p-2 pl-3" @click="!isEditing && move()" @dblclick="startEditing">
+  <button type="button" class="chat-button relative" :class="{ 'chat-button--active': chatIsActive }">
+    <div class="flex-1 min-w-0 p-2 pl-3" @click="!isEditing && move()" @dblclick="startEditing">
       <input
         v-if="isEditing"
         ref="inputRef"
@@ -85,12 +85,12 @@ const cancelEdit = () => {
       </div>
     </div>
     <div
-      class="flex flex-row justify-end gap-1 min-w-content ml-2 overflow-hidden controls min-w-8"
+      class="flex flex-row justify-end gap-1 overflow-hidden controls min-w-max shrink-0"
     >
       <DropdownMenu :open="dropdownOpen" @update:open="dropdownOpen = $event">
         <DropdownMenuTrigger>
           <div
-            class="dots-button p-1 rounded-md flex items-center justify-center z-[1000] mr-1"
+            class="dots-button bg-white p-1 rounded-md flex items-center justify-center z-[1000] mr-1"
             :class="{ 'dots-button--open': dropdownOpen }"
           >
             <PhDotsThree size="18" weight="bold" class="text-slate-500" />
@@ -141,42 +141,48 @@ const cancelEdit = () => {
 
 .controls {
   background-color: transparent;
+  display: none;
+  width: 0;
+}
+
+.chat-button:hover .controls {
+  display: flex;
+  width: auto;
 }
 
 .dots-button {
-  transform: translateX(100%);
-  opacity: 0;
-  transition:
-    transform 0.3s ease,
-    opacity 0.3s ease,
-    background-color 0.3s ease;
+  transition: background-color 0.3s ease;
 
   &:hover {
     background: var(--color-btn-inner-selected-bg);
   }
-
-  &--open {
-    transform: translateX(0);
-    opacity: 1;
-  }
 }
 
-.chat-button:hover .dots-button {
-  transform: translateX(0);
-  opacity: 1;
-
-  @apply cursor-pointer;
+.chat-button:has(.dots-button--open) .controls {
+  display: flex;
+  width: auto;
+  margin-left: 0.5rem;
 }
 
 @media (pointer: coarse) {
-  .dots-button {
-    transform: translateX(0);
-    opacity: 1;
+  .controls {
+    display: flex;
+    width: auto;
+    margin-left: 0.5rem;
+  }
+
+  .channel-name {
+    @apply truncate;
   }
 }
 
 .channel-name {
   @apply w-full;
+}
+
+.chat-button:hover .channel-name,
+.chat-button:has(.dots-button--open) .channel-name {
+  @apply truncate;
 }
 
 .channel-name-input {

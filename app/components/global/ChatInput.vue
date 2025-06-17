@@ -1,7 +1,12 @@
 <script setup lang="ts">
 import { toast } from 'vue-sonner'
 import { useFilesStore } from '@app/store/files.store'
-import { normalizeAbsoluteLeaves, resolveMessageStageContentType, resolveMessageStageType } from '@app/lib/utils'
+import {
+  normalizeAbsoluteLeaves,
+  resolveMessageStageContentType,
+  resolveMessageStageType,
+  resolveModelName
+} from '@app/lib/utils'
 import { Inputs, useInputsStore } from '@app/store/useInputsStore'
 import { debounce } from '@app/lib/debouce'
 import { useWebSocket } from '@app/composables/use-web-socket'
@@ -10,6 +15,9 @@ import { useAuthStore } from '@app/store/auth.store'
 import { WebSocketOpCode } from '@app/constants/web-socket-op-code'
 import { MessageStageType } from '@app/constants/message-stage-type'
 import { MessageStageContentType } from '@app/constants/message-stage-content-type'
+import Retry from '@app/components/icons/Retry.vue'
+import ChangeModel from '@app/components/chat/ChangeModel.vue'
+import { AiModel } from '@app/constants/ai-model'
 
 const chatId = useRoute().params.id as string | undefined
 
@@ -268,7 +276,12 @@ onMounted(() => {
     </div>
     <div class="chat-input-actions">
       <div class="chat-input-actions__left">
-        <button type="button" class="voice-button">Voice</button>
+        <ChangeModel v-model="model">
+          <button type="button" class="bg-neutral-100 min-w-32 rounded-lg p-2 active:scale-90 flex flex-row items-center justify-between gap-1">
+            {{ resolveModelName(inputsStore.getInput(Inputs.SelectedModel)?.model) }}
+            <Retry class="w-4 h-4" />
+          </button>
+        </ChangeModel>
         <button type="button" class="clear-button">Clear</button>
         <button type="button" class="settings-button">Settings</button>
       </div>
@@ -336,7 +349,7 @@ onMounted(() => {
   }
 
   button {
-    @apply transition-opacity duration-200 ease-in-out;
+    @apply transition-all duration-200 ease-in-out;
     &:hover {
       @apply opacity-60;
     }
