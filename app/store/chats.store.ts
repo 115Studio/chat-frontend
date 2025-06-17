@@ -1,5 +1,7 @@
 import { defineStore } from 'pinia'
 import type { Chat } from '@app/types'
+import { deleteChannel } from '@app/composables/api'
+import { useAuthStore } from '@app/store/auth.store'
 
 export const useChatsStore = defineStore('chats', {
   state: () => ({
@@ -42,12 +44,12 @@ export const useChatsStore = defineStore('chats', {
       return null
     },
 
-    deleteChat(id: string): boolean {
-      const before = this.chats.length
-      this.chats = this.chats.filter((chat) => chat.id !== id)
-      const after = this.chats.length
+    async deleteChat(id: string): Promise<boolean> {
+      this.chats = this.chats.filter((c) => c.id !== id)
 
-      return before !== after
+      const result = await deleteChannel(useAuthStore().jwt, id)
+
+      return result.ok
     },
 
     getChat(id: string): Chat | null {

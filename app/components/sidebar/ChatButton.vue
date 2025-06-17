@@ -25,7 +25,7 @@ const chatName = computed(() => {
 })
 
 const deleteChat = async () => {
-  store.deleteChat(props.id)
+  await store.deleteChat(props.id)
 
   if (chatIsActive.value) await useRouter().push('/')
 }

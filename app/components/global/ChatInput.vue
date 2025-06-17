@@ -120,6 +120,7 @@ const receivingMessages = ref(false)
 const writingSelf = ref(false)
 
 watch(model, () => {
+  console.log('updated')
   saveToStore()
 
   nextTick(() => {
@@ -188,8 +189,6 @@ watch(() => inputsStore.inputs[Inputs.ChatInput], () => {
 })
 
 const saveToStore = () => {
-  if (!chatId) return
-
   const files = store.files
     .filter(file => !file.isUploading)
     .map((file) => ({
