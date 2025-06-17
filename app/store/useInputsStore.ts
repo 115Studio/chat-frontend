@@ -10,20 +10,24 @@ export enum Inputs {
 export const useInputsStore = (id: string) =>
   defineStore(`inputs-store-${id}`, {
     state: () => ({
-      inputs: new Map<string, any>(),
+      inputs: {} as Record<Inputs | string, any>,
     }),
+
+    persist: {
+      storage: localStorage,
+    },
 
     actions: {
       getInput(key: Inputs | string): any | undefined {
-        return this.inputs.get(key)
+        return this.inputs[key]
       },
 
       writeInput(key: Inputs | string, value: any): void {
-        this.inputs.set(key, value)
+        this.inputs[key] = value
       },
 
       deleteInput(key: Inputs | string): void {
-        this.inputs.delete(key)
+        this.inputs.delete[key] = undefined
       },
     }
   })

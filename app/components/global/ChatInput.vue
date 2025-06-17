@@ -137,7 +137,7 @@ watch(() => store.files, () => {
   syncMessages()
 }, { deep: true })
 
-watch(() => inputsStore.inputs.get(Inputs.ChatInput), () => {
+watch(() => inputsStore.inputs[Inputs.ChatInput], () => {
   if (writingSelf.value) return
 
   receivingMessages.value = true
@@ -188,6 +188,8 @@ watch(() => inputsStore.inputs.get(Inputs.ChatInput), () => {
 })
 
 const saveToStore = () => {
+  if (!chatId) return
+
   const files = store.files
     .filter(file => !file.isUploading)
     .map((file) => ({
@@ -217,6 +219,14 @@ const saveToStore = () => {
     writingSelf.value = false
   }, 3)
 }
+
+onMounted(() => {
+  const chatInput = inputsStore.getInput(Inputs.ChatInput)
+  if (chatInput?.stages)
+    model.value = chatInput.stages.find((s: any) => s.type === MessageStageType.Text)?.content?.value || ''
+  else
+    model.value = ''
+})
 </script>
 
 <template>

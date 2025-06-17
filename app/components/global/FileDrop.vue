@@ -20,6 +20,27 @@ const isDragging = ref(false)
 const isVideoDragged = ref(false)
 const isUnsupportedDragged = ref(false)
 
+const allowedTypes = [
+  'image/png',
+  'image/gif',
+  'image/jpeg',
+  'image/avif',
+  'image/avifs',
+  'image/heic',
+  'image/webp',
+  'application/pdf',
+  'text/plain'
+]
+
+function hasFiles(dt: DataTransfer | null): boolean {
+  if (!dt?.items) return false
+
+  for (const item of dt.items) {
+    if (item.kind === 'file') return true
+  }
+  return false
+}
+
 function hasVideo(dt: DataTransfer | null): boolean {
   if (!dt?.items) return false
 
@@ -33,10 +54,8 @@ function hasUnsupported(dt: DataTransfer | null): boolean {
   if (!dt?.items) return false
 
   for (const item of dt.items) {
-    if (item.kind === 'file') {
-      const t = item.type
-      if (!t.startsWith('image/') && !t.startsWith('text/') && !t.startsWith('application/'))
-        return true
+    if (item.kind === 'file' && !allowedTypes.includes(item.type)) {
+      return true
     }
   }
   return false
@@ -44,11 +63,15 @@ function hasUnsupported(dt: DataTransfer | null): boolean {
 
 function onDragEnter(e: DragEvent) {
   e.preventDefault()
+
+  const dt = e.dataTransfer
+
+  if (!hasFiles(dt)) return
+
   dragCounter++
 
   if (dragCounter === 1) {
     isDragging.value = true
-    const dt = e.dataTransfer
 
     if (hasVideo(dt)) isVideoDragged.value = true
     else if (hasUnsupported(dt)) isUnsupportedDragged.value = true
@@ -58,11 +81,20 @@ function onDragEnter(e: DragEvent) {
 function onDragOver(e: DragEvent) {
   e.preventDefault()
 
+  const dt = e.dataTransfer
+
+  if (!hasFiles(dt)) return
+
   if (isVideoDragged.value || isUnsupportedDragged.value) e.dataTransfer!.dropEffect = 'none'
 }
 
 function onDragLeave(e: DragEvent) {
   e.preventDefault()
+
+  const dt = e.dataTransfer
+
+  if (!hasFiles(dt)) return
+
   dragCounter--
 
   if (dragCounter === 0) {
@@ -74,6 +106,11 @@ function onDragLeave(e: DragEvent) {
 
 function onDrop(e: DragEvent) {
   e.preventDefault()
+
+  const dt = e.dataTransfer
+
+  if (!hasFiles(dt)) return
+
   dragCounter = 0
 
   if (isVideoDragged.value || isUnsupportedDragged.value) {
@@ -84,16 +121,12 @@ function onDrop(e: DragEvent) {
   }
 
   isDragging.value = false
-  const dt = e.dataTransfer
   if (!dt?.files) return
 
   console.log('Files dropped:', dt.files)
 
-  const files = Array.from(dt.files).filter(
-    (file) =>
-      file.type.startsWith('image/') ||
-      file.type.startsWith('text/') ||
-      file.type.startsWith('application/'),
+  const files = Array.from(dt.files).filter((file) =>
+    allowedTypes.includes(file.type)
   )
 
   emit('filesDropped', files)
