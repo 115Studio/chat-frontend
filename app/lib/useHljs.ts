@@ -33,6 +33,7 @@ import clojure from 'highlight.js/lib/languages/clojure'
 import groovy from 'highlight.js/lib/languages/groovy'
 import erlang from 'highlight.js/lib/languages/erlang'
 import ocaml from 'highlight.js/lib/languages/ocaml'
+import lisp from 'highlight.js/lib/languages/lisp'
 
 export const useHljs = () => {
   hljs.registerLanguage('javascript', javascript)
@@ -68,6 +69,7 @@ export const useHljs = () => {
   hljs.registerLanguage('groovy', groovy)
   hljs.registerLanguage('erlang', erlang)
   hljs.registerLanguage('ocaml', ocaml)
+  hljs.registerLanguage('lisp', lisp)
 
   return hljs
 }

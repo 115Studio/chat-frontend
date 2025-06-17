@@ -18,13 +18,14 @@ const md = markdownit({
     if (lang && hljs.getLanguage(lang)) {
       try {
         return `<div class="internal-code-block-header lang-${lang}"><p class="c-b-c" style="display: none">${str}</p></div>`
-          + hljs.highlight(str, { language: lang }).value
+          + `<div class="code">${hljs.highlight(str, { language: lang }).value}</div>`
       } catch (e) {
         console.error(`Error highlighting code: ${e}`)
       }
     }
 
-    return ''
+    return `<div class="internal-code-block-header lang-${lang}"><p class="c-b-c" style="display: none">${str}</p></div>`
+      + `<div class="code">${str}</div>`
   }
 })
 
@@ -68,7 +69,7 @@ onMounted(() => {
   <template v-for="([ i, [ language, code ]]) of Object.entries(codeMap)">
     <Teleport defer :to="'#' + `code-header-${i}`">
       <div class="code-block-header">
-        <Text v-if="language" as="p" class="font-mono text-sm">
+        <Text v-if="language" as="p" class="font-mono text-md">
           {{ language }}
         </Text>
         <CopyButton :value="code" />
@@ -79,8 +80,7 @@ onMounted(() => {
 
 <style lang="scss">
 .code-block-header {
-  @apply flex justify-between items-center px-4 py-2 bg-white border-b border-neutral-200;
-  min-height: 44px;
+  @apply flex justify-between items-center mb-1 pb-1 bg-white border-b border-neutral-200;
 }
 
 .markdown {
@@ -170,12 +170,15 @@ onMounted(() => {
   }
 
   pre {
-    @apply relative rounded-2xl p-3 my-4;
-    overflow-y: hidden;
-    overflow-x: auto;
+    @apply relative rounded-2xl p-3 px-5 my-4;
     background: white;
 
     border: 1px solid var(--color-border-default);
+  }
+
+  .code {
+    overflow-y: hidden;
+    overflow-x: auto;
   }
 
   .copy-btn {
