@@ -218,7 +218,7 @@ md.renderer.rules.link_open = (tokens: any, idx: any, options: any, env: any, se
   }
 
   pre {
-    @apply relative rounded-2xl p-3 px-5 my-4;
+    @apply relative rounded-2xl p-3 px-5 my-4 max-w-[95%];
     background: white;
 
     border: 1px solid var(--color-border-default);
