@@ -10,6 +10,7 @@ import { useChatMessagesStore } from '@app/store/chat-messages.store'
 import { useChatsStore } from '@app/store/chats.store'
 import { Inputs, useInputsStore } from '@app/store/useInputsStore'
 import { useNewChatStore } from '@app/store/new-chat.store'
+import 'highlight.js/styles/github.css'
 
 const auth = useAuthStore()
 

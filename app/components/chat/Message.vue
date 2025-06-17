@@ -4,6 +4,8 @@ import { MessageStageContentType } from '@app/constants/message-stage-content-ty
 import { MessageStageType } from '@app/constants/message-stage-type'
 import { MessageRole } from '@app/constants/message-role'
 import UserChatCommands from '@app/components/chat/UserChatCommands.vue'
+import MarkdownRender from '@app/components/chat/MarkdownRender.vue'
+
 
 const message = defineProps<Message>()
 
@@ -41,6 +43,8 @@ const isSearch = (stage: MessageStage) => {
 const isLink = (stage: MessageStage) => {
   return stage.content?.type === MessageStageContentType.Url
 }
+
+
 </script>
 
 <template>
@@ -56,9 +60,10 @@ const isLink = (stage: MessageStage) => {
           'message-container-bot': message.role === MessageRole.Assistant,
         }"
       >
-        <div v-if="isText(stage)" class="whitespace-pre-wrap break-words">
+        <div v-if="isText(stage)" class="whitespace-normal break-words">
           <Text as="p" variant="bodyMd" :tone="isReasoning(stage) ? 'muted' : 'content'">
-            <MarkdownRenderer :markdown="stage.content?.value || ''" />
+<!--            <MarkdownRenderer :markdown="stage.content?.value || ''" />-->
+            <MarkdownRender :content="stage.content?.value || ''" />
           </Text>
         </div>
         <div v-else-if="isImage(stage)">
@@ -92,7 +97,7 @@ const isLink = (stage: MessageStage) => {
   </div>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss">
 @use '@app/assets/styles/mixins';
 
 .message-container {

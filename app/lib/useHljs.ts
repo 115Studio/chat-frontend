@@ -1,6 +1,4 @@
 import hljs from 'highlight.js/lib/core'
-import highlightJS from '@highlightjs/vue-plugin'
-import 'highlight.js/styles/github.css'
 
 import javascript from 'highlight.js/lib/languages/javascript'
 import python from 'highlight.js/lib/languages/python'
@@ -36,8 +34,7 @@ import groovy from 'highlight.js/lib/languages/groovy'
 import erlang from 'highlight.js/lib/languages/erlang'
 import ocaml from 'highlight.js/lib/languages/ocaml'
 
-
-export default defineNuxtPlugin((nuxtApp) => {
+export const useHljs = () => {
   hljs.registerLanguage('javascript', javascript)
   hljs.registerLanguage('python', python)
   hljs.registerLanguage('typescript', typescript)
@@ -72,5 +69,5 @@ export default defineNuxtPlugin((nuxtApp) => {
   hljs.registerLanguage('erlang', erlang)
   hljs.registerLanguage('ocaml', ocaml)
 
-  nuxtApp.vueApp.use(highlightJS)
-})
+  return hljs
+}
