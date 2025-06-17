@@ -5,13 +5,13 @@ export const useModelFeatures = (model: AiModel): AiModelFeature[] => {
   switch (model) {
     // OpenAI models
     case AiModel.OpenaiGpt4o:
-      return [AiModelFeature.TextGen, AiModelFeature.Vision, AiModelFeature.Reasoning, AiModelFeature.ReasoningControl]
+      return [AiModelFeature.TextGen, AiModelFeature.Vision, AiModelFeature.Reasoning]
     case AiModel.OpenaiGpt4oMini:
-      return [AiModelFeature.TextGen, AiModelFeature.Vision, AiModelFeature.Reasoning, AiModelFeature.ReasoningControl]
+      return [AiModelFeature.TextGen, AiModelFeature.Vision, AiModelFeature.Reasoning]
     case AiModel.OpenaiGpt4Turbo:
-      return [AiModelFeature.TextGen, AiModelFeature.Reasoning, AiModelFeature.ReasoningControl]
+      return [AiModelFeature.TextGen, AiModelFeature.Reasoning]
     case AiModel.OpenaiGpt4:
-      return [AiModelFeature.TextGen, AiModelFeature.Reasoning, AiModelFeature.ReasoningControl]
+      return [AiModelFeature.TextGen, AiModelFeature.Reasoning]
     case AiModel.OpenaiGpt35Turbo:
       return [AiModelFeature.TextGen]
 
@@ -43,7 +43,7 @@ export const useModelFeatures = (model: AiModel): AiModelFeature[] => {
     case AiModel.GoogleGemini15Flash:
       return [AiModelFeature.TextGen, AiModelFeature.Vision]
     case AiModel.GoogleGeminiPro:
-      return [AiModelFeature.TextGen, AiModelFeature.WebSearch, AiModelFeature.PdfScan, AiModelFeature.Vision, AiModelFeature.Reasoning, AiModelFeature.ReasoningControl]
+      return [AiModelFeature.TextGen, AiModelFeature.WebSearch, AiModelFeature.PdfScan, AiModelFeature.Vision, AiModelFeature.Reasoning]
 
     // Groq models
     case AiModel.GroqLlama31:

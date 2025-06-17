@@ -39,6 +39,11 @@ export const useNewChatStore = defineStore('new-chat', {
         model: model.id,
       })
 
+      console.log(model.flags, model.flags[0])
+      useInputsStore(channel.id)().writeInput(Inputs.ReasoningLevel, {
+        level: model.flags[0],
+      })
+
       const messages = useChatMessagesStore(channel.id)()
       messages.addMessage(userMessage)
       messages.addMessage(systemMessage)
