@@ -29,7 +29,7 @@ const handleOverlayClick = (event: MouseEvent) => {
     <Transition name="modal-overlay">
       <div
         v-if="isOpen"
-        class="fixed inset-0 z-50 bg-[#000000ab] flex items-center justify-center"
+        class="fixed inset-0 z-[999999999] bg-[#000000ab] flex items-center justify-center"
         @click="handleOverlayClick"
       >
         <Transition name="modal-close">

@@ -8,8 +8,10 @@ import {
 import ModelFeatures from '@app/components/chat/ModelFeatures.vue'
 
 import BrainHalf from '@app/components/icons/BrainHalf.vue';
+import Brick from '@app/components/icons/Brick.vue';
 import type { AiModelFeature } from '@app/constants/ai-model-feature'
 import { ReasoningLevelEnum } from '@app/constants/ai-model'
+import { AiModelFlag } from '@app/constants/ai-model-flag'
 
 const props = defineProps<{
   model: {
@@ -29,12 +31,27 @@ const props = defineProps<{
 const map = {
   [ReasoningLevelEnum.low]: BrainHalf,
   [ReasoningLevelEnum.medium]: BrainHalf,
-  [ReasoningLevelEnum.high]: BrainHalf
+  [ReasoningLevelEnum.high]: BrainHalf,
+  [ReasoningLevelEnum.none]: Brick,
 }
 
 const emit = defineEmits<{
-  (e: 'update:level', level: ReasoningLevelEnum): void
+  (e: 'update:level', level: AiModelFlag): void
 }>()
+
+const transformLevelToFlag = (level: ReasoningLevelEnum): AiModelFlag => {
+  switch (level) {
+    case ReasoningLevelEnum.low:
+      return AiModelFlag.LowReasoning
+    case ReasoningLevelEnum.medium:
+      return AiModelFlag.MediumReasoning
+    case ReasoningLevelEnum.high:
+      return AiModelFlag.HighReasoning
+    case ReasoningLevelEnum.none:
+      return AiModelFlag.NoneReasoning
+  }
+}
+
 </script>
 
 <template>
@@ -52,7 +69,7 @@ const emit = defineEmits<{
           v-for="level in Object.values(ReasoningLevelEnum)"
           :key="level"
           class="cursor-pointer"
-          @click="emit('update:level', level as ReasoningLevelEnum)"
+          @click="emit('update:level', transformLevelToFlag(level))"
         >
           <component :is="map[level]" class="w-4 h-4" />
           <Text as="p" variant="bodySm">

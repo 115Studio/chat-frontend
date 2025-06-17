@@ -8,7 +8,7 @@ import { WebSocketOpCode } from '@app/constants/web-socket-op-code'
 import { subscribeOp, useWebSocket } from '@app/composables/use-web-socket'
 import { useChatMessagesStore } from '@app/store/chat-messages.store'
 import { useChatsStore } from '@app/store/chats.store'
-import { Inputs, useInputsStore } from '@app/store/useInputsStore'
+import { Inputs, useInputsStore } from '@app/store/inputs.store'
 import { useNewChatStore } from '@app/store/new-chat.store'
 import 'highlight.js/styles/github.css'
 

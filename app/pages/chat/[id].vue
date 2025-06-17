@@ -8,7 +8,7 @@ import { MessageStageContentType } from '@app/constants/message-stage-content-ty
 import { AiModel } from '@app/constants/ai-model'
 import { toast } from 'vue-sonner'
 import { useChatMessagesStore } from '@app/store/chat-messages.store'
-import { Inputs, useInputsStore } from '@app/store/useInputsStore'
+import { Inputs, useInputsStore } from '@app/store/inputs.store'
 import { useNewChatStore } from '@app/store/new-chat.store'
 
 const router = useRouter()
@@ -74,7 +74,9 @@ const createMessageEvent = async () => {
     {
       // TODO model settings
       id: inputsStore.getInput(Inputs.SelectedModel)?.model as AiModel,
-      flags: [],
+      flags: [
+        inputsStore.getInput(Inputs.ReasoningLevel)?.level
+      ],
     },
     // TODO personality settings
   )

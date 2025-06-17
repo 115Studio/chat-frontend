@@ -7,6 +7,7 @@ import { MessageStageContentType } from '@app/constants/message-stage-content-ty
 import type { MessageStages } from '@app/types'
 import type { AiModel } from '@app/constants/ai-model'
 import { models } from '@app/constants/models'
+import { AiModelFlag } from '@app/constants/ai-model-flag'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -87,4 +88,19 @@ export const resolveModelName = (model: AiModel): string => {
 
 export const resolveModelIcon = (model: AiModel) => {
   return models.find(m => m.variants.some(variant => variant.id === model))?.icon ?? ''
+}
+
+export const resolveReasoningLevel = (level: AiModelFlag): string => {
+  switch (level) {
+    case AiModelFlag.LowReasoning:
+      return 'Low'
+    case AiModelFlag.MediumReasoning:
+      return 'Medium'
+    case AiModelFlag.HighReasoning:
+      return 'High'
+    case AiModelFlag.NoneReasoning:
+      return ''
+    default:
+      return ''
+  }
 }

@@ -5,7 +5,7 @@ import { MessageStageType } from '@app/constants/message-stage-type'
 import { MessageStageContentType } from '@app/constants/message-stage-content-type'
 import { AiModel } from '@app/constants/ai-model'
 import { convertStorageToAiRequest } from '@app/lib/utils'
-import { Inputs, useInputsStore } from '@app/store/useInputsStore'
+import { Inputs, useInputsStore } from '@app/store/inputs.store'
 import { MagicNumber } from '@app/constants/magic-number'
 import { useNewChatStore } from '@app/store/new-chat.store'
 
@@ -56,7 +56,12 @@ const createMessageEvent = async () => {
     createdAt: Date.now()
   })
 
-  void useNewChatStore().newChat(internalId, authStore.jwt, convertedStages, inputsStore.getInput(Inputs.SelectedModel)?.model)
+  void useNewChatStore().newChat(internalId, authStore.jwt, convertedStages, {
+    id: inputsStore.getInput(Inputs.SelectedModel)?.model,
+    flags: [
+      inputsStore.getInput(Inputs.ReasoningLevel)?.level
+    ],
+  })
 
   return router.push('/chat/@new')
 }

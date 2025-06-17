@@ -50,5 +50,6 @@ export enum AiModel {
 export enum ReasoningLevelEnum {
   high = 'High',
   medium = 'Medium',
-  low = 'Low'
+  low = 'Low',
+  none = 'None',
 }

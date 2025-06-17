@@ -10,9 +10,10 @@ import { PhCaretRight } from '@phosphor-icons/vue'
 import ModelFeatures from '@app/components/chat/ModelFeatures.vue'
 import { defineEmits } from 'vue'
 import { AiModelFeature } from '@app/constants/ai-model-feature'
-import type { ReasoningLevelEnum, AiModel } from '@app/constants/ai-model'
-import { Inputs, useInputsStore } from '@app/store/useInputsStore'
-import { resolveModelName } from '../../lib/utils'
+import type { AiModel } from '@app/constants/ai-model'
+import { Inputs, useInputsStore } from '@app/store/inputs.store'
+import { resolveModelName } from '@app/lib/utils'
+import type { AiModelFlag } from '@app/constants/ai-model-flag'
 
 const chatId = useRoute().params.id as string
 
@@ -29,7 +30,7 @@ function handleOpenChange(open: boolean) {
   emit('dropdown-open', open)
 }
 
-const selectModel = (selectedModel: AiModel, level?: ReasoningLevelEnum) => {
+const selectModel = (selectedModel: AiModel, level?: AiModelFlag) => {
   store.writeInput(Inputs.SelectedModel, { model: selectedModel })
   if (level) store.writeInput(Inputs.ReasoningLevel, { level })
 
@@ -72,7 +73,7 @@ const selectModel = (selectedModel: AiModel, level?: ReasoningLevelEnum) => {
                   v-if="variant.features.includes(AiModelFeature.ReasoningControl)"
                   :model="model"
                   :variant="variant"
-                  @update:level="(level) => selectModel(variant.id, level as ReasoningLevelEnum)"
+                  @update:level="(level) => selectModel(variant.id, level as AiModelFlag)"
                 />
                 <DropdownMenuItem
                   v-else

@@ -5,9 +5,9 @@ import {
   normalizeAbsoluteLeaves,
   resolveMessageStageContentType,
   resolveMessageStageType, resolveModelIcon,
-  resolveModelName
+  resolveModelName, resolveReasoningLevel
 } from '@app/lib/utils'
-import { Inputs, useInputsStore } from '@app/store/useInputsStore'
+import { Inputs, useInputsStore } from '@app/store/inputs.store'
 import { debounce } from '@app/lib/debouce'
 import { useWebSocket } from '@app/composables/use-web-socket'
 import { wsApi } from '@app/composables/api'
@@ -284,6 +284,8 @@ onMounted(() => {
           <Button weight="normal" size="sm">
             <component :is="resolveModelIcon(inputsStore.getInput(Inputs.SelectedModel)?.model)" class="w-4 h-4" />
             {{ resolveModelName(inputsStore.getInput(Inputs.SelectedModel)?.model) }}
+
+            {{ resolveReasoningLevel(inputsStore.getInput(Inputs.ReasoningLevel)?.level) }}
           </Button>
         </ChangeModel>
       </div>

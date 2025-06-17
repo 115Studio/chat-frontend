@@ -1,10 +1,11 @@
 import type { MessageStages } from '@app/types'
 import type { AiModel } from '@app/constants/ai-model'
 import { createMessage } from '@app/composables/api'
-import { Inputs, useInputsStore } from '@app/store/useInputsStore'
+import { Inputs, useInputsStore } from '@app/store/inputs.store'
 import { useChatMessagesStore } from '@app/store/chat-messages.store'
 import { toast } from 'vue-sonner'
 import { useChatsStore } from '@app/store/chats.store'
+import type { AiModelFlag } from '@app/constants/ai-model-flag'
 
 export const useNewChatStore = defineStore('new-chat', {
   state: () => ({
@@ -13,18 +14,14 @@ export const useNewChatStore = defineStore('new-chat', {
   }),
 
   actions: {
-    async newChat(internalId: string, jwt: string, stages: MessageStages, model: AiModel) {
+    async newChat(internalId: string, jwt: string, stages: MessageStages, model: { id: AiModel, flags: AiModelFlag[] }) {
       this.internalId = internalId
 
       const response = await createMessage(
         jwt,
         '@new',
         stages,
-        {
-          // TODO model settings
-          id: model,
-          flags: [],
-        },
+        model,
         // TODO personality settings
       )
 
@@ -39,7 +36,7 @@ export const useNewChatStore = defineStore('new-chat', {
       useChatsStore().updateChatInternal(internalId, channel)
 
       useInputsStore(channel.id)().writeInput(Inputs.SelectedModel, {
-        model,
+        model: model.id,
       })
 
       const messages = useChatMessagesStore(channel.id)()

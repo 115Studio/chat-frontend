@@ -6,4 +6,6 @@ export enum AiModelFlag {
   LowReasoning,
   MediumReasoning,
   HighReasoning,
+
+  NoneReasoning = 1000,
 }

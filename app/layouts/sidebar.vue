@@ -110,7 +110,7 @@ const sidebar = useSidebarStore()
 const chatId = useRoute().params.id as string | undefined
 const breakpoints = useBreakpoints(breakpointsTailwind)
 
-const isMobile = computed(() => breakpoints.smallerOrEqual('md'))
+const isMobile = breakpoints.smallerOrEqual('md')
 
 const store = useFilesStore(chatId ?? '@new')()
 const chatsStore = useChatsStore()

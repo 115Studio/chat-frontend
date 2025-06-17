@@ -48,6 +48,10 @@ const isLink = (stage: MessageStage) => {
 const isUser = (msg: Message) => {
   return msg.role === MessageRole.User
 }
+
+const formatTextStage = (stage: MessageStage) => {
+  return stage.content?.value || ''
+}
 </script>
 
 <template>
@@ -63,8 +67,17 @@ const isUser = (msg: Message) => {
           'message-container-bot': message.role === MessageRole.Assistant,
         }"
       >
+        <Text
+          v-if="isReasoning(stage)"
+          as="p"
+          variant="bodyMd"
+          class="text-muted-foreground"
+          tone="muted"
+        >
+          {{ stage.content?.value || 'Thinking...' }}
+        </Text>
         <div v-if="isText(stage)" class="whitespace-normal break-words">
-          <MarkdownRender v-if="!isUser(message)" :content="stage.content?.value || ''" />
+          <MarkdownRender v-if="!isUser(message)" :content="formatTextStage(stage)" />
           <Text v-else as="p" variant="bodyMd" :tone="isReasoning(stage) ? 'muted' : 'content'">
             {{ stage.content?.value || '' }}
           </Text>

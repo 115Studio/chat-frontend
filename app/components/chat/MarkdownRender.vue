@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import markdownit from 'markdown-it'
 import { useHljs } from '@app/lib/useHljs'
-import { debounce } from '@app/lib/debouce'
 
 const hljs = useHljs()
 
@@ -27,13 +26,13 @@ const md = markdownit({
   highlight: (str: string, lang: string) => {
     if (lang && hljs.getLanguage(lang)) {
       try {
-        return `<div id="${recordHeader(lang, str)}"></div>` + hljs.highlight(str, { language: lang }).value
+        return `<div id="${recordHeader(lang, str)}"></div>` + `<div class="code">${hljs.highlight(str, { language: lang }).value}</div>`
       } catch (e) {
         console.error(`Error highlighting code: ${e}`)
       }
     }
 
-    return ''
+    return `<div id="${recordHeader(lang, str)}"></div>` + `<div class="code">${str}</div>`
   }
 })
 
@@ -219,7 +218,7 @@ md.renderer.rules.link_open = (tokens: any, idx: any, options: any, env: any, se
   }
 
   pre {
-    @apply relative rounded-2xl p-3 px-5 mt-4 mb-8;
+    @apply relative rounded-2xl p-3 px-5 my-4;
     background: white;
 
     border: 1px solid var(--color-border-default);
