@@ -72,7 +72,13 @@ const selectModel = (selectedModel: AiModel, level?: ReasoningLevelEnum) => {
                   :variant="variant"
                   @update:level="(level) => selectModel(variant.id, level as ReasoningLevelEnum)"
                 />
-                <DropdownMenuItem v-else class="cursor-pointer gap-0 items-center" @click="selectModel(variant.id)">
+                <DropdownMenuItem
+                  v-else
+                  class="cursor-pointer gap-0 items-center"
+                  :class="{
+                    'bg-accent text-accent-foreground': [props.usedModel, store.getInput(Inputs.SelectedModel)?.model].includes(variant.id),
+                  }"
+                  @click="selectModel(variant.id)">
                   <component :is="model.icon" class="w-4 text-accent h-4 mr-2" />
                   <Text as="p" variant="bodySm">
                     {{ variant.name }}
