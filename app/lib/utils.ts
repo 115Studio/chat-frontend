@@ -72,3 +72,7 @@ export const convertStorageToAiRequest = (stages: MessageStages) => {
 export const resolveModelName = (model: AiModel): string => {
   return models.flatMap((m) => m.variants).find(variant => variant.id === model)?.name ?? model
 }
+
+export const resolveModelIcon = (model: AiModel) => {
+  return models.find(m => m.variants.some(variant => variant.id === model))?.icon ?? ''
+}

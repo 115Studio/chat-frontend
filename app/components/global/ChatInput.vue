@@ -4,7 +4,7 @@ import { useFilesStore } from '@app/store/files.store'
 import {
   normalizeAbsoluteLeaves,
   resolveMessageStageContentType,
-  resolveMessageStageType,
+  resolveMessageStageType, resolveModelIcon,
   resolveModelName
 } from '@app/lib/utils'
 import { Inputs, useInputsStore } from '@app/store/useInputsStore'
@@ -18,6 +18,8 @@ import { MessageStageContentType } from '@app/constants/message-stage-content-ty
 import Retry from '@app/components/icons/Retry.vue'
 import ChangeModel from '@app/components/chat/ChangeModel.vue'
 import { AiModel } from '@app/constants/ai-model'
+import { PhPaperclip, PhPaperPlaneRight } from '@phosphor-icons/vue'
+import Button from '@app/components/global/Button.vue'
 
 const chatId = useRoute().params.id as string | undefined
 
@@ -237,6 +239,24 @@ onMounted(() => {
 
 <template>
   <div class="chat-input-container" @paste="onPaste">
+    <div class="relative overflow-x-auto max-w-full" :class="{ 'mb-4': store.files.length > 0 }">
+      <transition-group
+        name="fade-insert"
+        tag="div"
+        class="flex flex-row gap-3"
+        @before-leave="normalizeAbsoluteLeaves"
+      >
+        <ChatInputImage
+          v-for="file in imagesToShow"
+          :id="file.id"
+          :key="file.id"
+          :image="file.url"
+          alt="Attached file"
+          class="max-h-24 rounded-lg flex-shrink-0"
+        />
+        <ChatInputFile v-for="file in filesToShow" :id="file.id" :key="file.id" :name="file.name" />
+      </transition-group>
+    </div>
     <div class="input-container">
       <textarea
         ref="textareaRef"
@@ -255,42 +275,22 @@ onMounted(() => {
         @change="processFileInput"
       >
     </div>
-    <div class="relative overflow-x-auto max-w-full">
-      <transition-group
-        name="fade-insert"
-        tag="div"
-        class="flex flex-row gap-3"
-        @before-leave="normalizeAbsoluteLeaves"
-      >
-        <ChatInputImage
-          v-for="file in imagesToShow"
-          :id="file.id"
-          :key="file.id"
-          :image="file.url"
-          alt="Attached file"
-          class="max-h-24 rounded-lg flex-shrink-0"
-        />
-        <ChatInputFile v-for="file in filesToShow" :id="file.id" :key="file.id" :name="file.name" />
-      </transition-group>
-    </div>
     <div class="chat-input-actions">
       <div class="chat-input-actions__left">
-        <ChangeModel v-model="model">
-          <button type="button" class="bg-neutral-100 min-w-32 rounded-lg p-2 active:scale-90 flex flex-row items-center justify-between gap-1">
+        <Button size="sm" class="max-w-4" @click="fileInput?.click()">
+          <PhPaperclip size="20" />
+        </Button>
+        <ChangeModel class="w-fit" tooltip-disabled v-model="model">
+          <Button weight="normal" size="sm">
+            <component class="w-4 h-4" :is="resolveModelIcon(inputsStore.getInput(Inputs.SelectedModel)?.model)" />
             {{ resolveModelName(inputsStore.getInput(Inputs.SelectedModel)?.model) }}
-            <Retry class="w-4 h-4" />
-          </button>
+          </Button>
         </ChangeModel>
-        <button type="button" class="clear-button">Clear</button>
-        <button type="button" class="settings-button">Settings</button>
       </div>
       <div class="chat-input-actions__right">
-        <button type="button" @click="toast('This is a toast message!')">Toast!</button>
-        <button type="button" class="send-button" @click="createMessage()">Send</button>
-        <button type="button" class="attach-button" @click="$refs.fileInput!.click()">
-          Attach
-        </button>
-        <button type="button" class="emoji-button">♥️</button>
+        <Button size="md" class="button__send" @click="createMessage()">
+          <PhPaperPlaneRight size="20" />
+        </Button>
       </div>
     </div>
   </div>
@@ -303,7 +303,7 @@ onMounted(() => {
   margin-right: auto;
   margin-left: auto;
   max-width: 768px;
-  padding: 28px;
+  padding: 28px 28px 24px 28px;
   border-radius: 24px;
   display: flex;
   flex-direction: column;
@@ -320,7 +320,7 @@ onMounted(() => {
   height: 28px;
   min-height: 24px;
   max-height: 128px;
-  padding: 2px 0;
+  padding: 2px 0 0 6px;
   border: 1px solid var(--color-border-default);
   border-radius: 0;
   font-size: 18px;
@@ -334,8 +334,10 @@ onMounted(() => {
 
 .chat-input-actions {
   display: flex;
+  flex-direction: row;
+  align-items: center;
   justify-content: space-between;
-  margin-top: 12px;
+  margin-top: 8px;
 
   &__left {
     display: flex;
@@ -345,13 +347,6 @@ onMounted(() => {
   &__right {
     display: flex;
     gap: 8px;
-  }
-
-  button {
-    @apply transition-all duration-200 ease-in-out;
-    &:hover {
-      @apply opacity-60;
-    }
   }
 }
 

@@ -19,6 +19,7 @@ const store = useInputsStore(chatId ?? '@new')()
 
 const props = defineProps<{
   usedModel?: AiModel
+  tooltipDisabled?: boolean
 }>()
 
 const emit = defineEmits(['dropdown-open'])
@@ -43,7 +44,7 @@ const selectModel = (selectedModel: AiModel, level?: ReasoningLevelEnum) => {
           <TooltipTrigger>
             <slot/>
           </TooltipTrigger>
-          <TooltipContent>
+          <TooltipContent v-if="!tooltipDisabled">
             <Text as="p" variant="bodySm">
               Change model ({{ props.usedModel || store.getInput(Inputs.SelectedModel)?.model || 'Select Model' }})
             </Text>

@@ -7,6 +7,7 @@ import { useOauthUrl } from '@app/composables/use-oauth-url'
 import code from '@app/middleware/code'
 import { discordAuthorize } from '@app/composables/api'
 import { UserPlan } from '@app/constants/user-plan'
+import Button from '@app/components/global/Button.vue'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -78,9 +79,10 @@ definePageMeta({
         </Text>
       </div>
       <div class="row__group">
-        <button
+        <Button
           :disabled="isLoading"
-          class="row__button row__button--accent"
+          variant="accent"
+          full-width
           type="button"
           @click="login()"
         >
@@ -93,7 +95,7 @@ definePageMeta({
           <template v-else>
             <PhSpinner :size="20" weight="bold" class="animate-spin" />
           </template>
-        </button>
+        </Button>
       </div>
     </div>
   </div>

@@ -69,7 +69,6 @@
     padding: 0 24px;
     font-weight: 700;
     border-radius: 12px;
-    width: 100%;
     box-sizing: border-box;
     cursor: pointer;
     transition: background-color var(--transition-default), border-color var(--transition-default), color var(--transition-default);
@@ -78,6 +77,59 @@
       cursor: default;
       pointer-events: none;
       @include mixins.select-none;
+    }
+
+    // Size variants
+    &--size-sm {
+      height: 32px;
+      padding: 0 16px;
+      gap: 8px;
+      font-size: 14px;
+    }
+
+    &--size-lg {
+      height: 48px;
+      padding: 0 32px;
+      gap: 16px;
+      font-size: 16px;
+    }
+
+    &--size-sq {
+      height: 48px;
+      width: 48px;
+      padding: unset;
+      border-radius: 14px;
+    }
+
+    // Alignment variants
+    &--alignment-start {
+      justify-content: flex-start;
+    }
+
+    &--alignment-end {
+      justify-content: flex-end;
+    }
+
+    &--alignment-stretch {
+      justify-content: space-between;
+    }
+
+    // Weight variants
+    &--weight-normal {
+      font-weight: 400;
+    }
+
+    &--weight-medium {
+      font-weight: 500;
+    }
+
+    &--weight-bold {
+      font-weight: 700;
+    }
+
+    // Full width
+    &--full-width {
+      width: 100%;
     }
 
     &--inner {
@@ -123,7 +175,6 @@
       @include mixins.skeleton(100%, 40px, 12px);
     }
   }
-
 
   &__input {
     background: var(--color-input-inner-bg);
@@ -210,4 +261,9 @@
       }
     }
   }
+}
+
+@keyframes button-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }

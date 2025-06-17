@@ -51,7 +51,7 @@ function parseInlineMarkdown(text: string): InlineToken[] {
       })
     }
 
-    const boldItalicMatch = remaining.match(/\*\*\*(.*?)\*\*\*/)
+    const boldItalicMatch = remaining.match(/\*\*\*([^ ].*?)\*\*\*/)
     if (boldItalicMatch && boldItalicMatch.index !== undefined && boldItalicMatch[1]) {
       matches.push({
         type: 'bold-italic',
@@ -62,7 +62,7 @@ function parseInlineMarkdown(text: string): InlineToken[] {
       })
     }
 
-    const boldMatch = remaining.match(/\*\*(.*?)\*\*/)
+    const boldMatch = remaining.match(/\*\*([^ ].*?)\*\*/)
     if (boldMatch && boldMatch.index !== undefined && boldMatch[1]) {
       matches.push({
         type: 'bold',
@@ -73,7 +73,7 @@ function parseInlineMarkdown(text: string): InlineToken[] {
       })
     }
 
-    const italicMatch = remaining.match(/\*(.*?)\*/)
+    const italicMatch = remaining.match(/\*([^ ].*?)\*/)
     if (italicMatch && italicMatch.index !== undefined && italicMatch[1]) {
       matches.push({
         type: 'italic',
@@ -211,7 +211,7 @@ function parseInlineMarkdown(text: string): InlineToken[] {
 }
 
 function hasInlineFormatting(text: string): boolean {
-  return /`.*?`|\*.*?\*|~~.*?~~|\[.*?]\(.*?\)/.test(text)
+  return /`.*?`|\*[^ ].*?\*|~~.*?~~|\[.*?]\(.*?\)/.test(text)
 }
 
 export function parseMarkdown(markdown: string): Token[] {
@@ -341,20 +341,20 @@ export function parseMarkdown(markdown: string): Token[] {
         inline: parseInlineMarkdown(line)
       })
     }
-    else if (/\*\*\*(.*?)\*\*\*/.test(line))
+    else if (/\*\*\*([^ ].*?)\*\*\*/.test(line))
       tokens.push({
         type: 'bold-italic',
-        content: line.replace(/\*\*\*(.*?)\*\*\*/, '$1'),
+        content: line.replace(/\*\*\*([^ ].*?)\*\*\*/, '$1'),
       })
-    else if (/\*\*(.*?)\*\*/.test(line))
+    else if (/\*\*([^ ].*?)\*\*/.test(line))
       tokens.push({
         type: 'bold',
-        content: line.replace(/\*\*(.*?)\*\*/, '$1'),
+        content: line.replace(/\*\*([^ ].*?)\*\*/, '$1'),
       })
-    else if (/\*(.*?)\*/.test(line))
+    else if (/\*([^ ].*?)\*/.test(line))
       tokens.push({
         type: 'italic',
-        content: line.replace(/\*(.*?)\*/, '$1'),
+        content: line.replace(/\*([^ ].*?)\*/, '$1'),
       })
     else if (/~~(.*?)~~/.test(line))
       tokens.push({

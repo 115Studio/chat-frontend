@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { PhChatCircleSlash, PhMoonStars, PhSidebarSimple } from '@phosphor-icons/vue'
+import { PhChatCircleSlash, PhMoonStars, PhNotePencil, PhSidebarSimple } from '@phosphor-icons/vue'
 import { useSidebarStore } from '@app/store/sidebar.store'
+import Button from '@app/components/global/Button.vue'
 
 const sidebar = useSidebarStore()
 </script>
@@ -8,17 +9,16 @@ const sidebar = useSidebarStore()
 <template>
   <div class="header-container">
     <div class="header-items header-items__left">
-      <div class="header-item" @click="sidebar.toggle()">
-        <PhSidebarSimple :size="20" weight="bold" />
-      </div>
+      <Button size="sq" class="header-item" @click="sidebar.toggle()">
+        <PhSidebarSimple :size="20" />
+      </Button>
     </div>
     <div class="header-items header-items__right">
-      <div class="header-item">
-        <PhMoonStars :size="20" weight="bold" />
-      </div>
-      <div class="header-item">
-        <PhChatCircleSlash :size="20" weight="bold" />
-      </div>
+      <RouterLink to="/">
+        <Button size="sq" class="header-item" v-if="!sidebar.isOpen">
+          <PhNotePencil :size="20"/>
+        </Button>
+      </RouterLink>
     </div>
   </div>
 </template>
@@ -48,23 +48,7 @@ const sidebar = useSidebarStore()
 }
 
 .header-item {
-  padding: 16px;
-  border-radius: 14px;
   margin: 12px 12px 12px 0;
-
-  background: var(--color-btn-inner-bg);
-  border: 1px solid var(--color-btn-inner-border);
-  cursor: pointer;
-
-  &:hover {
-    background-color: var(--color-btn-inner-hover-bg);
-    border: 1px solid var(--color-btn-inner-hover-border);
-  }
-
-  &:active, &:focus-visible {
-    background-color: var(--color-btn-inner-selected-bg);
-    border: 1px solid var(--color-btn-inner-selected-border);
-  }
 }
 
 </style>

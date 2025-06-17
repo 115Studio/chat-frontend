@@ -8,7 +8,7 @@
             <Text as="h1" variant="headingMd" alignment="center" class="container__group-item">
               115 Chat
             </Text>
-            <Button class="container__group-item ml-[-0.5rem]" @click="createNewChat">
+            <Button class="container__group-item ml-[-0.5rem]" full-width @click="createNewChat">
               <template v-if="true">
                 <Text as="span"> New Chat </Text>
               </template>
