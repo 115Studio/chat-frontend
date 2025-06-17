@@ -75,6 +75,18 @@ export default defineNuxtConfig({
       weights: [400, 500, 700],
       subsets: ['cyrillic-ext', 'cyrillic', 'latin-ext', 'latin'],
     },
+    families: [
+      {
+        name: 'JetBrains Mono',
+        provider: 'google',
+        preload: true,
+      },
+      {
+        name: 'Onest',
+        provider: 'google',
+        preload: true,
+      },
+    ],
     experimental: {
       processCSSVariables: true,
     },
