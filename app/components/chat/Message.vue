@@ -45,7 +45,9 @@ const isLink = (stage: MessageStage) => {
   return stage.content?.type === MessageStageContentType.Url
 }
 
-
+const isUser = (msg: Message) => {
+  return msg.role === MessageRole.User
+}
 </script>
 
 <template>
@@ -62,9 +64,9 @@ const isLink = (stage: MessageStage) => {
         }"
       >
         <div v-if="isText(stage)" class="whitespace-normal break-words">
-          <Text as="p" variant="bodyMd" :tone="isReasoning(stage) ? 'muted' : 'content'">
-<!--            <MarkdownRenderer :markdown="stage.content?.value || ''" />-->
-            <MarkdownRender :content="stage.content?.value || ''" />
+          <MarkdownRender v-if="!isUser(message)" :content="stage.content?.value || ''" />
+          <Text v-else as="p" variant="bodyMd" :tone="isReasoning(stage) ? 'muted' : 'content'">
+            {{ stage.content?.value || '' }}
           </Text>
         </div>
         <div v-else-if="isImage(stage)">

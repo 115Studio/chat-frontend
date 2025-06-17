@@ -46,7 +46,7 @@ onUpdated(() => {
 </script>
 
 <template>
-  <div class="flex flex-col gap-8 chat-container mx-auto rounded-xl">
+  <div class="flex flex-col gap-2 chat-container mx-auto rounded-xl">
     <template
       v-for="message in messagesStore.messages"
       v-if="messagesStore.messages.length"

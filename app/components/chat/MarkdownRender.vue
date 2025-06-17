@@ -85,18 +85,21 @@ onMounted(() => {
 
 .markdown {
   h1 {
-    @apply my-4;
+    @apply mt-8 mb-4;
 
     font: var(--font-xl-heading-lg);
+
     @media (max-width: 768px) {
       font: var(--font-md-heading-lg);
     }
+
     @media (max-width: 640px) {
       font: var(--font-sm-heading-lg);
     }
   }
+
   h2 {
-    @apply my-4;
+    @apply mt-8 mb-4;
 
     font: var(--font-xl-heading-md);
 
@@ -104,13 +107,44 @@ onMounted(() => {
       font: var(--font-md-heading-md);
     }
   }
+
   h3 {
-    @apply my-4;
+    @apply mt-6 mb-3;
     font: var(--font-heading-sm);
   }
+
   h4 {
-    @apply my-4;
+    @apply mt-4 mb-2;
     font: var(--font-body-lg);
+  }
+
+  h5 {
+    @apply mt-3 mb-1.5;
+    font: var(--font-body-md);
+  }
+
+  h6 {
+    @apply mt-2 mb-1;
+    font: var(--font-body-sm);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    line-height: 1.2;
+    color: var(--color-content);
+  }
+
+  p {
+    line-height: 1.6;
+    color: var(--color-content);
+    font: var(--font-body-md);
+  }
+
+  li::marker {
+    color: var(--color-muted);
+  }
+
+  hr {
+    @apply my-5;
   }
 
   ul, menu {
