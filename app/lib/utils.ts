@@ -65,6 +65,18 @@ export const convertStorageToAiRequest = (stages: MessageStages) => {
         }
       }
 
+    if (stage.type === MessageStageType.Pdf || stage.type === MessageStageType.File)
+      if (stage.content!.type === MessageStageContentType.File) {
+        const [id] = stage.content!.value!.split('::') ?? []
+        return {
+          type: stage.type,
+          content: {
+            type: stage.content!.type,
+            value: id ?? stage.content!.value,
+          },
+        }
+      }
+
     return stage
   })
 }
