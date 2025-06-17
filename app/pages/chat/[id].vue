@@ -144,7 +144,7 @@ definePageMeta({
         'page-content--shadow-bottom': shadowBottom,
       }"
     >
-      <Chat class="mt-20 mb-16 h-fit" @scroll-down="scrollDown" />
+      <Chat class="mt-20 mb-8 h-fit" @scroll-down="scrollDown" />
     </div>
     <div class="bottom-content max-h-content">
       <ChatInput @create-message-event="createMessageEvent" />

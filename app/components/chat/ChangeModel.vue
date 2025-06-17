@@ -12,6 +12,7 @@ import { defineEmits } from 'vue'
 import { AiModelFeature } from '@app/constants/ai-model-feature'
 import type { ReasoningLevelEnum, AiModel } from '@app/constants/ai-model'
 import { Inputs, useInputsStore } from '@app/store/useInputsStore'
+import { resolveModelName } from '../../lib/utils'
 
 const chatId = useRoute().params.id as string
 
@@ -46,7 +47,7 @@ const selectModel = (selectedModel: AiModel, level?: ReasoningLevelEnum) => {
           </TooltipTrigger>
           <TooltipContent v-if="!tooltipDisabled">
             <Text as="p" variant="bodySm">
-              Change model ({{ props.usedModel || store.getInput(Inputs.SelectedModel)?.model || 'Select Model' }})
+              Change model ({{ resolveModelName(store.getInput(Inputs.SelectedModel)?.model) || 'Select Model' }})
             </Text>
           </TooltipContent>
         </Tooltip>

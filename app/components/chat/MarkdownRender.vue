@@ -8,53 +8,81 @@ const props = defineProps<{
   content: string
 }>()
 
+const codeMap = ref<Record<number, [ string, string ]>>({})
+const codeHeaderOrdinal = ref(0)
+
 const md = markdownit({
   linkify: true,
   typographer: true,
   highlight: (str: string, lang: string) => {
     if (lang && hljs.getLanguage(lang)) {
       try {
-        return hljs.highlight(str, { language: lang }).value;
+        return `<div class="internal-code-block-header lang-${lang}"><p class="c-b-c" style="display: none">${str}</p></div>`
+          + hljs.highlight(str, { language: lang }).value
       } catch (e) {
-        console.error(`Error highlighting code: ${e}`);
+        console.error(`Error highlighting code: ${e}`)
       }
     }
 
-    return '';
+    return ''
   }
 })
 
 const defaultRender = md.renderer.rules.link_open || ((tokens: any, idx: any, options: any, env: any, self: any) => {
-  return self.renderToken(tokens, idx, options);
-});
+  return self.renderToken(tokens, idx, options)
+})
 
 md.renderer.rules.link_open = (tokens: any, idx: any, options: any, env: any, self: any) => {
-  tokens[idx].attrSet('target', '_blank');
-  return defaultRender(tokens, idx, options, env, self);
-};
+  tokens[idx].attrSet('target', '_blank')
+  return defaultRender(tokens, idx, options, env, self)
+}
 
-function addCopyButtons() {
-  document.querySelectorAll('.markdown pre').forEach((preEl) => {
-    if (preEl.querySelector('button.copy-btn')) return;
+function addCodeHeaders() {
+  document.querySelectorAll('.internal-code-block-header').forEach((preEl) => {
+    if (preEl.querySelector('.internal-ignore')) return
 
-    const copyButton = document.createElement('div');
-    copyButton.id = `copy-btn`;
+    const ordinal = codeHeaderOrdinal.value
+    const language = preEl.classList.item(1)?.split('lang-')[1] || 'txt'
+    const code = preEl.querySelector('.c-b-c')!.innerHTML.trim()
+
+    const codeHeaderIgnore = document.createElement('div')
+    codeHeaderIgnore.id = `code-header-${ordinal}`
+    codeHeaderIgnore.className = `internal-ignore`
+    preEl.prepend(codeHeaderIgnore)
+
+    codeMap.value[ordinal] = [ language, code ]
+
+    codeHeaderOrdinal.value++
   })
 }
 
 onMounted(() => {
-  addCopyButtons();
+  addCodeHeaders()
 
   document.getElementById('copy-btn')
-});
+})
 </script>
 
 <template>
-  <div :id="'ababa'"/>
   <div class="markdown" v-html="md.render(props.content.trim())"/>
+  <template v-for="([ i, [ language, code ]]) of Object.entries(codeMap)">
+    <Teleport defer :to="'#' + `code-header-${i}`">
+      <div class="code-block-header">
+        <Text v-if="language" as="p" class="font-mono text-sm">
+          {{ language }}
+        </Text>
+        <CopyButton :value="code" />
+      </div>
+    </Teleport>
+  </template>
 </template>
 
 <style lang="scss">
+.code-block-header {
+  @apply flex justify-between items-center px-4 py-2 bg-white border-b border-neutral-200;
+  min-height: 44px;
+}
+
 .markdown {
   h1 {
     @apply my-4;
