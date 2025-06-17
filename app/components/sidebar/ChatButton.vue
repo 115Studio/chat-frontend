@@ -1,8 +1,14 @@
 <script setup lang="ts">
-import { PhDotsThree, PhPen, PhPencilSimple, PhPushPin, PhPushPinSlash, PhTrash } from '@phosphor-icons/vue'
+import { PhDotsThree, PhPencilSimple, PhPushPin, PhPushPinSlash, PhTrash } from '@phosphor-icons/vue'
 import { useChatsStore } from '@app/store/chats.store'
 import { pinChannel, renameChannel } from '@app/composables/api'
 import { useAuthStore } from '@app/store/auth.store'
+import { breakpointsTailwind, useBreakpoints } from '@vueuse/core'
+import { useSidebarStore } from '@app/store/sidebar.store'
+
+const breakpoints = useBreakpoints(breakpointsTailwind)
+
+const isMobile = breakpoints.smallerOrEqual('md')
 
 const store = useChatsStore()
 
@@ -25,12 +31,14 @@ const chatName = computed(() => {
 })
 
 const deleteChat = async () => {
+  if (isMobile.value) useSidebarStore().close()
   await store.deleteChat(props.id)
 
   if (chatIsActive.value) await useRouter().push('/')
 }
 
 const pinChat = async () => {
+  if (isMobile.value) useSidebarStore().close()
   const chatPinned = store.getChat(props.id)?.isPinned ?? false
 
   store.pinChatLocal(props.id, !chatPinned)
@@ -39,6 +47,8 @@ const pinChat = async () => {
 }
 
 const move = () => {
+  console.log(breakpoints.smallerOrEqual('md'), isMobile.value)
+  if (isMobile.value) useSidebarStore().close()
   useRouter().push(`/chat/${props.id}`)
 }
 

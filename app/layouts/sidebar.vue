@@ -2,20 +2,26 @@
   <div class="layout layout--empty">
     <Background />
     <div class="wrapper max-h-screen">
-      <div class="container" :class="{ 'container--closed': !sidebar.isOpen }">
+      <div class="container relative" :class="{ 'container--closed': !sidebar.isOpen }">
         <div v-if="sidebar.isOpen" class="container__content">
           <div class="container__group">
             <Text as="h1" variant="headingMd" alignment="center" class="container__group-item">
               115 Chat
             </Text>
-            <Button class="container__group-item ml-[-0.5rem]" full-width @click="createNewChat">
-              <template v-if="true">
-                <Text as="span"> New Chat </Text>
-              </template>
-              <template v-else>
-                <PhSpinner :size="20" weight="bold" class="animate-spin" />
-              </template>
-            </Button>
+            <div class="flex flex-row gap-2">
+              <Button class="container__group-item ml-[-0.5rem]" full-width @click="createNewChat">
+                <template v-if="true">
+                  <Text as="span"> New Chat </Text>
+                </template>
+                <template v-else>
+                  <PhSpinner :size="20" weight="bold" class="animate-spin" />
+                </template>
+              </Button>
+
+              <Button class="container__group-item ml-[-0.5rem] hidden-on-pc" @click="sidebar.toggle()">
+                <PhX size="20" weight="bold" />
+              </Button>
+            </div>
             <div class="row__divider--horizontal" />
           </div>
           <div class="container__group container__group--scrollable">
@@ -66,7 +72,7 @@
                 </transition-group>
             </div>
           </div>
-          <div class="bottom-content">
+          <div class="bottom-content text-center">
             <Text as="p" variant="bodyLg">
               Your name is <Text as="span" tone="accent" weight="bold">{{ authStore.name }}</Text
             >.
@@ -75,7 +81,8 @@
         </div>
       </div>
       <div class="content max-h-screen" :class="{ 'content--sidebar-closed': !sidebar.isOpen }">
-        <div class="header">
+        <div :class="{ 'overlay': sidebar.isOpen }"/>
+        <div class="header" :class="{ 'hidden md:flex': sidebar.isOpen }">
           <Header />
         </div>
         <slot />
@@ -86,7 +93,7 @@
 </template>
 
 <script setup lang="ts">
-import { PhPushPin, PhSpinner } from '@phosphor-icons/vue'
+import { PhPushPin, PhSpinner, PhX } from '@phosphor-icons/vue'
 import { useAuthStore } from '@app/store/auth.store'
 import Header from '@app/components/global/Header.vue'
 import { useFilesStore } from '@app/store/files.store'
@@ -95,11 +102,15 @@ import { MagicNumber } from '@app/constants/magic-number'
 import { getChannels } from '@app/composables/api'
 import { useSidebarStore } from '@app/store/sidebar.store'
 import { normalizeAbsoluteLeaves } from '@app/lib/utils'
+import { breakpointsTailwind, useBreakpoints } from '@vueuse/core'
 
 const authStore = useAuthStore()
 const sidebar = useSidebarStore()
 
 const chatId = useRoute().params.id as string | undefined
+const breakpoints = useBreakpoints(breakpointsTailwind)
+
+const isMobile = computed(() => breakpoints.smallerOrEqual('md'))
 
 const store = useFilesStore(chatId ?? '@new')()
 const chatsStore = useChatsStore()
@@ -112,6 +123,7 @@ const processFileDrop = async (files: File[]) => {
 }
 
 const createNewChat = () => {
+  if (isMobile.value) sidebar.close()
   useRouter().push('/')
 }
 
@@ -152,7 +164,8 @@ onMounted(async () => {
 .container {
   background: var(--color-default);
   border: 1px solid var(--color-border-default);
-  width: 276px;
+  position: fixed;
+  width: calc(100% - 24px); /* Full width minus margin */
   padding: 32px;
   border-radius: 16px;
   margin: 12px;
@@ -162,6 +175,9 @@ onMounted(async () => {
   max-height: calc(100vh - 24px);
   overflow: hidden; /* Prevent container from overflowing */
   transition: width 0.3s ease-in-out, padding 0.3s ease-in-out, margin 0.3s ease-in-out;
+  z-index: 100;
+
+  @apply md:relative md:w-[276px];
 
   &--closed {
     width: 0;
@@ -298,5 +314,25 @@ onMounted(async () => {
 .fade-leave-from {
   opacity: 1;
   transform: scale(1);
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 99;
+
+  @apply md:hidden;
+}
+
+.hidden-on-pc {
+  @apply block md:hidden;
+}
+
+.hidden-on-mobile {
+  @apply hidden md:block;
 }
 </style>
