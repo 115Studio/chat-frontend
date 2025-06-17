@@ -51,7 +51,7 @@ const handleOverlayClick = (event: MouseEvent) => {
               class="max-w-[80vw] max-h-[80vh] object-contain rounded-xl"
               @click.stop
             >
-            <a :href="props.src" target="_blank" rel="noopener noreferrer" class="block mt-2 text-white visited:text-white hover:opacity-60 transition-opacity">
+            <a :href="props.src" target="_blank" rel="noopener noreferrer" class="w-fit mt-2 text-white visited:text-white hover:opacity-60 transition-opacity">
               Open in new tab
             </a>
           </div>
