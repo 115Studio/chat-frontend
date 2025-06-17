@@ -88,6 +88,10 @@ onMounted(() => {
   ul, menu {
     padding-left: 1em;
     list-style: disc;
+
+    ul {
+      list-style-type: circle;
+    }
   }
 
   ol {
