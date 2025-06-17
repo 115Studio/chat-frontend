@@ -9,6 +9,7 @@ import { subscribeOp, useWebSocket } from '@app/composables/use-web-socket'
 import { useChatMessagesStore } from '@app/store/chat-messages.store'
 import { useChatsStore } from '@app/store/chats.store'
 import { Inputs, useInputsStore } from '@app/store/useInputsStore'
+import { useNewChatStore } from '@app/store/new-chat.store'
 
 const auth = useAuthStore()
 
@@ -45,6 +46,7 @@ async function main() {
   const ws = useWebSocket(wsApi(), auth.jwt)
 
   subscribeOp<'channel', Chat>(ws, WebSocketOpCode.ChannelCreate, ({ channel }) => {
+    if (useNewChatStore().internalId) chatsStore.updateChatInternal(useNewChatStore().internalId, channel)
     chatsStore.createChat(channel)
   })
 

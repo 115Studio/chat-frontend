@@ -2,6 +2,7 @@
 import { useChatsStore } from '@app/store/chats.store'
 import { useChatMessagesStore } from '@app/store/chat-messages.store'
 import { useAuthStore } from '@app/store/auth.store'
+import { toast } from 'vue-sonner'
 
 const emit = defineEmits<{
   (e: 'scroll-down'): void
@@ -9,16 +10,18 @@ const emit = defineEmits<{
 
 const route = useRoute()
 
-const id = route.path.split('chat/')[1]
+const id = route.path.split('chat/')[1] ?? '@new'
 
 if (!id) {
-  throw new Error('Chat ID is required')
+  toast.error(`Chat Id is required`)
+  useRouter().push('/')
 }
 
 const chat = useChatsStore().chats.find((c) => c.id === id)
 
 if (!chat) {
-  throw new Error(`Chat with id ${id} not found`)
+  toast.error(`Chat with id ${id} not found`)
+  useRouter().push('/')
 }
 
 const messagesStore = useChatMessagesStore(id)()

@@ -9,6 +9,7 @@ import { AiModel } from '@app/constants/ai-model'
 import { toast } from 'vue-sonner'
 import { useChatMessagesStore } from '@app/store/chat-messages.store'
 import { Inputs, useInputsStore } from '@app/store/useInputsStore'
+import { useNewChatStore } from '@app/store/new-chat.store'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -17,7 +18,7 @@ if (!authStore.isAuthenticated) {
   router.push('/login')
 }
 
-const chatId = useRoute().params.id as string
+let chatId = useRoute().params.id as string
 
 const inputsStore = useInputsStore(chatId)()
 
@@ -99,6 +100,22 @@ const scrollDown = () => {
 
 onMounted(async () => {
   scrollDown()
+
+  await new Promise(resolve => {
+    if (chatId === '@new') {
+      const newChatStore = useNewChatStore()
+      watch(() => newChatStore.id, (newId) => {
+        if (newId) {
+          chatId = newId
+          router.replace(`/chat/${chatId}`)
+
+          newChatStore.reset()
+
+          resolve(null)
+        }
+      })
+    } else resolve(null)
+  })
 
   const store = useChatMessagesStore(chatId)()
 

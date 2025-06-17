@@ -1,15 +1,13 @@
 <script setup lang="ts">
 import { useAuthStore } from '@app/store/auth.store'
 import { useChatsStore } from '@app/store/chats.store'
-import { createMessage } from '@app/composables/api'
 import { MessageStageType } from '@app/constants/message-stage-type'
 import { MessageStageContentType } from '@app/constants/message-stage-content-type'
 import { AiModel } from '@app/constants/ai-model'
-import { toast } from 'vue-sonner'
-import { useChatMessagesStore } from '@app/store/chat-messages.store'
-import { useFilesStore } from '@app/store/files.store'
 import { convertStorageToAiRequest } from '@app/lib/utils'
 import { Inputs, useInputsStore } from '@app/store/useInputsStore'
+import { MagicNumber } from '@app/constants/magic-number'
+import { useNewChatStore } from '@app/store/new-chat.store'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -42,37 +40,25 @@ const createMessageEvent = async () => {
     ]
   })
 
-  const response = await createMessage(
-    authStore.jwt,
-    '@new',
-    convertedStages,
-    {
-      // TODO model settings
-      id: inputsStore.getInput(Inputs.SelectedModel)?.model as AiModel,
-      flags: [],
-    },
-    // TODO personality settings
-  )
+  const internalId = crypto.randomUUID()
 
-  if (!response.ok) {
-    return toast.error('Failed to create message')
-  }
+  chatStore.createChat({
+    id: '@new',
+    name: MagicNumber.NameShowSkeleton,
+    internalId,
+    ownerId: authStore.id,
 
-  useFilesStore('@new')().clearFiles()
+    isPinned: false,
+    isBranch: false,
+    isTemporary: false,
+    isPublic: false,
 
-  const { channel, userMessage, systemMessage } = response.result
-
-  chatStore.createChat(channel)
-
-  useInputsStore(channel.id)().writeInput(Inputs.SelectedModel, {
-    model: inputsStore.getInput(Inputs.SelectedModel)?.model,
+    createdAt: Date.now()
   })
 
-  const messages = useChatMessagesStore(channel.id)()
-  messages.addMessage(userMessage)
-  messages.addMessage(systemMessage)
+  void useNewChatStore().newChat(internalId, authStore.jwt, convertedStages, inputsStore.getInput(Inputs.SelectedModel)?.model)
 
-  return router.push('/chat/' + channel.id)
+  return router.push('/chat/@new')
 }
 
 // const createNewChat = () => {

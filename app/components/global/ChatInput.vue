@@ -128,7 +128,6 @@ const receivingMessages = ref(false)
 const writingSelf = ref(false)
 
 watch(model, () => {
-  console.log('updated')
   saveToStore()
 
   nextTick(() => {
@@ -245,8 +244,8 @@ onMounted(() => {
         class="input"
         type="text"
         placeholder="Ask anything"
-        @keydown.enter.exact.prevent="() => createMessage()"
         @keydown.enter.shift.exact.prevent="model += '\n'"
+        @keydown.enter.exact.prevent="() => createMessage()"
       />
       <input
         ref="fileInput"

@@ -44,6 +44,21 @@ export const useChatsStore = defineStore('chats', {
       return null
     },
 
+    updateChatInternal(id: string, chat: Chat){
+      const existingIndex = this.chats.findIndex((c) => c.internalId === id)
+
+      if (existingIndex !== -1) {
+        const existing = this.chats[existingIndex]!
+
+        Object.assign(existing, chat)
+        this.chats[existingIndex] = existing
+
+        return existing
+      }
+
+      return null
+    },
+
     async deleteChat(id: string): Promise<boolean> {
       this.chats = this.chats.filter((c) => c.id !== id)
 
