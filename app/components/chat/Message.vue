@@ -135,7 +135,7 @@ const formatTextStage = (stage: MessageStage) => {
   }
 
   &-bot {
-    margin-right: auto;
+    margin-right: 0;
     margin-left: 0;
   }
 
