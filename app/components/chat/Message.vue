@@ -3,6 +3,7 @@ import type { Message, MessageStage } from '@app/types'
 import { MessageStageContentType } from '@app/constants/message-stage-content-type'
 import { MessageStageType } from '@app/constants/message-stage-type'
 import { MessageRole } from '@app/constants/message-role'
+import UserChatCommands from '@app/components/chat/UserChatCommands.vue'
 
 const message = defineProps<Message>()
 
@@ -82,6 +83,9 @@ const isLink = (stage: MessageStage) => {
       </div>
       <template v-if="message.role === MessageRole.Assistant">
         <ChatCommands :used-model="message.model.id" :copy-content="stages.find(isText)?.content?.value || ''"/>
+      </template>
+      <template v-else>
+        <UserChatCommands class="ml-auto" :copy-content="stages.find(isText)?.content?.value || ''"/>
       </template>
     </template>
     <div v-else class="message-container message-container-skeleton" />
