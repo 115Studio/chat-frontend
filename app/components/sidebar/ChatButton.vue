@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { PhDotsThree, PhPushPin, PhPushPinSlash, PhTrash } from '@phosphor-icons/vue'
+import { PhDotsThree, PhPen, PhPencilSimple, PhPushPin, PhPushPinSlash, PhTrash } from '@phosphor-icons/vue'
 import { useChatsStore } from '@app/store/chats.store'
 import { pinChannel, renameChannel } from '@app/composables/api'
 import { useAuthStore } from '@app/store/auth.store'
@@ -31,7 +31,11 @@ const deleteChat = async () => {
 }
 
 const pinChat = async () => {
-  await pinChannel(useAuthStore().jwt, props.id, !chatPinned.value)
+  const chatPinned = store.getChat(props.id)?.isPinned ?? false
+
+  store.pinChatLocal(props.id, !chatPinned)
+
+  await pinChannel(useAuthStore().jwt, props.id, !chatPinned)
 }
 
 const move = () => {
@@ -54,10 +58,16 @@ const startEditing = () => {
 }
 
 const saveEdit = async () => {
-  if (editingName.value.trim() && editingName.value !== chatName.value)
-    await renameChannel(useAuthStore().jwt, props.id, editingName.value.trim())
+  if (editingName.value === store.getChat(props.id)?.name) {
+    isEditing.value = false
+    return
+  }
 
+  store.renameChatLocal(props.id, editingName.value.trim())
   isEditing.value = false
+
+  if (editingName.value.trim())
+    await renameChannel(useAuthStore().jwt, props.id, editingName.value.trim())
 }
 
 const cancelEdit = () => {
@@ -67,7 +77,7 @@ const cancelEdit = () => {
 </script>
 
 <template>
-  <button type="button" class="chat-button relative" :class="{ 'chat-button--active': chatIsActive }">
+  <button type="button" class="chat-button" :class="{ 'chat-button--active': chatIsActive }">
     <div class="flex-1 min-w-0 p-2 pl-3" @click="!isEditing && move()" @dblclick="startEditing">
       <input
         v-if="isEditing"
@@ -84,19 +94,22 @@ const cancelEdit = () => {
         <slot />
       </div>
     </div>
-    <div
-      class="flex flex-row justify-end gap-1 overflow-hidden controls min-w-max shrink-0"
-    >
-      <DropdownMenu :open="dropdownOpen" @update:open="dropdownOpen = $event">
+    <div class="flex flex-row justify-end gap-1 controls shrink-0">
+      <DropdownMenu v-model="dropdownOpen" @update:open="dropdownOpen = $event">
         <DropdownMenuTrigger>
           <div
-            class="dots-button bg-white p-1 rounded-md flex items-center justify-center z-[1000] mr-1"
+            class="dots-button bg-white p-1 rounded-md flex items-center justify-center mr-1"
             :class="{ 'dots-button--open': dropdownOpen }"
           >
             <PhDotsThree size="18" weight="bold" class="text-slate-500" />
           </div>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
+          <DropdownMenuItem @click="startEditing">
+            <PhPencilSimple size="12" weight="bold" />
+            <Text as="span">Rename</Text>
+          </DropdownMenuItem>
+          <DropdownMenuSeparator/>
           <DropdownMenuItem @click="pinChat">
             <template v-if="!chatPinned">
               <PhPushPin size="12" weight="bold" />
@@ -140,35 +153,33 @@ const cancelEdit = () => {
 }
 
 .controls {
-  background-color: transparent;
-  display: none;
+  transform: translateX(100%);
+  opacity: 0;
   width: 0;
+  transition: opacity 0.2s ease, width 0.2s ease, transform 0.2s ease;
 }
 
-.chat-button:hover .controls {
-  display: flex;
-  width: auto;
+.chat-button:hover .controls,
+.chat-button:has([data-state="open"]) .controls {
+  opacity: 1;
+  width: min-content;
+  transform: translateX(0);
 }
 
 .dots-button {
   transition: background-color 0.3s ease;
+  position: relative;
 
   &:hover {
     background: var(--color-btn-inner-selected-bg);
   }
 }
 
-.chat-button:has(.dots-button--open) .controls {
-  display: flex;
-  width: auto;
-  margin-left: 0.5rem;
-}
-
 @media (pointer: coarse) {
   .controls {
-    display: flex;
-    width: auto;
-    margin-left: 0.5rem;
+    opacity: 1;
+    width: min-content;
+    transform: translateX(0);
   }
 
   .channel-name {

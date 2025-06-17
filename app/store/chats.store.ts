@@ -71,6 +71,24 @@ export const useChatsStore = defineStore('chats', {
       })
     },
 
+    pinChatLocal(id: string, pin: boolean): Chat | null {
+      const chat = this.getChat(id)
+      if (!chat) return null
+
+      chat.isPinned = pin
+
+      return chat
+    },
+
+    renameChatLocal(id: string, name: string): Chat | null {
+      const chat = this.getChat(id)
+      if (!chat) return null
+
+      chat.name = name
+
+      return chat
+    },
+
     getPinnedChats(): Chat[] {
       return this.chats.filter((chat) => chat.isPinned)
     },

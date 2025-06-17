@@ -20,40 +20,50 @@
           </div>
           <div class="container__group container__group--scrollable">
             <div class="chats-wrapper">
-              <template v-if="chatsStore.getPinnedChats().length > 0">
-                <div class="flex flex-row items-center ml-2 mb-2">
-                  <PhPushPin size="16" weight="bold" />
-                  <Text as="span" variant="bodyMd" class="ml-1.5">Pinned Chats</Text>
-                </div>
-                <ChatButton
-                  v-for="chat in chatsStore.getPinnedChats()"
-                  :id="chat.id"
-                  :key="chat.id"
-                  class="mb-1"
-                >
-                  <Text
-                    v-if="chat.name !== MagicNumber.NameShowSkeleton"
-                    :truncate="true"
-                    as="span"
-                    variant="bodySm"
-                    tone="muted"
+                <template v-if="chatsStore.getPinnedChats().length > 0">
+                  <div class="flex flex-row items-center ml-2 mb-2">
+                    <PhPushPin size="16" weight="bold" />
+                    <Text as="span" variant="bodyMd" class="ml-1.5">Pinned Chats</Text>
+                  </div>
+                  <transition-group
+                    name="fade"
+                    @before-leave="normalizeAbsoluteLeaves"
                   >
-                    {{ chat.name }}
-                  </Text>
-                  <div v-else class="name-skeleton" />
-                </ChatButton>
-                <hr class="section-divider" >
-              </template>
-              <ChatButton
-                v-for="chat in chatsStore.getUnpinnedChats()"
-                :id="chat.id"
-                :key="chat.id"
-              >
-                <Text v-if="chat.name !== MagicNumber.NameShowSkeleton" :truncate="true" as="p" variant="bodySm" tone="muted">
-                  {{ chat.name }}
-                </Text>
-                <div v-else class="name-skeleton" />
-              </ChatButton>
+                    <ChatButton
+                      v-for="chat in chatsStore.getPinnedChats()"
+                      :id="chat.id"
+                      :key="chat.id"
+                      class="mb-1"
+                    >
+                      <Text
+                        v-if="chat.name !== MagicNumber.NameShowSkeleton"
+                        :truncate="true"
+                        as="span"
+                        variant="bodySm"
+                        tone="muted"
+                      >
+                        {{ chat.name }}
+                      </Text>
+                      <div v-else class="name-skeleton" />
+                    </ChatButton>
+                  </transition-group>
+                  <hr class="section-divider" >
+                </template>
+                <transition-group
+                  name="fade"
+                  @before-leave="normalizeAbsoluteLeaves"
+                >
+                  <ChatButton
+                    v-for="chat in chatsStore.getUnpinnedChats()"
+                    :id="chat.id"
+                    :key="chat.id"
+                  >
+                    <Text v-if="chat.name !== MagicNumber.NameShowSkeleton" :truncate="true" as="p" variant="bodySm" tone="muted">
+                      {{ chat.name }}
+                    </Text>
+                    <div v-else class="name-skeleton" />
+                  </ChatButton>
+                </transition-group>
             </div>
           </div>
           <div class="bottom-content">
@@ -84,6 +94,7 @@ import { useChatsStore } from '@app/store/chats.store'
 import { MagicNumber } from '@app/constants/magic-number'
 import { getChannels } from '@app/composables/api'
 import { useSidebarStore } from '@app/store/sidebar.store'
+import { normalizeAbsoluteLeaves } from '@app/lib/utils'
 
 const authStore = useAuthStore()
 const sidebar = useSidebarStore()
@@ -266,23 +277,26 @@ onMounted(async () => {
   }
 }
 
-.fade-insert-right-move,
-.fade-insert-right-enter-active,
-.fade-insert-right-leave-active {
+.fade-move,
+.fade-enter-active,
+.fade-leave-active {
   transition:
-    opacity 0.3s ease-in-out,
-    transform 0.3s ease-in-out;
+    opacity 0.2s ease-in-out,
+    transform 0.2s ease-in-out;
 }
-.fade-insert-right-leave-active {
+.fade-leave-active {
+  max-width: 200px;
   position: absolute;
 }
-.fade-insert-right-enter-from,
-.fade-insert-right-leave-to {
+.fade-enter-from,
+.fade-leave-to {
   opacity: 0;
+  transform: scale(0.9);
 }
 
-.fade-insert-right-enter-to,
-.fade-insert-right-leave-from {
+.fade-enter-to,
+.fade-leave-from {
   opacity: 1;
+  transform: scale(1);
 }
 </style>
