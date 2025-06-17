@@ -40,7 +40,7 @@ const emit = defineEmits<{
 <template>
   <div>
     <DropdownMenuSub>
-      <DropdownMenuSubTrigger class="flex items-start transition-colors">
+      <DropdownMenuSubTrigger class="flex items-center transition-colors">
         <component :is="props.model.icon" class="w-4 text-accent h-4 mr-2" />
         <Text as="p" variant="bodySm">
           {{ props.variant.name }}
