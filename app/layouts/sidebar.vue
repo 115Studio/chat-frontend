@@ -108,18 +108,16 @@ import { breakpointsTailwind, useBreakpoints } from '@vueuse/core'
 const authStore = useAuthStore()
 const sidebar = useSidebarStore()
 
-const chatId = useRoute().params.id as string | undefined
 const breakpoints = useBreakpoints(breakpointsTailwind)
 
 const isMobile = breakpoints.smallerOrEqual('md')
 
-const store = useFilesStore(chatId ?? '@new')()
 const chatsStore = useChatsStore()
 
 const processFileDrop = async (files: File[]) => {
-  console.log('Files dropped func:', files)
+  console.log('Files dropped func:',useRoute().params.id, files)
   for (const file of files) {
-    await store.addFile(file)
+    await useFilesStore(useRoute().params.id as string ?? '@new')().addFile(file)
   }
 }
 
