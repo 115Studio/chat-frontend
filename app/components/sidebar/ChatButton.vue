@@ -94,7 +94,7 @@ const cancelEdit = () => {
         ref="inputRef"
         v-model="editingName"
         type="text"
-        class="channel-name-input w-full bg-transparent border-none outline-none text-inherit font-inherit"
+        class="channel-name-input w-full bg-transparent border-none outline-none text-sm font-inherit"
         @blur="saveEdit()"
         @keydown.exact.enter="saveEdit()"
         @keydown.exact.esc="cancelEdit"
@@ -115,7 +115,7 @@ const cancelEdit = () => {
           </div>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-          <DropdownMenuItem @click="startEditing">
+          <DropdownMenuItem @click.stop="startEditing">
             <PhPencilSimple size="12" weight="bold" />
             <Text as="span">Rename</Text>
           </DropdownMenuItem>
