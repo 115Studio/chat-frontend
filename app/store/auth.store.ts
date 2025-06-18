@@ -13,4 +13,14 @@ export const useAuthStore = defineStore('auth', {
   persist: {
     storage: localStorage,
   },
+
+  actions: {
+    signOut() {
+      this.isAuthenticated = false
+      this.jwt = ''
+      this.id = ''
+      this.email = undefined
+      this.plan = UserPlan.None
+    }
+  }
 })

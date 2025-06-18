@@ -31,14 +31,14 @@ const chatName = computed(() => {
 })
 
 const deleteChat = async () => {
-  if (isMobile.value) useSidebarStore().close()
+  // if (isMobile.value) useSidebarStore().close()
   await store.deleteChat(props.id)
 
   if (chatIsActive.value) await useRouter().push('/')
 }
 
 const pinChat = async () => {
-  if (isMobile.value) useSidebarStore().close()
+  // if (isMobile.value) useSidebarStore().close()
   const chatPinned = store.getChat(props.id)?.isPinned ?? false
 
   store.pinChatLocal(props.id, !chatPinned)
@@ -47,8 +47,8 @@ const pinChat = async () => {
 }
 
 const move = () => {
-  console.log(breakpoints.smallerOrEqual('md'), isMobile.value)
   if (isMobile.value) useSidebarStore().close()
+
   useRouter().push(`/chat/${props.id}`)
 }
 

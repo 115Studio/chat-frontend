@@ -75,8 +75,22 @@
           </div>
           <div class="bottom-content text-center">
             <Text as="p" variant="bodyLg">
-              Your name is <Text as="span" tone="accent" weight="bold">{{ authStore.name }}</Text
-            >.
+              Your name is
+              <Popover>
+                <PopoverTrigger>
+                  <Text as="span" tone="accent" weight="bold">{{ authStore.name }}</Text>
+                </PopoverTrigger>
+                <PopoverContent>
+                  <div
+                    class="text-red-500 w-full px-2 py-1 rounded-md flex flex-row gap-2 items-center active:bg-red-200 hover:bg-red-100 hover:text-red-600 transition-colors duration-200 cursor-pointer"
+                    @click="signOut"
+                  >
+                    <PhSignOut size="16" weight="bold" />
+                    <Text as="span">Sign Out</Text>
+                  </div>
+                </PopoverContent>
+              </Popover>
+              .
             </Text>
           </div>
         </div>
@@ -94,7 +108,7 @@
 </template>
 
 <script setup lang="ts">
-import { PhPushPin, PhSpinner, PhX } from '@phosphor-icons/vue'
+import { PhPushPin, PhSignOut, PhSpinner, PhX } from '@phosphor-icons/vue'
 import { useAuthStore } from '@app/store/auth.store'
 import Header from '@app/components/global/Header.vue'
 import { useFilesStore } from '@app/store/files.store'
@@ -124,6 +138,11 @@ const processFileDrop = async (files: File[]) => {
 const createNewChat = () => {
   if (isMobile.value) sidebar.close()
   useRouter().push('/')
+}
+
+const signOut = () => {
+  authStore.signOut()
+  useRouter().push('/login')
 }
 
 onMounted(async () => {
