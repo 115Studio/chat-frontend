@@ -61,8 +61,6 @@ const createMessageEvent = async () => {
     flags: inputsStore.getInput(Inputs.ReasoningLevel)?.level !== undefined
       ? [ inputsStore.getInput(Inputs.ReasoningLevel)?.level ] : [],
   })
-
-  return router.push('/chat/@new')
 }
 
 // const createNewChat = () => {

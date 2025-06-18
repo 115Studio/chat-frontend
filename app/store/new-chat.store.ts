@@ -18,6 +18,8 @@ export const useNewChatStore = defineStore('new-chat', {
     async newChat(router: Router, internalId: string, jwt: string, stages: MessageStages, model: { id: AiModel, flags: AiModelFlag[] }) {
       this.internalId = internalId
 
+      await router.push('/chat/@new')
+
       const response = await createMessage(
         jwt,
         '@new',
