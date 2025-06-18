@@ -162,6 +162,7 @@ definePageMeta({
   flex-direction: column;
   height: 100svh;
   padding-bottom: 12px;
+  padding-right: 12px;
 }
 
 .page-container {

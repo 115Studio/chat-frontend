@@ -52,7 +52,7 @@ onUpdated(() => {
       v-if="messagesStore.messages.length"
       :key="message.id"
     >
-      <Message v-bind="message" class="mx-4" />
+      <Message v-bind="message" class="message" />
     </template>
     <div v-else>
       <!-- User message skeletons (right aligned) -->
@@ -84,6 +84,18 @@ onUpdated(() => {
   display: flex;
   flex-direction: column;
   max-width: 768px;
+
+  @media (max-width: 768px) {
+    max-width: 90vw;
+  }
+}
+
+.message {
+  @apply mx-4;
+
+  @media (max-width: 768px) {
+    @apply mx-2;
+  }
 }
 
 .separator {
