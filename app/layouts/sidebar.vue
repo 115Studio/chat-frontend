@@ -63,6 +63,7 @@
                     v-for="chat in chatsStore.getUnpinnedChats()"
                     :id="chat.id"
                     :key="chat.id"
+                    class="mb-1"
                   >
                     <Text v-if="chat.name !== MagicNumber.NameShowSkeleton" :truncate="true" as="p" variant="bodySm" tone="muted">
                       {{ chat.name }}
