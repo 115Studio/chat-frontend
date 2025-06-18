@@ -328,7 +328,7 @@ onMounted(() => {
   font-size: 18px;
   background: none;
   resize: none;
-  overflow-y: hidden;
+  overflow-y: auto;
   line-height: 1.25;
 
   @apply focus:outline-none focus:ring-0;
