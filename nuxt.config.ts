@@ -19,9 +19,9 @@ export default defineNuxtConfig({
   $production: {
     runtimeConfig: {
       public: {
-        discordClientId: '1381420687230763129',
-        api: 'https://chat.115.studio/api/v1',
-        ws: 'wss://chat.115.studio/api/v1/sync/connection',
+        discordClientId: process.env.DISCORD_CLIENT_ID,
+        api: process.env.CHAT_API_HTTP,
+        ws: process.env.CHAT_API_WS,
       },
     },
     nitro: {
@@ -62,7 +62,7 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-06-09',
   vite: {
     server: {
-      allowedHosts: ['localhost', 'test2.rinisle.uk'],
+      allowedHosts: ['localhost'],
     },
     css: {
       preprocessorOptions: {
