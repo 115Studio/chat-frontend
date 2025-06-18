@@ -6,6 +6,7 @@ import { useChatMessagesStore } from '@app/store/chat-messages.store'
 import { toast } from 'vue-sonner'
 import { useChatsStore } from '@app/store/chats.store'
 import type { AiModelFlag } from '@app/constants/ai-model-flag'
+import type { Router } from 'vue-router'
 
 export const useNewChatStore = defineStore('new-chat', {
   state: () => ({
@@ -14,7 +15,7 @@ export const useNewChatStore = defineStore('new-chat', {
   }),
 
   actions: {
-    async newChat(internalId: string, jwt: string, stages: MessageStages, model: { id: AiModel, flags: AiModelFlag[] }) {
+    async newChat(router: Router, internalId: string, jwt: string, stages: MessageStages, model: { id: AiModel, flags: AiModelFlag[] }) {
       this.internalId = internalId
 
       const response = await createMessage(
@@ -26,7 +27,8 @@ export const useNewChatStore = defineStore('new-chat', {
       )
 
       if (!response.ok) {
-        return toast.error('Failed to create message')
+        toast.error('Failed to create message')
+        return router.push('/')
       }
 
       const { channel, userMessage, systemMessage } = response.result
@@ -47,6 +49,8 @@ export const useNewChatStore = defineStore('new-chat', {
       const messages = useChatMessagesStore(channel.id)()
       messages.addMessage(userMessage)
       messages.addMessage(systemMessage)
+
+      return router.push(`/chat/${channel.id}`)
     },
 
     reset() {

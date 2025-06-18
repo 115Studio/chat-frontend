@@ -75,6 +75,32 @@ export const createMessage = async (
   return useApiResponse<CreateMessageResponse>(data)
 }
 
+export interface EditAssistantMessageResponse {
+  systemMessage: Message
+}
+
+export const editAssistantMessage = async (
+  jwt: string,
+  chatId: string,
+  messageId: string,
+  model: ModelSettings,
+  personalityId?: string,
+) => {
+  const data = await useFetch<EditAssistantMessageResponse, RawApiResponseErrorResponse>(
+    `${chatApi()}/channels/${chatId}/messages/${messageId}/ai`,
+    {
+      method: 'patch',
+      body: { model, personalityId },
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': jwt,
+      },
+    },
+  )
+
+  return useApiResponse<EditAssistantMessageResponse>(data)
+}
+
 export const getChannelMessages = async (
   jwt: string,
   channelId: string,

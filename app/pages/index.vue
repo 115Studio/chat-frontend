@@ -56,7 +56,7 @@ const createMessageEvent = async () => {
     createdAt: Date.now()
   })
 
-  void useNewChatStore().newChat(internalId, authStore.jwt, convertedStages, {
+  void useNewChatStore().newChat(router, internalId, authStore.jwt, convertedStages, {
     id: inputsStore.getInput(Inputs.SelectedModel)?.model,
     flags: inputsStore.getInput(Inputs.ReasoningLevel)?.level !== undefined
       ? [ inputsStore.getInput(Inputs.ReasoningLevel)?.level ] : [],

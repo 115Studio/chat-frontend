@@ -3,6 +3,7 @@ import { useChatsStore } from '@app/store/chats.store'
 import { useChatMessagesStore } from '@app/store/chat-messages.store'
 import { useAuthStore } from '@app/store/auth.store'
 import { toast } from 'vue-sonner'
+import type { Message } from '@app/types'
 
 const emit = defineEmits<{
   (e: 'scroll-down'): void
@@ -34,6 +35,43 @@ const messagesStore = computed(() => {
   return useChatMessagesStore(id.value as string)()
 })
 
+const groupedMessages = computed(() => {
+  const messages = messagesStore.value.messages
+  if (!messages.length) return []
+
+  // Group messages by groupId
+  const messageGroups = new Map<string, Message[]>()
+  
+  for (const message of messages) {
+    if (!messageGroups.has(message.groupId)) {
+      messageGroups.set(message.groupId, [])
+    }
+    messageGroups.get(message.groupId)!.push(message)
+  }
+
+  // Get the latest message from each group along with the earliest message for sorting
+  const groupResults: { latest: Message, earliest: Message }[] = []
+  
+  for (const group of messageGroups.values()) {
+    const latestMessage = group.reduce((latest, current) => {
+      const latestTime = latest.updatedAt ?? latest.createdAt
+      const currentTime = current.updatedAt ?? current.createdAt
+      return currentTime > latestTime ? current : latest
+    })
+    
+    const earliestMessage = group.reduce((earliest, current) => {
+      return current.createdAt < earliest.createdAt ? current : earliest
+    })
+    
+    groupResults.push({ latest: latestMessage, earliest: earliestMessage })
+  }
+
+  // Sort by the earliest message's creation time in each group
+  return groupResults
+    .sort((a, b) => a.earliest.createdAt - b.earliest.createdAt)
+    .map(result => result.latest)
+})
+
 const authStore = useAuthStore()
 
 if (!authStore.isAuthenticated) {
@@ -48,8 +86,8 @@ onUpdated(() => {
 <template>
   <div class="flex flex-col gap-2 chat-container mx-auto rounded-xl">
     <template
-      v-for="message in messagesStore.messages"
-      v-if="messagesStore.messages.length"
+      v-for="message in groupedMessages"
+      v-if="groupedMessages.length"
       :key="message.id"
     >
       <Message v-bind="message" class="message" />

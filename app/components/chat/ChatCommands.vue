@@ -9,6 +9,7 @@ const isDropdownOpen = ref(false)
 
 const props = defineProps<{
   copyContent: string
+  messageId?: string
   usedModel?: AiModel
 }>()
 
@@ -46,7 +47,7 @@ const isActive = computed(() => isDropdownOpen.value)
         </TooltipContent>
       </Tooltip>
     </TooltipProvider-->
-    <ChangeModel :used-model="usedModel" @dropdown-open="val => isDropdownOpen = val">
+    <ChangeModel :used-model="usedModel" :message-id="messageId" @dropdown-open="val => isDropdownOpen = val">
       <button type="button" class="hover:bg-neutral-200 transition-all rounded-lg p-1.5 active:scale-90">
         <Retry class="w-4 h-4" />
       </button>

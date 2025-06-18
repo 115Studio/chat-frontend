@@ -32,8 +32,10 @@ export default defineNuxtConfig({
     runtimeConfig: {
       public: {
         discordClientId: '1381420687230763129',
-        api: 'https://chat.115.studio/api/v1',
-        ws: 'wss://chat.115.studio/api/v1/sync/connection',
+        api: 'http://localhost:8787/api/v1',
+        ws: 'ws://localhost:8787/api/v1/sync/connection',
+        // api: 'https://chat.115.studio/api/v1',
+        // ws: 'wss://chat.115.studio/api/v1/sync/connection',
       },
     },
   },

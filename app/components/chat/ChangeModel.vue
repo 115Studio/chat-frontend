@@ -17,14 +17,21 @@ import type { AiModel } from '@app/constants/ai-model'
 import { Inputs, useInputsStore } from '@app/store/inputs.store'
 import { resolveModelName } from '@app/lib/utils'
 import { AiModelFlag } from '@app/constants/ai-model-flag'
+import { editAssistantMessage } from '@app/composables/api'
+import { useAuthStore } from '@app/store/auth.store'
+import { useChatMessagesStore } from '@app/store/chat-messages.store'
+import { MessageState } from '@app/constants/message-state'
 
 const chatId = useRoute().params.id as string
 
 const store = useInputsStore(chatId ?? '@new')()
+const auth = useAuthStore()
+const messagesStore = (id: string) => useChatMessagesStore(id)()
 
 const props = defineProps<{
   usedModel?: AiModel
   tooltipDisabled?: boolean
+  messageId?: string
 }>()
 
 const emit = defineEmits(['dropdown-open'])
@@ -33,11 +40,42 @@ function handleOpenChange(open: boolean) {
   emit('dropdown-open', open)
 }
 
-const selectModel = (selectedModel: AiModel, level?: AiModelFlag) => {
+const selectModel = async (selectedModel: AiModel, level?: AiModelFlag) => {
   store.writeInput(Inputs.SelectedModel, { model: selectedModel })
   store.writeInput(Inputs.ReasoningLevel, { level: typeof level === 'number' ? level : AiModelFlag.None })
 
   handleOpenChange(false)
+
+  if (props.messageId) {
+    const msgs = messagesStore(chatId)
+
+    const message = msgs.messages.find(m => m.id === props.messageId)
+
+    const previousState = message?.state || MessageState.Completed
+
+    if (message) {
+      message.state = MessageState.Created
+      msgs.updateMessage(message)
+    }
+
+    const response = await editAssistantMessage(
+      auth.jwt,
+      chatId,
+      props.messageId,
+      {
+        id: selectedModel,
+        flags: level ? [level] : [],
+      }
+    )
+
+    if (response.ok) {
+      const result = response.result.systemMessage
+      msgs.addMessage(result)
+    } else if (message) {
+      message.state = previousState
+      msgs.updateMessage(message)
+    }
+  }
 }
 </script>
 

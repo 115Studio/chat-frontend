@@ -109,7 +109,11 @@ const formatTextStage = (stage: MessageStage) => {
         </div>
       </div>
       <template v-if="message.role === MessageRole.Assistant">
-        <ChatCommands :used-model="message.model.id" :copy-content="stages.find(isText)?.content?.value || ''"/>
+        <ChatCommands
+          :used-model="message.model.id"
+          :message-id="message.id"
+          :copy-content="stages.find(isText)?.content?.value || ''"
+        />
       </template>
       <template v-else>
         <UserChatCommands class="ml-auto" :copy-content="stages.find(isText)?.content?.value || ''"/>
@@ -141,6 +145,7 @@ const formatTextStage = (stage: MessageStage) => {
 
   &-skeleton {
     @include mixins.skeleton(75%, 40px, 12px);
+    margin-bottom: 24px;
   }
 
   &-error {
