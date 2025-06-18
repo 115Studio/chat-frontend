@@ -11,8 +11,6 @@ const props = defineProps<{
 const codeMap = ref<Record<string, [ string, string ]>>({})
 
 const recordHeader = (lang: string, code: string) => {
-  codeMap.value = {}
-
   const actualId = Math.random().toString(36).substring(2, 15)
 
   codeMap.value[actualId] = [ lang, code ]
@@ -82,8 +80,8 @@ md.renderer.rules.link_open = (tokens: any, idx: any, options: any, env: any, se
   <div class="markdown" v-html="md.render(props.content.trim())"/>
   <template v-for="([ i, [ language, code ]]) of Object.entries(codeMap)">
     <Teleport defer :to="'#' + `code-header-${i}`">
-      <div class="code-block-header">
-        <Text v-if="language" as="p" class="font-mono text-md">
+      <div v-if="language" class="code-block-header">
+        <Text as="p" class="font-mono text-md">
           {{ language }}
         </Text>
         <CopyButton :value="code" />
