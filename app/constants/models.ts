@@ -18,6 +18,7 @@ export const models = [
     icon: OpenAi,
     variants: [
       { name: 'GPT-4o',         id: AiModel.OpenaiGpt4o,         features: useModelFeatures(AiModel.OpenaiGpt4o) },
+      { name: 'GPT-o4 Mini',    id: AiModel.OpenaiGptO4Mini,     features: useModelFeatures(AiModel.OpenaiGptO4Mini) },
       { name: 'GPT-4o Mini',    id: AiModel.OpenaiGpt4oMini,     features: useModelFeatures(AiModel.OpenaiGpt4oMini) },
       { name: 'GPT-4 Turbo',    id: AiModel.OpenaiGpt4Turbo,     features: useModelFeatures(AiModel.OpenaiGpt4Turbo) },
       { name: 'GPT-4',          id: AiModel.OpenaiGpt4,          features: useModelFeatures(AiModel.OpenaiGpt4) },

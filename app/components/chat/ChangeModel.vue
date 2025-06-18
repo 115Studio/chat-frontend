@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import { models } from '@app/constants/models'
 import {
-  DropdownMenu, DropdownMenuContent,
-  DropdownMenuItem, DropdownMenuSub, DropdownMenuSubContent,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuTrigger
 } from '@app/components/ui/dropdown-menu'
@@ -13,7 +16,7 @@ import { AiModelFeature } from '@app/constants/ai-model-feature'
 import type { AiModel } from '@app/constants/ai-model'
 import { Inputs, useInputsStore } from '@app/store/inputs.store'
 import { resolveModelName } from '@app/lib/utils'
-import type { AiModelFlag } from '@app/constants/ai-model-flag'
+import { AiModelFlag } from '@app/constants/ai-model-flag'
 
 const chatId = useRoute().params.id as string
 
@@ -32,7 +35,7 @@ function handleOpenChange(open: boolean) {
 
 const selectModel = (selectedModel: AiModel, level?: AiModelFlag) => {
   store.writeInput(Inputs.SelectedModel, { model: selectedModel })
-  if (level) store.writeInput(Inputs.ReasoningLevel, { level })
+  store.writeInput(Inputs.ReasoningLevel, { level: typeof level === 'number' ? level : AiModelFlag.None })
 
   handleOpenChange(false)
 }

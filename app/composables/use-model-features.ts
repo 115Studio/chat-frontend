@@ -5,13 +5,15 @@ export const useModelFeatures = (model: AiModel): AiModelFeature[] => {
   switch (model) {
     // OpenAI models
     case AiModel.OpenaiGpt4o:
-      return [AiModelFeature.TextGen, AiModelFeature.Vision, AiModelFeature.Reasoning]
+      return [AiModelFeature.TextGen, AiModelFeature.Vision]
+    case AiModel.OpenaiGptO4Mini:
+      return [AiModelFeature.TextGen, AiModelFeature.Vision, AiModelFeature.Reasoning, AiModelFeature.ReasoningControl]
     case AiModel.OpenaiGpt4oMini:
-      return [AiModelFeature.TextGen, AiModelFeature.Vision, AiModelFeature.Reasoning]
+      return [AiModelFeature.TextGen, AiModelFeature.Vision]
     case AiModel.OpenaiGpt4Turbo:
-      return [AiModelFeature.TextGen, AiModelFeature.Reasoning]
+      return [AiModelFeature.TextGen]
     case AiModel.OpenaiGpt4:
-      return [AiModelFeature.TextGen, AiModelFeature.Reasoning]
+      return [AiModelFeature.TextGen]
     case AiModel.OpenaiGpt35Turbo:
       return [AiModelFeature.TextGen]
 

@@ -48,7 +48,7 @@ const transformLevelToFlag = (level: ReasoningLevelEnum): AiModelFlag => {
     case ReasoningLevelEnum.high:
       return AiModelFlag.HighReasoning
     case ReasoningLevelEnum.none:
-      return AiModelFlag.NoneReasoning
+      return AiModelFlag.None
   }
 }
 

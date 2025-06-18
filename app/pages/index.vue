@@ -58,9 +58,8 @@ const createMessageEvent = async () => {
 
   void useNewChatStore().newChat(internalId, authStore.jwt, convertedStages, {
     id: inputsStore.getInput(Inputs.SelectedModel)?.model,
-    flags: [
-      inputsStore.getInput(Inputs.ReasoningLevel)?.level
-    ],
+    flags: inputsStore.getInput(Inputs.ReasoningLevel)?.level !== undefined
+      ? [ inputsStore.getInput(Inputs.ReasoningLevel)?.level ] : [],
   })
 
   return router.push('/chat/@new')

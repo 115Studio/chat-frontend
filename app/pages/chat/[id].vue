@@ -74,9 +74,8 @@ const createMessageEvent = async () => {
     {
       // TODO model settings
       id: inputsStore.getInput(Inputs.SelectedModel)?.model as AiModel,
-      flags: [
-        inputsStore.getInput(Inputs.ReasoningLevel)?.level
-      ],
+      flags: inputsStore.getInput(Inputs.ReasoningLevel)?.level !== undefined
+        ? [ inputsStore.getInput(Inputs.ReasoningLevel)?.level ] : [],
     },
     // TODO personality settings
   )

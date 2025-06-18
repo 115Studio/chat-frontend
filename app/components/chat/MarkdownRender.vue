@@ -157,6 +157,10 @@ md.renderer.rules.link_open = (tokens: any, idx: any, options: any, env: any, se
     color: var(--color-muted);
   }
 
+  li {
+    @apply my-4;
+  }
+
   hr {
     @apply my-5;
   }

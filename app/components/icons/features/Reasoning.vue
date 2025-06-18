@@ -11,7 +11,7 @@
       </TooltipTrigger>
       <TooltipContent>
         <Text as="p" variant="bodySm">
-          Can thinking
+          Can think
         </Text>
       </TooltipContent>
     </Tooltip>

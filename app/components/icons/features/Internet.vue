@@ -13,7 +13,7 @@ import { PhGlobe } from '@phosphor-icons/vue'
       </TooltipTrigger>
       <TooltipContent>
         <Text as="p" variant="bodySm">
-          Can search the internet
+          Can search the web
         </Text>
       </TooltipContent>
     </Tooltip>

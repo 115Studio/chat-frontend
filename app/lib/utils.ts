@@ -98,8 +98,6 @@ export const resolveReasoningLevel = (level: AiModelFlag): string => {
       return 'Medium'
     case AiModelFlag.HighReasoning:
       return 'High'
-    case AiModelFlag.NoneReasoning:
-      return ''
     default:
       return ''
   }
