@@ -7,7 +7,7 @@ export const useModelFeatures = (model: AiModel): AiModelFeature[] => {
     case AiModel.OpenaiGpt4o:
       return [AiModelFeature.TextGen, AiModelFeature.Vision]
     case AiModel.OpenaiGptO4Mini:
-      return [AiModelFeature.TextGen, AiModelFeature.Vision, AiModelFeature.Reasoning, AiModelFeature.ReasoningControl]
+      return [AiModelFeature.TextGen, AiModelFeature.Vision]
     case AiModel.OpenaiGpt4oMini:
       return [AiModelFeature.TextGen, AiModelFeature.Vision]
     case AiModel.OpenaiGpt4Turbo:
@@ -29,23 +29,23 @@ export const useModelFeatures = (model: AiModel): AiModelFeature[] => {
     case AiModel.AnthropicClaudeSonnet35:
       return [AiModelFeature.TextGen, AiModelFeature.Vision, AiModelFeature.PdfScan]
     case AiModel.AnthropicClaudeHaiku35:
-      return [AiModelFeature.TextGen ]
+      return [AiModelFeature.TextGen]
     case AiModel.AnthropicClaudeOpus3:
-      return [AiModelFeature.TextGen, AiModelFeature.Reasoning, AiModelFeature.ReasoningControl]
+      return [AiModelFeature.TextGen]
     case AiModel.AnthropicClaudeHaiku3:
-      return [AiModelFeature.TextGen ]
+      return [AiModelFeature.TextGen]
 
     // Google Gemini models
     case AiModel.GoogleGemini20Flash:
-      return [AiModelFeature.TextGen, AiModelFeature.WebSearch, AiModelFeature.PdfScan, AiModelFeature.Vision]
+      return [AiModelFeature.TextGen, AiModelFeature.PdfScan, AiModelFeature.Vision]
     case AiModel.GoogleGemini20FlashLite:
       return [AiModelFeature.TextGen, AiModelFeature.PdfScan, AiModelFeature.Vision]
     case AiModel.GoogleGemini25Flash:
-      return [AiModelFeature.TextGen, AiModelFeature.WebSearch, AiModelFeature.PdfScan, AiModelFeature.Vision]
+      return [AiModelFeature.TextGen, AiModelFeature.PdfScan, AiModelFeature.Vision]
     case AiModel.GoogleGemini15Flash:
       return [AiModelFeature.TextGen, AiModelFeature.Vision]
     case AiModel.GoogleGeminiPro:
-      return [AiModelFeature.TextGen, AiModelFeature.WebSearch, AiModelFeature.PdfScan, AiModelFeature.Vision, AiModelFeature.Reasoning]
+      return [AiModelFeature.TextGen, AiModelFeature.PdfScan, AiModelFeature.Vision]
 
     // Groq models
     case AiModel.GroqLlama31:

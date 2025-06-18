@@ -88,15 +88,17 @@ const formatTextStage = (stage: MessageStage) => {
             <img alt="image" :src="stage.content!.value" class="image no-drag-no-select" >
           </ImagePreview>
         </div>
-        <div v-else-if="isFile(stage)" class="max-w-48">
-          <PhFile
-            class="w-full h-full object-cover rounded-custom text-stone-700"
-            weight="fill"
-          />
-          <Text as="p" variant="bodySm" class="text-center w-full truncate">
-            {{ stage.content?.value?.split('/').at(-1) || '' }}
-          </Text>
-        </div>
+        <a v-else-if="isFile(stage)" :href="stage.content?.value" target="_blank" rel="noopener noreferrer">
+          <div class="max-w-48">
+            <PhFile
+              class="w-full h-full object-cover rounded-custom text-stone-700"
+              weight="fill"
+            />
+            <Text as="p" variant="bodySm" class="text-center w-full truncate">
+              {{ stage.content?.value?.split('/').at(-1) || '' }}
+            </Text>
+          </div>
+        </a>
         <div v-else-if="isSearch(stage)">
           <Text as="p" variant="bodyMd" tone="muted">
             {{ stage.content?.value }}
